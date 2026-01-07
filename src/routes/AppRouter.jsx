@@ -5,7 +5,7 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import DashboardPage from "../pages/Dashboard/DashboardPage";
 
 // User Management
-import OwnersListPage from "../pages/Owners/OwnersListPage";
+import OwnersListPage from "../pages/Users/OwnersListPage";
 import PendingVerificationsPage from "../pages/Users/PendingVerificationsPage";
 
 // Properties
