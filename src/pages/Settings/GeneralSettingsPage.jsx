@@ -7,7 +7,6 @@ import {
     TextField,
     Button,
     Switch,
-    FormControlLabel,
     Divider,
     Avatar,
     IconButton,
@@ -29,11 +28,9 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LanguageIcon from "@mui/icons-material/Language";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import SecurityIcon from "@mui/icons-material/Security";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import { notificationSettings } from "../../data/mockData";
 
@@ -97,7 +94,7 @@ const GeneralSettingsPage = () => {
 
             <Grid container spacing={3}>
                 {/* Business Information */}
-                <Grid item xs={12} lg={8}>
+                <Grid item size={{xs:12, lg:8}}>
                     <Paper sx={{ p: 3, borderRadius: 2, mb: 3 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Business Information
@@ -145,7 +142,7 @@ const GeneralSettingsPage = () => {
                         </Box>
 
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     label="Business Name"
@@ -159,7 +156,7 @@ const GeneralSettingsPage = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     label="Email"
@@ -172,7 +169,7 @@ const GeneralSettingsPage = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     label="Phone"
@@ -184,7 +181,7 @@ const GeneralSettingsPage = () => {
                                     }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     label="Website"
@@ -223,7 +220,7 @@ const GeneralSettingsPage = () => {
                             Regional Settings
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     select
@@ -242,7 +239,7 @@ const GeneralSettingsPage = () => {
                                     <option value="Asia/Tokyo">Tokyo (JST)</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     select
@@ -260,7 +257,7 @@ const GeneralSettingsPage = () => {
                                     <option value="AUD">AUD - Australian Dollar</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     select
@@ -275,7 +272,7 @@ const GeneralSettingsPage = () => {
                                     <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid item size={{xs:12, sm:6}}>
                                 <TextField
                                     fullWidth
                                     select
@@ -396,7 +393,7 @@ const GeneralSettingsPage = () => {
                 </Grid>
 
                 {/* Right Column - Quick Settings */}
-                <Grid item xs={12} lg={4}>
+                <Grid size={{xs:12, lg:4}}>
                     {/* Display Settings */}
                     <Paper sx={{ p: 3, borderRadius: 2, mb: 3 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>

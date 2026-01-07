@@ -375,7 +375,7 @@ const RoomTypesPage = () => {
             {/* Stats Summary */}
             <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="primary.main">
                                 {typesData.length}
@@ -385,7 +385,7 @@ const RoomTypesPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="success.main">
                                 {rooms.length}
@@ -395,7 +395,7 @@ const RoomTypesPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="info.main">
                                 {typesData.filter((t) => getRoomsCount(t.name) > 0).length}
@@ -411,7 +411,7 @@ const RoomTypesPage = () => {
             {/* Room Types Grid */}
             <Grid container spacing={3}>
                 {typesData.map((type) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={type.id}>
+                    <Grid item size={{xs:12, sm:6, md:4, lg:3}} key={type.id}>
                         <RoomTypeCard type={type} />
                     </Grid>
                 ))}

@@ -24,15 +24,12 @@ import {
     Card,
     CardContent,
     Slider,
-    InputAdornment,
-    Divider,
 } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
-import SaveIcon from "@mui/icons-material/Save";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
@@ -172,7 +169,7 @@ const SeasonalPricingPage = () => {
             />
 
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={{xs:12, sm:6}}>
                     <TextField
                         fullWidth
                         label="Start Date"
@@ -184,7 +181,7 @@ const SeasonalPricingPage = () => {
                         required
                     />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item size={{xs:12, sm:6}}>
                     <TextField
                         fullWidth
                         label="End Date"
@@ -292,7 +289,7 @@ const SeasonalPricingPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6}} md={3}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -316,7 +313,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6}} md={3}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -340,7 +337,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6}} md={3}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -364,7 +361,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6}} md={3}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar

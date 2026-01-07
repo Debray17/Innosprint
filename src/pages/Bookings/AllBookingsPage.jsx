@@ -262,7 +262,7 @@ const AllBookingsPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}} >
                     <Paper
                         sx={{
                             p: 2,
@@ -278,7 +278,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -294,7 +294,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -310,7 +310,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -326,7 +326,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -364,7 +364,7 @@ const AllBookingsPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <TextField
                             fullWidth
                             size="small"
@@ -380,7 +380,7 @@ const AllBookingsPage = () => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -397,7 +397,7 @@ const AllBookingsPage = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Payment Status</InputLabel>
                             <Select
@@ -496,7 +496,7 @@ const AllBookingsPage = () => {
 
                             <Grid container spacing={3}>
                                 {/* Guest Information */}
-                                <Grid item xs={12} md={6}>
+                                <Grid item size={{xs:12, md:6}}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Guest Information
@@ -538,7 +538,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Property & Room */}
-                                <Grid item xs={12} md={6}>
+                                <Grid item size={{xs:12, md:6}}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Property & Room
@@ -567,7 +567,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Stay Details */}
-                                <Grid item xs={12} md={6}>
+                                <Grid item size={{xs:12, md:6}}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Stay Details
@@ -610,7 +610,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Payment Details */}
-                                <Grid item xs={12} md={6}>
+                                <Grid item size={{xs:12, md:6}}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Payment Details
@@ -663,7 +663,7 @@ const AllBookingsPage = () => {
 
                                 {/* Special Requests */}
                                 {selectedBooking.specialRequests && (
-                                    <Grid item xs={12}>
+                                    <Grid item size={{xs:12}}>
                                         <Paper
                                             sx={{
                                                 p: 2,

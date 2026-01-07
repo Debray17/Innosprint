@@ -309,7 +309,7 @@ const AllRoomsPage = () => {
     // Room Form Component
     const RoomForm = () => (
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <FormControl fullWidth required>
                     <InputLabel>Property</InputLabel>
                     <Select
@@ -326,7 +326,7 @@ const AllRoomsPage = () => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <TextField
                     fullWidth
                     label="Room Number"
@@ -336,7 +336,7 @@ const AllRoomsPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <FormControl fullWidth required>
                     <InputLabel>Room Type</InputLabel>
                     <Select
@@ -353,7 +353,7 @@ const AllRoomsPage = () => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <TextField
                     fullWidth
                     label="Floor"
@@ -364,7 +364,7 @@ const AllRoomsPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <TextField
                     fullWidth
                     label="Capacity"
@@ -379,7 +379,7 @@ const AllRoomsPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{xs:12, sm:6}}>
                 <TextField
                     fullWidth
                     label="Base Price (per night)"
@@ -393,7 +393,7 @@ const AllRoomsPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item size={{xs:12}}>
                 <TextField
                     fullWidth
                     label="Description"
@@ -404,7 +404,7 @@ const AllRoomsPage = () => {
                     rows={2}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item size={{xs:12}}>
                 <Autocomplete
                     multiple
                     options={availableAmenities}
@@ -427,7 +427,7 @@ const AllRoomsPage = () => {
             </Grid>
 
             {/* Seasonal Pricing Section */}
-            <Grid item xs={12}>
+            <Grid item size={{xs:12}}>
                 <Divider sx={{ my: 1 }} />
                 <Typography variant="subtitle2" fontWeight={600} sx={{ mt: 2, mb: 1 }}>
                     Seasonal Pricing
@@ -438,7 +438,7 @@ const AllRoomsPage = () => {
                             (sp) => sp.seasonId === season.id
                         );
                         return (
-                            <Grid item xs={12} sm={6} key={season.id}>
+                            <Grid item size={{xs:12, sm:6}} key={season.id}>
                                 <TextField
                                     fullWidth
                                     label={`${season.name} (x${season.priceMultiplier})`}
@@ -489,7 +489,7 @@ const AllRoomsPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -505,7 +505,7 @@ const AllRoomsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -521,7 +521,7 @@ const AllRoomsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -537,7 +537,7 @@ const AllRoomsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -553,7 +553,7 @@ const AllRoomsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid item size={{xs:6, sm:4, md:2.4}}>
                     <Paper
                         sx={{
                             p: 2,
@@ -591,7 +591,7 @@ const AllRoomsPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <TextField
                             fullWidth
                             size="small"
@@ -607,7 +607,7 @@ const AllRoomsPage = () => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -624,7 +624,7 @@ const AllRoomsPage = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Room Type</InputLabel>
                             <Select
@@ -819,7 +819,7 @@ const AllRoomsPage = () => {
 
                             {/* Details Grid */}
                             <Grid container spacing={2}>
-                                <Grid item xs={6}>
+                                <Grid item size={{xs:6}}>
                                     <Typography variant="caption" color="text.secondary">
                                         Room Type
                                     </Typography>
@@ -827,7 +827,7 @@ const AllRoomsPage = () => {
                                         {selectedRoom.roomType}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item size={{xs:6}}>
                                     <Typography variant="caption" color="text.secondary">
                                         Floor
                                     </Typography>
@@ -835,7 +835,7 @@ const AllRoomsPage = () => {
                                         {selectedRoom.floor}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item size={{xs:6}}>
                                     <Typography variant="caption" color="text.secondary">
                                         Capacity
                                     </Typography>
@@ -843,7 +843,7 @@ const AllRoomsPage = () => {
                                         {selectedRoom.capacity} guests
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6}>
+                                <Grid item size={{xs:6}}>
                                     <Typography variant="caption" color="text.secondary">
                                         Base Price
                                     </Typography>
@@ -892,7 +892,7 @@ const AllRoomsPage = () => {
                                         {selectedRoom.seasonalPricing.map((sp) => {
                                             const season = seasons.find((s) => s.id === sp.seasonId);
                                             return (
-                                                <Grid item xs={6} key={sp.seasonId}>
+                                                <Grid item size={{xs:6}} key={sp.seasonId}>
                                                     <Paper
                                                         sx={{
                                                             p: 1,

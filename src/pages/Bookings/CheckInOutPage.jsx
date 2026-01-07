@@ -16,10 +16,6 @@ import {
     DialogActions,
     TextField,
     IconButton,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     Tabs,
     Tab,
     Alert,
@@ -29,9 +25,6 @@ import {
 import { useTheme, alpha } from "@mui/material/styles";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import PersonIcon from "@mui/icons-material/Person";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
 import HotelIcon from "@mui/icons-material/Hotel";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -39,11 +32,8 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PaymentIcon from "@mui/icons-material/Payment";
-import NoteIcon from "@mui/icons-material/Note";
-import KeyIcon from "@mui/icons-material/Key";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 
-import ConfirmDialog from "../../components/ConfirmDialog";
 import { bookings } from "../../data/mockData";
 
 const CheckInOutPage = () => {
@@ -231,7 +221,7 @@ const CheckInOutPage = () => {
                         }}
                     >
                         <Grid container spacing={1}>
-                            <Grid item xs={6}>
+                            <Grid size={{xs:12}}>
                                 <Typography variant="caption" color="text.secondary">
                                     Check-in
                                 </Typography>
@@ -239,7 +229,7 @@ const CheckInOutPage = () => {
                                     {formatDate(booking.checkIn)}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={{xs:12}}>
                                 <Typography variant="caption" color="text.secondary">
                                     Check-out
                                 </Typography>
@@ -313,7 +303,7 @@ const CheckInOutPage = () => {
 
             {/* Stats Cards */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <Paper
                         sx={{
                             p: 3,
@@ -331,7 +321,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}} >
                     <Paper
                         sx={{
                             p: 3,
@@ -349,7 +339,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <Paper
                         sx={{
                             p: 3,
@@ -367,7 +357,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <Paper
                         sx={{
                             p: 3,
@@ -421,7 +411,7 @@ const CheckInOutPage = () => {
             {getDisplayedBookings().length > 0 ? (
                 <Grid container spacing={3}>
                     {getDisplayedBookings().map((booking) => (
-                        <Grid item xs={12} sm={6} lg={4} key={booking.id}>
+                        <Grid item size={{xs:12, sm:6, lg:4}} key={booking.id}>
                             <BookingCard
                                 booking={booking}
                                 type={selectedTab === 0 ? "checkin" : "checkout"}
@@ -503,7 +493,7 @@ const CheckInOutPage = () => {
                                 }}
                             >
                                 <Grid container spacing={2}>
-                                    <Grid item xs={12}>
+                                    <Grid item size={{xs:12}}>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                                             <Avatar
                                                 sx={{
@@ -524,7 +514,7 @@ const CheckInOutPage = () => {
                                             </Box>
                                         </Box>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={{xs:12}}>
                                         <Typography variant="caption" color="text.secondary">
                                             Check-in
                                         </Typography>
@@ -532,7 +522,7 @@ const CheckInOutPage = () => {
                                             {formatDate(selectedBooking.checkIn)}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={{xs:12}}>
                                         <Typography variant="caption" color="text.secondary">
                                             Check-out
                                         </Typography>
@@ -659,7 +649,7 @@ const CheckInOutPage = () => {
                                 }}
                             >
                                 <Grid container spacing={2}>
-                                    <Grid item xs={12}>
+                                    <Grid item size={{xs:12}}>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                                             <Avatar
                                                 sx={{
@@ -680,7 +670,7 @@ const CheckInOutPage = () => {
                                             </Box>
                                         </Box>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={{xs:12}}>
                                         <Typography variant="caption" color="text.secondary">
                                             Stayed
                                         </Typography>
@@ -688,7 +678,7 @@ const CheckInOutPage = () => {
                                             {selectedBooking.nights} nights
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={{xs:12}}>
                                         <Typography variant="caption" color="text.secondary">
                                             Total Paid
                                         </Typography>

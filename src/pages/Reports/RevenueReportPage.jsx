@@ -10,7 +10,6 @@ import {
     MenuItem,
     TextField,
     Button,
-    Divider,
     Table,
     TableBody,
     TableCell,
@@ -36,8 +35,6 @@ import {
     ResponsiveContainer,
 } from "recharts";
 import DownloadIcon from "@mui/icons-material/Download";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
@@ -150,7 +147,7 @@ const RevenueReportPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Date Range</InputLabel>
                             <Select
@@ -166,7 +163,7 @@ const RevenueReportPage = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item size={{xs:12, sm:4}}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -185,7 +182,7 @@ const RevenueReportPage = () => {
                     </Grid>
                     {dateRange === "custom" && (
                         <>
-                            <Grid item xs={12} sm={2}>
+                            <Grid item size={{xs:12, sm:2}}>
                                 <TextField
                                     fullWidth
                                     size="small"
@@ -194,7 +191,7 @@ const RevenueReportPage = () => {
                                     InputLabelProps={{ shrink: true }}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={2}>
+                            <Grid item size={{xs:12, sm:2}}>
                                 <TextField
                                     fullWidth
                                     size="small"
@@ -210,7 +207,7 @@ const RevenueReportPage = () => {
 
             {/* Stats Cards */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Total Revenue"
                         value={formatCurrency(totalRevenue)}
@@ -220,7 +217,7 @@ const RevenueReportPage = () => {
                         trendValue="+18%"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:4}}>
                     <StatCard
                         title="Platform Commission"
                         value={formatCurrency(totalCommission)}
@@ -230,7 +227,7 @@ const RevenueReportPage = () => {
                         trendValue="+12%"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:4}}>
                     <StatCard
                         title="Avg. Booking Value"
                         value={formatCurrency(avgBookingValue)}
@@ -240,7 +237,7 @@ const RevenueReportPage = () => {
                         trendValue="+5%"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:4}}>
                     <StatCard
                         title="Pending Payments"
                         value={formatCurrency(pendingPayments)}
@@ -254,7 +251,7 @@ const RevenueReportPage = () => {
             {/* Charts Row */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
                 {/* Revenue Trend */}
-                <Grid item xs={12} lg={8}>
+                <Grid item size={{xs:12, lg:8}}>
                     <Paper sx={{ p: 3, borderRadius: 2, height: "100%" }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Revenue Trend
@@ -310,7 +307,7 @@ const RevenueReportPage = () => {
                 </Grid>
 
                 {/* Revenue by Payment Method */}
-                <Grid item xs={12} lg={4}>
+                <Grid item size={{xs:12, lg:4}}>
                     <Paper sx={{ p: 3, borderRadius: 2, height: "100%" }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             By Payment Method

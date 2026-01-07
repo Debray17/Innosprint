@@ -88,7 +88,7 @@ export default function DashboardPage() {
                         subtitle="vs last month"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Total Rooms"
                         value={dashboardStats.totalRooms}
@@ -99,7 +99,7 @@ export default function DashboardPage() {
                         subtitle="vs last month"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Total Bookings"
                         value={dashboardStats.totalBookings}
@@ -110,7 +110,7 @@ export default function DashboardPage() {
                         subtitle="vs last month"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Total Revenue"
                         value={formatCurrency(dashboardStats.totalRevenue)}
@@ -125,7 +125,7 @@ export default function DashboardPage() {
 
             {/* Secondary Stats */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Occupancy Rate"
                         value={`${dashboardStats.occupancyRate}%`}
@@ -133,7 +133,7 @@ export default function DashboardPage() {
                         color="success"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Pending Approvals"
                         value={dashboardStats.pendingApprovals}
@@ -141,7 +141,7 @@ export default function DashboardPage() {
                         color="warning"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Today's Check-ins"
                         value={dashboardStats.todayCheckIns}
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                         color="primary"
                     />
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid item size={{xs:12, sm:6, md:3}}>
                     <StatCard
                         title="Today's Check-outs"
                         value={dashboardStats.todayCheckOuts}
@@ -162,7 +162,7 @@ export default function DashboardPage() {
             {/* Charts Row */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
                 {/* Revenue Chart */}
-                <Grid item xs={12} md={8}>
+                <Grid item size={{xs:12, md:8}}>
                     <Card sx={{ height: "100%" }}>
                         <CardContent>
                             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
@@ -192,7 +192,7 @@ export default function DashboardPage() {
                 </Grid>
 
                 {/* Booking Status Pie Chart */}
-                <Grid item xs={12} md={4}>
+                <Grid item  size={{sx:12, md:4}} >
                     <Card sx={{ height: "100%" }}>
                         <CardContent>
                             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
@@ -244,7 +244,7 @@ export default function DashboardPage() {
 
             {/* Occupancy by Property */}
             <Grid container spacing={3} sx={{ mb: 4 }}>
-                <Grid item xs={12}>
+                <Grid item size={{xs:12}}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
@@ -275,7 +275,7 @@ export default function DashboardPage() {
             {/* Recent Bookings & Pending Approvals */}
             <Grid container spacing={3}>
                 {/* Recent Bookings */}
-                <Grid item xs={12} md={8}>
+                <Grid item size={{xs:12, md:8}}>
                     <Card>
                         <CardContent>
                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
@@ -353,7 +353,7 @@ export default function DashboardPage() {
                 </Grid>
 
                 {/* Pending Approvals */}
-                <Grid item xs={12} md={4}>
+                <Grid item size={{xs:12, md:4}}>
                     <Card sx={{ height: "100%" }}>
                         <CardContent>
                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
