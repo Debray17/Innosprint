@@ -18,7 +18,6 @@ import {
     Select,
     InputAdornment,
     Avatar,
-    Divider,
     List,
     ListItem,
     ListItemIcon,
@@ -34,7 +33,6 @@ import { useTheme, alpha } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -42,7 +40,6 @@ import CakeIcon from "@mui/icons-material/Cake";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PublicIcon from "@mui/icons-material/Public";
 import EventNoteIcon from "@mui/icons-material/EventNote";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import StarIcon from "@mui/icons-material/Star";
 import NoteIcon from "@mui/icons-material/Note";
 

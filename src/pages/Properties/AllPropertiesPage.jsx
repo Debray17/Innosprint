@@ -12,7 +12,6 @@ import {
     Grid,
     Chip,
     Divider,
-    Avatar,
     Rating,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";

@@ -81,7 +81,7 @@ export default function ContentPage({ title }) {
                             <>
                                 <Typography>Name: {selectedRow.name}</Typography>
                                 <Typography>Status: {selectedRow.status}</Typography>
-                                <Typography>Budget: ${selectedRow.budget}</Typography>
+                                <Typography>Budget: Nu {selectedRow.budget}</Typography>
                             </>
                         ) : (
                             <Typography>No Details</Typography>

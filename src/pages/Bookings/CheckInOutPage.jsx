@@ -725,7 +725,7 @@ const CheckInOutPage = () => {
                                 value={additionalCharges}
                                 onChange={(e) => setAdditionalCharges(e.target.value)}
                                 InputProps={{
-                                    startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>,
+                                    startAdornment: <Typography sx={{ mr: 1 }}>Nu</Typography>,
                                 }}
                                 helperText="Minibar, damages, extra services, etc."
                                 sx={{ mb: 2 }}

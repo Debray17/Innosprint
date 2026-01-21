@@ -246,10 +246,10 @@ const SeasonalPricingPage = () => {
                     </Box>
                     <Box sx={{ textAlign: "right" }}>
                         <Typography variant="body2" color="text.secondary">
-                            Example: $100 room becomes
+                            Example: Nu 100 room becomes
                         </Typography>
                         <Typography variant="h5" fontWeight={700}>
-                            ${(100 * formData.priceMultiplier).toFixed(0)}
+                            Nu {(100 * formData.priceMultiplier).toFixed(0)}
                         </Typography>
                     </Box>
                 </Box>

@@ -56,9 +56,9 @@ const CommissionSettingsPage = () => {
     const approvedProperties = properties.filter((p) => p.status === "approved");
 
     // Calculate commission stats
-    const totalRevenue = bookings
-        .filter((b) => b.bookingStatus !== "cancelled")
-        .reduce((sum, b) => sum + b.grandTotal, 0);
+    // const totalRevenue = bookings
+    //     .filter((b) => b.bookingStatus !== "cancelled")
+    //     .reduce((sum, b) => sum + b.grandTotal, 0);
 
     const totalCommission = approvedProperties.reduce((sum, property) => {
         const propertyBookings = bookings.filter(

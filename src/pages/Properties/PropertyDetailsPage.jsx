@@ -11,19 +11,11 @@ import {
     Divider,
     Tabs,
     Tab,
-    Card,
-    CardContent,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Rating,
     IconButton,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
     Table,
     TableBody,
     TableCell,
@@ -38,7 +30,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import StarIcon from "@mui/icons-material/Star";
 import PercentIcon from "@mui/icons-material/Percent";
@@ -51,8 +42,6 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 
 import ConfirmDialog from "../../components/ConfirmDialog";

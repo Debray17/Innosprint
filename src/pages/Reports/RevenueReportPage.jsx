@@ -64,9 +64,9 @@ const RevenueReportPage = () => {
         .filter((b) => b.bookingStatus !== "cancelled")
         .reduce((sum, b) => sum + b.grandTotal, 0);
 
-    const totalTax = bookings
-        .filter((b) => b.bookingStatus !== "cancelled")
-        .reduce((sum, b) => sum + b.taxAmount, 0);
+    // const totalTax = bookings
+    //     .filter((b) => b.bookingStatus !== "cancelled")
+    //     .reduce((sum, b) => sum + b.taxAmount, 0);
 
     const completedBookings = bookings.filter(
         (b) => b.bookingStatus === "checked-out" && b.paymentStatus === "paid"

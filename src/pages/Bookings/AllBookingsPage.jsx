@@ -33,14 +33,10 @@ import { useTheme, alpha } from "@mui/material/styles";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
-import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import HotelIcon from "@mui/icons-material/Hotel";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
-import PaymentIcon from "@mui/icons-material/Payment";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 import NoteIcon from "@mui/icons-material/Note";
 import PrintIcon from "@mui/icons-material/Print";
 
