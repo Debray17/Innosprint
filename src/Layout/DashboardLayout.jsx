@@ -11,8 +11,9 @@ const closedDrawerWidth = 70;
 const getPageTitle = (pathname) => {
     const routes = {
         "/dashboard": "Dashboard",
+        "/users/all": "All Users",
         "/users/owners": "Property Owners",
-        "/users/pending": "Pending Verifications",
+        "/users/pending": "Owner Verifications",
         "/properties/requests": "Property Requests",
         "/properties/all": "All Properties",
         "/properties/types": "Property Types",

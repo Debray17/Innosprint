@@ -1,16 +1,7 @@
 // src/components/User/Dashboard/BookingCard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Box,
-  Typography,
-  Button,
-  Chip,
-  Divider,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Button, Chip, Divider, Grid } from "@mui/material";
 // import { useTheme } from "@mui/material/styles";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
@@ -34,7 +25,7 @@ export default function BookingCard({ booking, variant = "default" }) {
     status,
     // canCancel,
     // canModify,
-    reviewSubmitted,
+    reviewSubmitted
   } = booking;
 
   const getStatusColor = (status) => {
@@ -57,7 +48,7 @@ export default function BookingCard({ booking, variant = "default" }) {
       weekday: "short",
       month: "short",
       day: "numeric",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
@@ -70,11 +61,11 @@ export default function BookingCard({ booking, variant = "default" }) {
         cursor: "pointer",
         transition: "all 0.2s",
         "&:hover": {
-          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        },
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
+        }
       }}
-      onClick={() => navigate(`/account/bookings/${id}`)}
-    >
+      onClick={() => navigate(`/account/bookings/${id}`)}>
+
       <CardContent sx={{ p: 0 }}>
         <Grid container>
           {/* Property Image */}
@@ -86,9 +77,9 @@ export default function BookingCard({ booking, variant = "default" }) {
                 backgroundImage: `url(${property.image})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                position: "relative",
-              }}
-            >
+                position: "relative"
+              }}>
+
               <Chip
                 label={status}
                 size="small"
@@ -98,21 +89,21 @@ export default function BookingCard({ booking, variant = "default" }) {
                   top: 12,
                   left: 12,
                   textTransform: "capitalize",
-                  fontWeight: 600,
-                }}
-              />
+                  fontWeight: 600
+                }} />
+
             </Box>
           </Grid>
 
           {/* Booking Details */}
-          <Grid
-            size={{ xs: 12, sm: isCompact ? 9 : 8, md: isCompact ? 10 : 9 }}
-          >
+          <Grid item xs={
+          12} sm={isCompact ? 9 : 8} md={isCompact ? 10 : 9}>
+
             <Box sx={{ p: 2.5 }}>
               {/* Header */}
               <Box
-                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
-              >
+                sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+
                 <Typography variant="caption" color="text.secondary">
                   Booking #{bookingCode}
                 </Typography>
@@ -123,11 +114,11 @@ export default function BookingCard({ booking, variant = "default" }) {
               </Typography>
 
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 2 }}
-              >
+                sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 2 }}>
+
                 <LocationOnIcon
-                  sx={{ fontSize: 16, color: "text.secondary" }}
-                />
+                  sx={{ fontSize: 16, color: "text.secondary" }} />
+
                 <Typography variant="body2" color="text.secondary">
                   {property.address}
                 </Typography>
@@ -142,14 +133,14 @@ export default function BookingCard({ booking, variant = "default" }) {
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3, mb: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <CalendarTodayIcon
-                    sx={{ fontSize: 18, color: "text.secondary" }}
-                  />
+                    sx={{ fontSize: 18, color: "text.secondary" }} />
+
                   <Box>
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      display="block"
-                    >
+                      display="block">
+
                       Check-in
                     </Typography>
                     <Typography variant="body2" fontWeight={500}>
@@ -160,14 +151,14 @@ export default function BookingCard({ booking, variant = "default" }) {
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <CalendarTodayIcon
-                    sx={{ fontSize: 18, color: "text.secondary" }}
-                  />
+                    sx={{ fontSize: 18, color: "text.secondary" }} />
+
                   <Box>
                     <Typography
                       variant="caption"
                       color="text.secondary"
-                      display="block"
-                    >
+                      display="block">
+
                       Check-out
                     </Typography>
                     <Typography variant="body2" fontWeight={500}>
@@ -178,8 +169,8 @@ export default function BookingCard({ booking, variant = "default" }) {
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                   <NightsStayIcon
-                    sx={{ fontSize: 18, color: "text.secondary" }}
-                  />
+                    sx={{ fontSize: 18, color: "text.secondary" }} />
+
                   <Typography variant="body2" fontWeight={500}>
                     {nights} Night{nights > 1 ? "s" : ""}
                   </Typography>
@@ -190,7 +181,7 @@ export default function BookingCard({ booking, variant = "default" }) {
                   <Typography variant="body2" fontWeight={500}>
                     {guests.adults} Adult{guests.adults > 1 ? "s" : ""}
                     {guests.children > 0 &&
-                      `, ${guests.children} Child${guests.children > 1 ? "ren" : ""}`}
+                    `, ${guests.children} Child${guests.children > 1 ? "ren" : ""}`}
                   </Typography>
                 </Box>
               </Box>
@@ -202,34 +193,34 @@ export default function BookingCard({ booking, variant = "default" }) {
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+                  alignItems: "center"
+                }}>
+
                 <Typography variant="h6" fontWeight={700} color="primary">
                   Nu {pricing.total.toFixed(2)}
                 </Typography>
 
                 <Box sx={{ display: "flex", gap: 1 }}>
-                  {status === "completed" && !reviewSubmitted && (
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/account/bookings/${id}?review=true`);
-                      }}
-                    >
+                  {status === "completed" && !reviewSubmitted &&
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/account/bookings/${id}?review=true`);
+                    }}>
+
                       Write Review
                     </Button>
-                  )}
+                  }
                   <Button
                     variant="contained"
                     size="small"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/account/bookings/${id}`);
-                    }}
-                  >
+                    }}>
+
                     View Details
                   </Button>
                 </Box>
@@ -238,6 +229,6 @@ export default function BookingCard({ booking, variant = "default" }) {
           </Grid>
         </Grid>
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }

@@ -1,16 +1,7 @@
 // src/components/User/Property/RoomCard.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardContent,
-  Grid,
-  Box,
-  Typography,
-  Button,
-  Chip,
-  Collapse,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Button, Chip, Collapse, Grid } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import PersonIcon from "@mui/icons-material/Person";
 import BedIcon from "@mui/icons-material/Bed";
@@ -24,7 +15,7 @@ export default function RoomCard({
   propertyId,
   checkIn,
   checkOut,
-  guests,
+  guests
 }) {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -44,7 +35,7 @@ export default function RoomCard({
     availableRooms,
     freeCancellation,
     breakfastIncluded,
-    breakfastPrice,
+    breakfastPrice
   } = room;
 
   const handleReserve = () => {
@@ -56,29 +47,29 @@ export default function RoomCard({
     navigate(`/booking/${propertyId}/${id}?${params.toString()}`);
   };
 
-  const discount = originalPrice
-    ? Math.round((1 - pricePerNight / originalPrice) * 100)
-    : 0;
+  const discount = originalPrice ?
+  Math.round((1 - pricePerNight / originalPrice) * 100) :
+  0;
 
   return (
     <Card sx={{ mb: 2 }}>
       <CardContent sx={{ p: 0 }}>
         <Grid container>
           {/* Room Image */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <Box
               sx={{
                 height: { xs: 200, md: "100%" },
                 minHeight: { md: 200 },
                 backgroundImage: `url(${images?.[0] || "/placeholder-room.jpg"})`,
                 backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
+                backgroundPosition: "center"
+              }} />
+
           </Grid>
 
           {/* Room Details */}
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid item xs={12} md={6}>
             <Box sx={{ p: 2.5 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 {name}
@@ -104,23 +95,23 @@ export default function RoomCard({
 
               {/* Tags */}
               <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
-                {freeCancellation && (
-                  <Chip
-                    icon={<CheckCircleIcon />}
-                    label="Free Cancellation"
-                    size="small"
-                    color="success"
-                    variant="outlined"
-                  />
-                )}
-                {breakfastIncluded && (
-                  <Chip
-                    label="Breakfast Included"
-                    size="small"
-                    color="primary"
-                    variant="outlined"
-                  />
-                )}
+                {freeCancellation &&
+                <Chip
+                  icon={<CheckCircleIcon />}
+                  label="Free Cancellation"
+                  size="small"
+                  color="success"
+                  variant="outlined" />
+
+                }
+                {breakfastIncluded &&
+                <Chip
+                  label="Breakfast Included"
+                  size="small"
+                  color="primary"
+                  variant="outlined" />
+
+                }
               </Box>
 
               {/* Expandable Amenities */}
@@ -129,22 +120,46 @@ export default function RoomCard({
                   size="small"
                   onClick={() => setExpanded(!expanded)}
                   endIcon={expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                  sx={{ textTransform: "none", p: 0 }}
-                >
+                  sx={{ textTransform: "none", p: 0 }}>
+
                   Room Amenities
                 </Button>
                 <Collapse in={expanded}>
                   <Box
-                    sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}
-                  >
-                    {amenities?.map((amenity) => (
-                      <Chip
-                        key={amenity}
-                        label={amenity}
-                        size="small"
-                        variant="outlined"
-                      />
-                    ))}
+                    sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+
+                    {amenities?.length > 0 ?
+                    amenities.map((amenity) => {
+                      const label =
+                      typeof amenity === "string" ?
+                      amenity :
+                      amenity?.name || "Amenity";
+
+                      const key =
+                      typeof amenity === "string" ?
+                      amenity :
+                      amenity?.id || amenity?.name || label;
+
+                      const title =
+                      typeof amenity === "string" ?
+                      undefined :
+                      amenity?.description || undefined;
+
+                      return (
+                    <Chip
+                          key={key}
+                          label={label}
+                      size="small"
+                          variant="outlined"
+                          title={title} />
+
+                      );
+                    }) :
+
+                    <Typography variant="caption" color="text.secondary">
+                        No amenities listed for this room.
+                      </Typography>
+                    }
                   </Box>
                 </Collapse>
               </Box>
@@ -152,7 +167,7 @@ export default function RoomCard({
           </Grid>
 
           {/* Price & Action */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <Box
               sx={{
                 p: 2.5,
@@ -163,37 +178,37 @@ export default function RoomCard({
                 borderLeft: { md: `1px solid ${theme.palette.divider}` },
                 borderTop: {
                   xs: `1px solid ${theme.palette.divider}`,
-                  md: "none",
+                  md: "none"
                 },
-                bgcolor: alpha(theme.palette.primary.main, 0.02),
-              }}
-            >
-              {discount > 0 && (
-                <Chip
-                  label={`${discount}% OFF`}
-                  size="small"
-                  sx={{
-                    bgcolor: theme.palette.error.main,
-                    color: "#fff",
-                    fontWeight: 600,
-                    alignSelf: "flex-start",
-                    mb: 1,
-                  }}
-                />
-              )}
+                bgcolor: alpha(theme.palette.primary.main, 0.02)
+              }}>
+
+              {discount > 0 &&
+              <Chip
+                label={`${discount}% OFF`}
+                size="small"
+                sx={{
+                  bgcolor: theme.palette.error.main,
+                  color: "#fff",
+                  fontWeight: 600,
+                  alignSelf: "flex-start",
+                  mb: 1
+                }} />
+
+              }
 
               <Box sx={{ mb: 1 }}>
-                {originalPrice && (
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      textDecoration: "line-through",
-                      color: "text.secondary",
-                    }}
-                  >
+                {originalPrice &&
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textDecoration: "line-through",
+                    color: "text.secondary"
+                  }}>
+
                     Nu {originalPrice}
                   </Typography>
-                )}
+                }
                 <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.5 }}>
                   <Typography variant="h4" fontWeight={700} color="primary">
                     Nu {pricePerNight}
@@ -204,38 +219,38 @@ export default function RoomCard({
                 </Box>
               </Box>
 
-              {!breakfastIncluded && breakfastPrice > 0 && (
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ mb: 1 }}
-                >
+              {!breakfastIncluded && breakfastPrice > 0 &&
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mb: 1 }}>
+
                   + Nu {breakfastPrice} breakfast (optional)
                 </Typography>
-              )}
+              }
 
               <Typography
                 variant="body2"
                 color={availableRooms <= 3 ? "error.main" : "text.secondary"}
-                sx={{ mb: 2 }}
-              >
-                {availableRooms <= 3
-                  ? `Only ${availableRooms} left!`
-                  : `${availableRooms} rooms available`}
+                sx={{ mb: 2 }}>
+
+                {availableRooms <= 3 ?
+                `Only ${availableRooms} left!` :
+                `${availableRooms} rooms available`}
               </Typography>
 
               <Button
                 variant="contained"
                 fullWidth
                 onClick={handleReserve}
-                size="large"
-              >
+                size="large">
+
                 Reserve
               </Button>
             </Box>
           </Grid>
         </Grid>
       </CardContent>
-    </Card>
-  );
+    </Card>);
+
 }

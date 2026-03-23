@@ -10,16 +10,20 @@ import AdminDashboardPage from "../pages/Dashboard/DashboardPage";
 // Admin - User Management
 import OwnersListPage from "../pages/Users/OwnersListPage";
 import PendingVerificationsPage from "../pages/Users/PendingVerificationsPage";
+import AllUsersPage from "../pages/Users/AllUsersPage";
 
 // Admin - Properties
 import PropertyRequestsPage from "../pages/Properties/PopertyRequestsPage";
 import AllPropertiesPage from "../pages/Properties/AllPropertiesPage";
 import PropertyTypesPage from "../pages/Properties/PropertyTypesPage";
+import PropertyAmenitiesPage from "../pages/Properties/PropertyAmenitiesPage";
 import AdminPropertyDetailsPage from "../pages/Properties/PropertyDetailsPage";
 
 // Admin - Rooms
 import AllRoomsPage from "../pages/Rooms/AllRoomsPage";
 import RoomTypesPage from "../pages/Rooms/RoomTypesPage";
+import RoomAmenitiesPage from "../pages/Rooms/RoomAmenitiesPage";
+import RoomSeasonalPricingPage from "../pages/Rooms/RoomSeasonalPricingPage";
 
 // Admin - Bookings
 import AllBookingsPage from "../pages/Bookings/AllBookingsPage";
@@ -98,8 +102,9 @@ export default function AppRouter() {
         {/* User Management */}
         <Route
           path="users"
-          element={<Navigate to="/admin/users/owners" replace />}
+          element={<Navigate to="/admin/users/all" replace />}
         />
+        <Route path="users/all" element={<AllUsersPage />} />
         <Route path="users/owners" element={<OwnersListPage />} />
         <Route path="users/pending" element={<PendingVerificationsPage />} />
 
@@ -111,6 +116,7 @@ export default function AppRouter() {
         <Route path="properties/requests" element={<PropertyRequestsPage />} />
         <Route path="properties/all" element={<AllPropertiesPage />} />
         <Route path="properties/types" element={<PropertyTypesPage />} />
+        <Route path="properties/amenities" element={<PropertyAmenitiesPage />} />
         <Route path="properties/:id" element={<AdminPropertyDetailsPage />} />
 
         {/* Rooms */}
@@ -120,6 +126,8 @@ export default function AppRouter() {
         />
         <Route path="rooms/all" element={<AllRoomsPage />} />
         <Route path="rooms/types" element={<RoomTypesPage />} />
+        <Route path="rooms/amenities" element={<RoomAmenitiesPage />} />
+        <Route path="rooms/seasonal-pricing" element={<RoomSeasonalPricingPage />} />
 
         {/* Bookings */}
         <Route

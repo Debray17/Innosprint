@@ -1,35 +1,7 @@
 import React, { useState } from "react";
-import {
-    Box,
-    Typography,
-    Button,
-    Paper,
-    Chip,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    TextField,
-    Grid,
-    MenuItem,
-    IconButton,
-    FormControl,
-    InputLabel,
-    Select,
-    InputAdornment,
-    Tabs,
-    Tab,
-    Divider,
-    Avatar,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Stepper,
-    Step,
-    StepLabel,
-} from "@mui/material";
+import { Box, Typography, Button, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, IconButton, FormControl, InputLabel, Select, InputAdornment, Tabs, Tab, Divider, Avatar, List, ListItem, ListItemIcon, ListItemText, Stepper, Step, StepLabel } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
@@ -42,205 +14,205 @@ import PrintIcon from "@mui/icons-material/Print";
 
 import CustomTable from "../../components/CustomTable";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import { bookings, properties, rooms, guests } from "../../data/mockData";
+import { bookings, properties } from "../../data/mockData";
 
 const AllBookingsPage = () => {
-    const theme = useTheme();
-    const [bookingsData, setBookingsData] = useState(bookings);
-    const [selectedTab, setSelectedTab] = useState(0);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [filterProperty, setFilterProperty] = useState("");
-    const [filterPayment, setFilterPayment] = useState("");
-    const [openViewModal, setOpenViewModal] = useState(false);
-    const [openCancelDialog, setOpenCancelDialog] = useState(false);
-    const [selectedBooking, setSelectedBooking] = useState(null);
+  const theme = useTheme();
+  const [bookingsData, setBookingsData] = useState(bookings);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterProperty, setFilterProperty] = useState("");
+  const [filterPayment, setFilterPayment] = useState("");
+  const [openViewModal, setOpenViewModal] = useState(false);
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
-    // Get approved properties
-    const approvedProperties = properties.filter((p) => p.status === "approved");
+  // Get approved properties
+  const approvedProperties = properties.filter((p) => p.status === "approved");
 
-    // Filter bookings
-    const getFilteredBookings = () => {
-        let filtered = bookingsData;
+  // Filter bookings
+  const getFilteredBookings = () => {
+    let filtered = bookingsData;
 
-        // Tab filter
-        switch (selectedTab) {
-            case 1:
-                filtered = filtered.filter((b) => b.bookingStatus === "confirmed");
-                break;
-            case 2:
-                filtered = filtered.filter((b) => b.bookingStatus === "checked-in");
-                break;
-            case 3:
-                filtered = filtered.filter((b) => b.bookingStatus === "checked-out");
-                break;
-            case 4:
-                filtered = filtered.filter((b) => b.bookingStatus === "cancelled");
-                break;
-            default:
-                break;
-        }
+    // Tab filter
+    switch (selectedTab) {
+      case 1:
+        filtered = filtered.filter((b) => b.bookingStatus === "confirmed");
+        break;
+      case 2:
+        filtered = filtered.filter((b) => b.bookingStatus === "checked-in");
+        break;
+      case 3:
+        filtered = filtered.filter((b) => b.bookingStatus === "checked-out");
+        break;
+      case 4:
+        filtered = filtered.filter((b) => b.bookingStatus === "cancelled");
+        break;
+      default:
+        break;
+    }
 
-        // Search filter
-        if (searchQuery) {
-            filtered = filtered.filter(
-                (b) =>
-                    b.bookingCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    b.guestName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    b.propertyName.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (b) =>
+        b.bookingCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.guestName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        b.propertyName.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
 
-        // Property filter
-        if (filterProperty) {
-            filtered = filtered.filter((b) => b.propertyId === parseInt(filterProperty));
-        }
+    // Property filter
+    if (filterProperty) {
+      filtered = filtered.filter((b) => b.propertyId === parseInt(filterProperty));
+    }
 
-        // Payment filter
-        if (filterPayment) {
-            filtered = filtered.filter((b) => b.paymentStatus === filterPayment);
-        }
+    // Payment filter
+    if (filterPayment) {
+      filtered = filtered.filter((b) => b.paymentStatus === filterPayment);
+    }
 
-        return filtered;
-    };
+    return filtered;
+  };
 
-    // Table columns
-    const columns = [
-        {
-            id: "bookingCode",
-            label: "Booking Code",
-            type: "text",
-            width: "140px",
-        },
-        {
-            id: "guestName",
-            label: "Guest",
-            type: "avatar",
-            subField: "guestEmail",
-            width: "200px",
-        },
-        {
-            id: "propertyName",
-            label: "Property",
-            type: "text",
-            width: "180px",
-        },
-        {
-            id: "roomNumber",
-            label: "Room",
-            type: "text",
-            width: "80px",
-            filterable: false,
-        },
-        {
-            id: "checkIn",
-            label: "Check-in",
-            type: "date",
-            width: "120px",
-            filterable: false,
-        },
-        {
-            id: "checkOut",
-            label: "Check-out",
-            type: "date",
-            width: "120px",
-            filterable: false,
-        },
-        {
-            id: "grandTotal",
-            label: "Total",
-            type: "currency",
-            width: "100px",
-            filterable: false,
-        },
-        {
-            id: "paymentStatus",
-            label: "Payment",
-            type: "status",
-            options: ["paid", "pending", "partial", "refunded"],
-            width: "100px",
-        },
-        {
-            id: "bookingStatus",
-            label: "Status",
-            type: "status",
-            options: ["confirmed", "checked-in", "checked-out", "cancelled"],
-            width: "120px",
-        },
-    ];
+  // Table columns
+  const columns = [
+  {
+    id: "bookingCode",
+    label: "Booking Code",
+    type: "text",
+    width: "140px"
+  },
+  {
+    id: "guestName",
+    label: "Guest",
+    type: "avatar",
+    subField: "guestEmail",
+    width: "200px"
+  },
+  {
+    id: "propertyName",
+    label: "Property",
+    type: "text",
+    width: "180px"
+  },
+  {
+    id: "roomNumber",
+    label: "Room",
+    type: "text",
+    width: "80px",
+    filterable: false
+  },
+  {
+    id: "checkIn",
+    label: "Check-in",
+    type: "date",
+    width: "120px",
+    filterable: false
+  },
+  {
+    id: "checkOut",
+    label: "Check-out",
+    type: "date",
+    width: "120px",
+    filterable: false
+  },
+  {
+    id: "grandTotal",
+    label: "Total",
+    type: "currency",
+    width: "100px",
+    filterable: false
+  },
+  {
+    id: "paymentStatus",
+    label: "Payment",
+    type: "status",
+    options: ["paid", "pending", "partial", "refunded"],
+    width: "100px"
+  },
+  {
+    id: "bookingStatus",
+    label: "Status",
+    type: "status",
+    options: ["confirmed", "checked-in", "checked-out", "cancelled"],
+    width: "120px"
+  }];
 
-    // Handle action clicks
-    const handleActionClick = (action, booking) => {
-        setSelectedBooking(booking);
-        switch (action) {
-            case "view":
-                setOpenViewModal(true);
-                break;
-            case "delete":
-                setOpenCancelDialog(true);
-                break;
-            default:
-                break;
-        }
-    };
 
-    // Handle cancel booking
-    const handleCancelBooking = () => {
-        setBookingsData(
-            bookingsData.map((b) =>
-                b.id === selectedBooking.id
-                    ? { ...b, bookingStatus: "cancelled", paymentStatus: "refunded" }
-                    : b
-            )
-        );
-        setOpenCancelDialog(false);
-        setSelectedBooking(null);
-    };
+  // Handle action clicks
+  const handleActionClick = (action, booking) => {
+    setSelectedBooking(booking);
+    switch (action) {
+      case "view":
+        setOpenViewModal(true);
+        break;
+      case "delete":
+        setOpenCancelDialog(true);
+        break;
+      default:
+        break;
+    }
+  };
 
-    // Format currency
-    const formatCurrency = (amount) =>
-        new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-        }).format(amount);
+  // Handle cancel booking
+  const handleCancelBooking = () => {
+    setBookingsData(
+      bookingsData.map((b) =>
+      b.id === selectedBooking.id ?
+      { ...b, bookingStatus: "cancelled", paymentStatus: "refunded" } :
+      b
+      )
+    );
+    setOpenCancelDialog(false);
+    setSelectedBooking(null);
+  };
 
-    // Format date
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
-            weekday: "short",
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
-    };
+  // Format currency
+  const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2
+  }).format(amount);
 
-    // Get booking status step
-    const getBookingStep = (status) => {
-        switch (status) {
-            case "confirmed":
-                return 0;
-            case "checked-in":
-                return 1;
-            case "checked-out":
-                return 2;
-            case "cancelled":
-                return -1;
-            default:
-                return 0;
-        }
-    };
+  // Format date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
 
-    // Counts for tabs
-    const counts = {
-        all: bookingsData.length,
-        confirmed: bookingsData.filter((b) => b.bookingStatus === "confirmed").length,
-        checkedIn: bookingsData.filter((b) => b.bookingStatus === "checked-in").length,
-        checkedOut: bookingsData.filter((b) => b.bookingStatus === "checked-out").length,
-        cancelled: bookingsData.filter((b) => b.bookingStatus === "cancelled").length,
-    };
+  // Get booking status step
+  const getBookingStep = (status) => {
+    switch (status) {
+      case "confirmed":
+        return 0;
+      case "checked-in":
+        return 1;
+      case "checked-out":
+        return 2;
+      case "cancelled":
+        return -1;
+      default:
+        return 0;
+    }
+  };
 
-    return (
-        <Box>
+  // Counts for tabs
+  const counts = {
+    all: bookingsData.length,
+    confirmed: bookingsData.filter((b) => b.bookingStatus === "confirmed").length,
+    checkedIn: bookingsData.filter((b) => b.bookingStatus === "checked-in").length,
+    checkedOut: bookingsData.filter((b) => b.bookingStatus === "checked-out").length,
+    cancelled: bookingsData.filter((b) => b.bookingStatus === "cancelled").length
+  };
+
+  return (
+    <Box>
             {/* Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Box>
@@ -258,14 +230,14 @@ const AllBookingsPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item size={{xs:6, sm:4, md:2.4}} >
+                <Grid item xs={6} sm={4} md={2.4}>
                     <Paper
-                        sx={{
-                            p: 2,
-                            textAlign: "center",
-                            backgroundColor: alpha(theme.palette.primary.main, 0.05),
-                        }}
-                    >
+            sx={{
+              p: 2,
+              textAlign: "center",
+              backgroundColor: alpha(theme.palette.primary.main, 0.05)
+            }}>
+
                         <Typography variant="h4" fontWeight={700} color="primary.main">
                             {counts.all}
                         </Typography>
@@ -274,14 +246,14 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item size={{xs:6, sm:4, md:2.4}}>
+                <Grid item xs={6} sm={4} md={2.4}>
                     <Paper
-                        sx={{
-                            p: 2,
-                            textAlign: "center",
-                            backgroundColor: alpha(theme.palette.info.main, 0.05),
-                        }}
-                    >
+            sx={{
+              p: 2,
+              textAlign: "center",
+              backgroundColor: alpha(theme.palette.info.main, 0.05)
+            }}>
+
                         <Typography variant="h4" fontWeight={700} color="info.main">
                             {counts.confirmed}
                         </Typography>
@@ -290,14 +262,14 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item size={{xs:6, sm:4, md:2.4}}>
+                <Grid item xs={6} sm={4} md={2.4}>
                     <Paper
-                        sx={{
-                            p: 2,
-                            textAlign: "center",
-                            backgroundColor: alpha(theme.palette.success.main, 0.05),
-                        }}
-                    >
+            sx={{
+              p: 2,
+              textAlign: "center",
+              backgroundColor: alpha(theme.palette.success.main, 0.05)
+            }}>
+
                         <Typography variant="h4" fontWeight={700} color="success.main">
                             {counts.checkedIn}
                         </Typography>
@@ -306,14 +278,14 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item size={{xs:6, sm:4, md:2.4}}>
+                <Grid item xs={6} sm={4} md={2.4}>
                     <Paper
-                        sx={{
-                            p: 2,
-                            textAlign: "center",
-                            backgroundColor: alpha(theme.palette.warning.main, 0.05),
-                        }}
-                    >
+            sx={{
+              p: 2,
+              textAlign: "center",
+              backgroundColor: alpha(theme.palette.warning.main, 0.05)
+            }}>
+
                         <Typography variant="h4" fontWeight={700} color="warning.main">
                             {counts.checkedOut}
                         </Typography>
@@ -322,14 +294,14 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item size={{xs:6, sm:4, md:2.4}}>
+                <Grid item xs={6} sm={4} md={2.4}>
                     <Paper
-                        sx={{
-                            p: 2,
-                            textAlign: "center",
-                            backgroundColor: alpha(theme.palette.error.main, 0.05),
-                        }}
-                    >
+            sx={{
+              p: 2,
+              textAlign: "center",
+              backgroundColor: alpha(theme.palette.error.main, 0.05)
+            }}>
+
                         <Typography variant="h4" fontWeight={700} color="error.main">
                             {counts.cancelled}
                         </Typography>
@@ -343,12 +315,12 @@ const AllBookingsPage = () => {
             {/* Tabs */}
             <Paper sx={{ mb: 3, borderRadius: 2 }}>
                 <Tabs
-                    value={selectedTab}
-                    onChange={(e, newValue) => setSelectedTab(newValue)}
-                    sx={{ px: 2 }}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                >
+          value={selectedTab}
+          onChange={(e, newValue) => setSelectedTab(newValue)}
+          sx={{ px: 2 }}
+          variant="scrollable"
+          scrollButtons="auto">
+
                     <Tab label={<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>All <Chip label={counts.all} size="small" /></Box>} />
                     <Tab label={<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>Confirmed <Chip label={counts.confirmed} size="small" color="info" /></Box>} />
                     <Tab label={<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>Checked In <Chip label={counts.checkedIn} size="small" color="success" /></Box>} />
@@ -360,47 +332,47 @@ const AllBookingsPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item size={{xs:12, sm:4}}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
-                            fullWidth
-                            size="small"
-                            placeholder="Search bookings..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
+              fullWidth
+              size="small"
+              placeholder="Search bookings..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment:
+                <InputAdornment position="start">
                                         <SearchIcon color="action" />
                                     </InputAdornment>
-                                ),
-                            }}
-                        />
+
+              }} />
+
                     </Grid>
-                    <Grid item size={{xs:12, sm:4}}>
+                    <Grid item xs={12} sm={4}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
-                                value={filterProperty}
-                                onChange={(e) => setFilterProperty(e.target.value)}
-                                label="Property"
-                            >
+                value={filterProperty}
+                onChange={(e) => setFilterProperty(e.target.value)}
+                label="Property">
+
                                 <MenuItem value="">All Properties</MenuItem>
-                                {approvedProperties.map((property) => (
-                                    <MenuItem key={property.id} value={property.id}>
+                                {approvedProperties.map((property) =>
+                <MenuItem key={property.id} value={property.id}>
                                         {property.name}
                                     </MenuItem>
-                                ))}
+                )}
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item size={{xs:12, sm:4}}>
+                    <Grid item xs={12} sm={4}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Payment Status</InputLabel>
                             <Select
-                                value={filterPayment}
-                                onChange={(e) => setFilterPayment(e.target.value)}
-                                label="Payment Status"
-                            >
+                value={filterPayment}
+                onChange={(e) => setFilterPayment(e.target.value)}
+                label="Payment Status">
+
                                 <MenuItem value="">All</MenuItem>
                                 <MenuItem value="paid">Paid</MenuItem>
                                 <MenuItem value="pending">Pending</MenuItem>
@@ -414,36 +386,36 @@ const AllBookingsPage = () => {
 
             {/* Table */}
             <CustomTable
-                data={getFilteredBookings()}
-                columns={columns}
-                actions={["view", "delete"]}
-                onActionClick={handleActionClick}
-                emptyMessage="No bookings found matching your criteria"
-            />
+        data={getFilteredBookings()}
+        columns={columns}
+        actions={["view", "delete"]}
+        onActionClick={handleActionClick}
+        emptyMessage="No bookings found matching your criteria" />
+
 
             {/* View Booking Modal */}
             <Dialog
-                open={openViewModal}
-                onClose={() => {
-                    setOpenViewModal(false);
-                    setSelectedBooking(null);
-                }}
-                maxWidth="md"
-                fullWidth
-            >
+        open={openViewModal}
+        onClose={() => {
+          setOpenViewModal(false);
+          setSelectedBooking(null);
+        }}
+        maxWidth="md"
+        fullWidth>
+
                 <DialogTitle>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                             <Typography variant="h6" fontWeight={600}>
                                 Booking Details
                             </Typography>
-                            {selectedBooking && (
-                                <Chip
-                                    label={selectedBooking.bookingCode}
-                                    color="primary"
-                                    variant="outlined"
-                                />
-                            )}
+                            {selectedBooking &&
+              <Chip
+                label={selectedBooking.bookingCode}
+                color="primary"
+                variant="outlined" />
+
+              }
                         </Box>
                         <Box>
                             <IconButton size="small" sx={{ mr: 1 }}>
@@ -456,11 +428,11 @@ const AllBookingsPage = () => {
                     </Box>
                 </DialogTitle>
                 <DialogContent dividers>
-                    {selectedBooking && (
-                        <Box>
+                    {selectedBooking &&
+          <Box>
                             {/* Booking Status Stepper */}
-                            {selectedBooking.bookingStatus !== "cancelled" && (
-                                <Box sx={{ mb: 4 }}>
+                            {selectedBooking.bookingStatus !== "cancelled" &&
+            <Box sx={{ mb: 4 }}>
                                     <Stepper activeStep={getBookingStep(selectedBooking.bookingStatus)} alternativeLabel>
                                         <Step>
                                             <StepLabel>Confirmed</StepLabel>
@@ -473,38 +445,38 @@ const AllBookingsPage = () => {
                                         </Step>
                                     </Stepper>
                                 </Box>
-                            )}
+            }
 
-                            {selectedBooking.bookingStatus === "cancelled" && (
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        mb: 3,
-                                        backgroundColor: alpha(theme.palette.error.main, 0.05),
-                                        borderLeft: `4px solid ${theme.palette.error.main}`,
-                                    }}
-                                >
+                            {selectedBooking.bookingStatus === "cancelled" &&
+            <Paper
+              sx={{
+                p: 2,
+                mb: 3,
+                backgroundColor: alpha(theme.palette.error.main, 0.05),
+                borderLeft: `4px solid ${theme.palette.error.main}`
+              }}>
+
                                     <Typography color="error" fontWeight={500}>
                                         This booking has been cancelled
                                     </Typography>
                                 </Paper>
-                            )}
+            }
 
                             <Grid container spacing={3}>
                                 {/* Guest Information */}
-                                <Grid item size={{xs:12, md:6}}>
+                                <Grid item xs={12} md={6}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Guest Information
                                         </Typography>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
                                             <Avatar
-                                                sx={{
-                                                    width: 48,
-                                                    height: 48,
-                                                    backgroundColor: theme.palette.primary.main,
-                                                }}
-                                            >
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        backgroundColor: theme.palette.primary.main
+                      }}>
+
                                                 {selectedBooking.guestName.charAt(0)}
                                             </Avatar>
                                             <Box>
@@ -534,7 +506,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Property & Room */}
-                                <Grid item size={{xs:12, md:6}}>
+                                <Grid item xs={12} md={6}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Property & Room
@@ -545,25 +517,25 @@ const AllBookingsPage = () => {
                                                     <HotelIcon fontSize="small" color="action" />
                                                 </ListItemIcon>
                                                 <ListItemText
-                                                    primary={selectedBooking.propertyName}
-                                                    secondary="Property"
-                                                />
+                        primary={selectedBooking.propertyName}
+                        secondary="Property" />
+
                                             </ListItem>
                                             <ListItem sx={{ px: 0 }}>
                                                 <ListItemIcon sx={{ minWidth: 36 }}>
                                                     <MeetingRoomIcon fontSize="small" color="action" />
                                                 </ListItemIcon>
                                                 <ListItemText
-                                                    primary={`Room ${selectedBooking.roomNumber} - ${selectedBooking.roomType}`}
-                                                    secondary="Room"
-                                                />
+                        primary={`Room ${selectedBooking.roomNumber} - ${selectedBooking.roomType}`}
+                        secondary="Room" />
+
                                             </ListItem>
                                         </List>
                                     </Paper>
                                 </Grid>
 
                                 {/* Stay Details */}
-                                <Grid item size={{xs:12, md:6}}>
+                                <Grid item xs={12} md={6}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Stay Details
@@ -606,7 +578,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Payment Details */}
-                                <Grid item size={{xs:12, md:6}}>
+                                <Grid item xs={12} md={6}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Payment Details
@@ -638,18 +610,18 @@ const AllBookingsPage = () => {
                                         </Box>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                             <Chip
-                                                label={selectedBooking.paymentStatus}
-                                                color={
-                                                    selectedBooking.paymentStatus === "paid"
-                                                        ? "success"
-                                                        : selectedBooking.paymentStatus === "pending"
-                                                            ? "warning"
-                                                            : selectedBooking.paymentStatus === "partial"
-                                                                ? "info"
-                                                                : "error"
-                                                }
-                                                size="small"
-                                            />
+                      label={selectedBooking.paymentStatus}
+                      color={
+                      selectedBooking.paymentStatus === "paid" ?
+                      "success" :
+                      selectedBooking.paymentStatus === "pending" ?
+                      "warning" :
+                      selectedBooking.paymentStatus === "partial" ?
+                      "info" :
+                      "error"
+                      }
+                      size="small" />
+
                                             <Typography variant="caption" color="text.secondary">
                                                 via {selectedBooking.paymentMethod}
                                             </Typography>
@@ -658,14 +630,14 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Special Requests */}
-                                {selectedBooking.specialRequests && (
-                                    <Grid item size={{xs:12}}>
+                                {selectedBooking.specialRequests &&
+              <Grid item xs={12}>
                                         <Paper
-                                            sx={{
-                                                p: 2,
-                                                backgroundColor: alpha(theme.palette.info.main, 0.05),
-                                            }}
-                                        >
+                  sx={{
+                    p: 2,
+                    backgroundColor: alpha(theme.palette.info.main, 0.05)
+                  }}>
+
                                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
                                                 <NoteIcon fontSize="small" color="info" />
                                                 <Typography variant="subtitle2" fontWeight={600}>
@@ -677,56 +649,56 @@ const AllBookingsPage = () => {
                                             </Typography>
                                         </Paper>
                                     </Grid>
-                                )}
+              }
                             </Grid>
                         </Box>
-                    )}
+          }
                 </DialogContent>
                 <DialogActions sx={{ px: 3, py: 2 }}>
                     <Button variant="outlined" onClick={() => setOpenViewModal(false)}>
                         Close
                     </Button>
-                    {selectedBooking?.bookingStatus === "confirmed" && (
-                        <Button variant="contained" color="success">
+                    {selectedBooking?.bookingStatus === "confirmed" &&
+          <Button variant="contained" color="success">
                             Check In
                         </Button>
-                    )}
-                    {selectedBooking?.bookingStatus === "checked-in" && (
-                        <Button variant="contained" color="warning">
+          }
+                    {selectedBooking?.bookingStatus === "checked-in" &&
+          <Button variant="contained" color="warning">
                             Check Out
                         </Button>
-                    )}
+          }
                     {(selectedBooking?.bookingStatus === "confirmed" ||
-                        selectedBooking?.bookingStatus === "checked-in") && (
-                            <Button
-                                variant="outlined"
-                                color="error"
-                                onClick={() => {
-                                    setOpenViewModal(false);
-                                    setOpenCancelDialog(true);
-                                }}
-                            >
+          selectedBooking?.bookingStatus === "checked-in") &&
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              setOpenViewModal(false);
+              setOpenCancelDialog(true);
+            }}>
+
                                 Cancel Booking
                             </Button>
-                        )}
+          }
                 </DialogActions>
             </Dialog>
 
             {/* Cancel Booking Dialog */}
             <ConfirmDialog
-                open={openCancelDialog}
-                onClose={() => {
-                    setOpenCancelDialog(false);
-                    setSelectedBooking(null);
-                }}
-                onConfirm={handleCancelBooking}
-                title="Cancel Booking"
-                message={`Are you sure you want to cancel booking ${selectedBooking?.bookingCode}? The guest will be notified and a refund will be processed.`}
-                confirmText="Cancel Booking"
-                type="danger"
-            />
-        </Box>
-    );
+        open={openCancelDialog}
+        onClose={() => {
+          setOpenCancelDialog(false);
+          setSelectedBooking(null);
+        }}
+        onConfirm={handleCancelBooking}
+        title="Cancel Booking"
+        message={`Are you sure you want to cancel booking ${selectedBooking?.bookingCode}? The guest will be notified and a refund will be processed.`}
+        confirmText="Cancel Booking"
+        type="danger" />
+
+        </Box>);
+
 };
 
 export default AllBookingsPage;

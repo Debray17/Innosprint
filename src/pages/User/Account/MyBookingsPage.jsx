@@ -1,21 +1,8 @@
 // src/pages/User/Account/MyBookingsPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Tabs,
-  Tab,
-  TextField,
-  InputAdornment,
-  MenuItem,
-  FormControl,
-  Select,
-  InputLabel,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, Tabs, Tab, TextField, InputAdornment, MenuItem, FormControl, Select, InputLabel } from "@mui/material";
 // import { useTheme } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import SearchIcon from "@mui/icons-material/Search";
 
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
@@ -36,7 +23,7 @@ export default function MyBookingsPage() {
     switch (activeTab) {
       case 1: // Upcoming
         filtered = filtered.filter(
-          (b) => b.status === "confirmed" && new Date(b.checkIn) > new Date(),
+          (b) => b.status === "confirmed" && new Date(b.checkIn) > new Date()
         );
         break;
       case 2: // Completed
@@ -54,9 +41,9 @@ export default function MyBookingsPage() {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
         (b) =>
-          b.property.name.toLowerCase().includes(query) ||
-          b.bookingCode.toLowerCase().includes(query) ||
-          b.property.address.toLowerCase().includes(query),
+        b.property.name.toLowerCase().includes(query) ||
+        b.bookingCode.toLowerCase().includes(query) ||
+        b.property.address.toLowerCase().includes(query)
       );
     }
 
@@ -86,10 +73,10 @@ export default function MyBookingsPage() {
   const tabCounts = {
     all: userBookings.length,
     upcoming: userBookings.filter(
-      (b) => b.status === "confirmed" && new Date(b.checkIn) > new Date(),
+      (b) => b.status === "confirmed" && new Date(b.checkIn) > new Date()
     ).length,
     completed: userBookings.filter((b) => b.status === "completed").length,
-    cancelled: userBookings.filter((b) => b.status === "cancelled").length,
+    cancelled: userBookings.filter((b) => b.status === "cancelled").length
   };
 
   return (
@@ -97,12 +84,12 @@ export default function MyBookingsPage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
+          <Grid item xs={12} md={9}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
                 My Bookings
@@ -112,8 +99,8 @@ export default function MyBookingsPage() {
               <Tabs
                 value={activeTab}
                 onChange={(e, newValue) => setActiveTab(newValue)}
-                sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}
-              >
+                sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
+
                 <Tab label={`All (${tabCounts.all})`} />
                 <Tab label={`Upcoming (${tabCounts.upcoming})`} />
                 <Tab label={`Completed (${tabCounts.completed})`} />
@@ -129,20 +116,20 @@ export default function MyBookingsPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   sx={{ flex: 1, minWidth: 200 }}
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
+                    startAdornment:
+                    <InputAdornment position="start">
                         <SearchIcon color="action" />
                       </InputAdornment>
-                    ),
-                  }}
-                />
+
+                  }} />
+
                 <FormControl size="small" sx={{ minWidth: 150 }}>
                   <InputLabel>Sort By</InputLabel>
                   <Select
                     value={sortBy}
                     label="Sort By"
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
+                    onChange={(e) => setSortBy(e.target.value)}>
+
                     <MenuItem value="date_desc">Date (Newest)</MenuItem>
                     <MenuItem value="date_asc">Date (Oldest)</MenuItem>
                     <MenuItem value="price_desc">Price (Highest)</MenuItem>
@@ -152,26 +139,26 @@ export default function MyBookingsPage() {
               </Box>
 
               {/* Bookings List */}
-              {filteredBookings.length > 0 ? (
-                filteredBookings.map((booking) => (
-                  <BookingCard key={booking.id} booking={booking} />
-                ))
-              ) : (
-                <Box sx={{ textAlign: "center", py: 6 }}>
+              {filteredBookings.length > 0 ?
+              filteredBookings.map((booking) =>
+              <BookingCard key={booking.id} booking={booking} />
+              ) :
+
+              <Box sx={{ textAlign: "center", py: 6 }}>
                   <Typography variant="h6" color="text.secondary" gutterBottom>
                     No bookings found
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {searchQuery
-                      ? "Try adjusting your search"
-                      : "Start planning your next trip!"}
+                    {searchQuery ?
+                  "Try adjusting your search" :
+                  "Start planning your next trip!"}
                   </Typography>
                 </Box>
-              )}
+              }
             </Paper>
           </Grid>
         </Grid>
       </Container>
-    </Box>
-  );
+    </Box>);
+
 }

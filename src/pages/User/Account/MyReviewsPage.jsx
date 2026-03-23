@@ -1,20 +1,8 @@
 // src/pages/User/Account/MyReviewsPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Card,
-  CardContent,
-  Rating,
-  IconButton,
-  Menu,
-  MenuItem,
-  Divider,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, Card, CardContent, Rating, IconButton, Menu, MenuItem, Divider } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -67,17 +55,17 @@ export default function MyReviewsPage() {
     return new Date(dateStr).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
   // Stats
   const totalReviews = reviews.length;
-  const averageRating = reviews.length
-    ? (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(
-        1,
-      )
-    : 0;
+  const averageRating = reviews.length ?
+  (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(
+    1
+  ) :
+  0;
   const totalHelpful = reviews.reduce((sum, r) => sum + (r.helpful || 0), 0);
 
   return (
@@ -85,12 +73,12 @@ export default function MyReviewsPage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
+          <Grid item xs={12} md={9}>
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
                 My Reviews
@@ -98,15 +86,15 @@ export default function MyReviewsPage() {
 
               {/* Stats */}
               <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid size={{ xs: 4 }}>
+                <Grid item xs={4}>
                   <Box
                     sx={{
                       textAlign: "center",
                       p: 2,
                       bgcolor: alpha(theme.palette.primary.main, 0.05),
-                      borderRadius: 2,
-                    }}
-                  >
+                      borderRadius: 2
+                    }}>
+
                     <Typography variant="h4" fontWeight={700} color="primary">
                       {totalReviews}
                     </Typography>
@@ -115,28 +103,28 @@ export default function MyReviewsPage() {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid size={{ xs: 4 }}>
+                <Grid item xs={4}>
                   <Box
                     sx={{
                       textAlign: "center",
                       p: 2,
                       bgcolor: alpha(theme.palette.warning.main, 0.05),
-                      borderRadius: 2,
-                    }}
-                  >
+                      borderRadius: 2
+                    }}>
+
                     <Box
                       sx={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: 0.5,
-                      }}
-                    >
+                        gap: 0.5
+                      }}>
+
                       <Typography
                         variant="h4"
                         fontWeight={700}
-                        color="warning.main"
-                      >
+                        color="warning.main">
+
                         {averageRating}
                       </Typography>
                       <StarIcon sx={{ color: theme.palette.warning.main }} />
@@ -146,20 +134,20 @@ export default function MyReviewsPage() {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid size={{ xs: 4 }}>
+                <Grid item xs={4}>
                   <Box
                     sx={{
                       textAlign: "center",
                       p: 2,
                       bgcolor: alpha(theme.palette.success.main, 0.05),
-                      borderRadius: 2,
-                    }}
-                  >
+                      borderRadius: 2
+                    }}>
+
                     <Typography
                       variant="h4"
                       fontWeight={700}
-                      color="success.main"
-                    >
+                      color="success.main">
+
                       {totalHelpful}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -171,33 +159,33 @@ export default function MyReviewsPage() {
             </Paper>
 
             {/* Reviews List */}
-            {reviews.length > 0 ? (
-              reviews.map((review) => (
-                <Card key={review.id} sx={{ mb: 2 }}>
+            {reviews.length > 0 ?
+            reviews.map((review) =>
+            <Card key={review.id} sx={{ mb: 2 }}>
                   <CardContent>
                     <Box sx={{ display: "flex", gap: 2 }}>
                       {/* Property Image */}
                       <Box
-                        component="img"
-                        src={review.property.image}
-                        alt={review.property.name}
-                        sx={{
-                          width: 120,
-                          height: 90,
-                          borderRadius: 1,
-                          objectFit: "cover",
-                        }}
-                      />
+                    component="img"
+                    src={review.property.image}
+                    alt={review.property.name}
+                    sx={{
+                      width: 120,
+                      height: 90,
+                      borderRadius: 1,
+                      objectFit: "cover"
+                    }} />
+
 
                       {/* Review Content */}
                       <Box sx={{ flex: 1 }}>
                         <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                          }}
-                        >
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start"
+                      }}>
+
                           <Box>
                             <Typography variant="subtitle1" fontWeight={600}>
                               {review.property.name}
@@ -207,60 +195,60 @@ export default function MyReviewsPage() {
                             </Typography>
                           </Box>
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1
+                        }}>
+
                             <Rating
-                              value={review.rating}
-                              readOnly
-                              size="small"
-                            />
+                          value={review.rating}
+                          readOnly
+                          size="small" />
+
                             <IconButton
-                              size="small"
-                              onClick={(e) => handleMenuOpen(e, review)}
-                            >
+                          size="small"
+                          onClick={(e) => handleMenuOpen(e, review)}>
+
                               <MoreVertIcon />
                             </IconButton>
                           </Box>
                         </Box>
 
                         <Typography
-                          variant="subtitle2"
-                          fontWeight={600}
-                          sx={{ mt: 1 }}
-                        >
+                      variant="subtitle2"
+                      fontWeight={600}
+                      sx={{ mt: 1 }}>
+
                           {review.title}
                         </Typography>
                         <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ mt: 0.5 }}
-                        >
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{ mt: 0.5 }}>
+
                           {review.comment}
                         </Typography>
 
                         <Divider sx={{ my: 2 }} />
 
                         <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                      }}>
+
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1
+                        }}>
+
                             <ThumbUpIcon
-                              sx={{ fontSize: 16, color: "text.secondary" }}
-                            />
+                          sx={{ fontSize: 16, color: "text.secondary" }} />
+
                             <Typography variant="body2" color="text.secondary">
                               {review.helpful} people found this helpful
                             </Typography>
@@ -271,16 +259,16 @@ export default function MyReviewsPage() {
                         </Box>
 
                         {/* Host Response */}
-                        {review.response && (
-                          <Box
-                            sx={{
-                              mt: 2,
-                              p: 2,
-                              bgcolor: alpha(theme.palette.primary.main, 0.05),
-                              borderRadius: 1,
-                              borderLeft: `3px solid ${theme.palette.primary.main}`,
-                            }}
-                          >
+                        {review.response &&
+                    <Box
+                      sx={{
+                        mt: 2,
+                        p: 2,
+                        bgcolor: alpha(theme.palette.primary.main, 0.05),
+                        borderRadius: 1,
+                        borderLeft: `3px solid ${theme.palette.primary.main}`
+                      }}>
+
                             <Typography variant="subtitle2" fontWeight={600}>
                               Response from property
                             </Typography>
@@ -288,17 +276,17 @@ export default function MyReviewsPage() {
                               {review.response.text}
                             </Typography>
                           </Box>
-                        )}
+                    }
                       </Box>
                     </Box>
                   </CardContent>
                 </Card>
-              ))
-            ) : (
-              <Paper sx={{ p: 6, textAlign: "center" }}>
+            ) :
+
+            <Paper sx={{ p: 6, textAlign: "center" }}>
                 <RateReviewIcon
-                  sx={{ fontSize: 64, color: "text.disabled", mb: 2 }}
-                />
+                sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
+
                 <Typography variant="h6" gutterBottom>
                   No reviews yet
                 </Typography>
@@ -306,7 +294,7 @@ export default function MyReviewsPage() {
                   After your stays, you can share your experiences here
                 </Typography>
               </Paper>
-            )}
+            }
           </Grid>
         </Grid>
       </Container>
@@ -315,8 +303,8 @@ export default function MyReviewsPage() {
       <Menu
         anchorEl={menuAnchor}
         open={Boolean(menuAnchor)}
-        onClose={handleMenuClose}
-      >
+        onClose={handleMenuClose}>
+
         <MenuItem onClick={handleEdit}>
           <EditIcon fontSize="small" sx={{ mr: 1 }} />
           Edit Review
@@ -335,8 +323,8 @@ export default function MyReviewsPage() {
         title="Delete Review?"
         message="Are you sure you want to delete this review? This action cannot be undone."
         confirmText="Delete"
-        type="error"
-      />
-    </Box>
-  );
+        type="error" />
+
+    </Box>);
+
 }

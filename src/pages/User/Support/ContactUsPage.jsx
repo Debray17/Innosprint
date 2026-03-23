@@ -1,20 +1,8 @@
 // src/pages/User/Support/ContactUsPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Divider,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, Divider } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import EmailIcon from "@mui/icons-material/Email";
@@ -26,16 +14,16 @@ import SendIcon from "@mui/icons-material/Send";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const contactReasons = [
-  "Booking Issue",
-  "Payment Problem",
-  "Cancellation Request",
-  "Refund Inquiry",
-  "Account Help",
-  "Property Complaint",
-  "General Inquiry",
-  "Partnership Inquiry",
-  "Other",
-];
+"Booking Issue",
+"Payment Problem",
+"Cancellation Request",
+"Refund Inquiry",
+"Account Help",
+"Property Complaint",
+"General Inquiry",
+"Partnership Inquiry",
+"Other"];
+
 
 export default function ContactUsPage() {
   const theme = useTheme();
@@ -46,7 +34,7 @@ export default function ContactUsPage() {
     phone: "",
     reason: "",
     bookingCode: "",
-    message: "",
+    message: ""
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -72,7 +60,7 @@ export default function ContactUsPage() {
       newErrors.message = "Message is required";
     } else if (formData.message.length < 20) {
       newErrors.message =
-        "Please provide more details (at least 20 characters)";
+      "Please provide more details (at least 20 characters)";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -106,12 +94,12 @@ export default function ContactUsPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 mx: "auto",
-                mb: 3,
-              }}
-            >
+                mb: 3
+              }}>
+
               <CheckCircleIcon
-                sx={{ fontSize: 48, color: theme.palette.success.main }}
-              />
+                sx={{ fontSize: 48, color: theme.palette.success.main }} />
+
             </Box>
             <Typography variant="h4" fontWeight={700} gutterBottom>
               Message Sent!
@@ -134,16 +122,16 @@ export default function ContactUsPage() {
                   phone: "",
                   reason: "",
                   bookingCode: "",
-                  message: "",
+                  message: ""
                 });
-              }}
-            >
+              }}>
+
               Send Another Message
             </Button>
           </Paper>
         </Container>
-      </Box>
-    );
+      </Box>);
+
   }
 
   return (
@@ -163,7 +151,7 @@ export default function ContactUsPage() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {/* Contact Form */}
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid item xs={12} md={8}>
             <Paper sx={{ p: 4 }}>
               <Typography variant="h5" fontWeight={600} gutterBottom>
                 Send us a message
@@ -175,7 +163,7 @@ export default function ContactUsPage() {
 
               <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
                       label="Your Name"
@@ -183,10 +171,10 @@ export default function ContactUsPage() {
                       onChange={handleChange("name")}
                       error={!!errors.name}
                       helperText={errors.name}
-                      required
-                    />
+                      required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
                       label="Email Address"
@@ -195,43 +183,43 @@ export default function ContactUsPage() {
                       onChange={handleChange("email")}
                       error={!!errors.email}
                       helperText={errors.email}
-                      required
-                    />
+                      required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
                       label="Phone Number (Optional)"
                       value={formData.phone}
-                      onChange={handleChange("phone")}
-                    />
+                      onChange={handleChange("phone")} />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <FormControl fullWidth error={!!errors.reason}>
                       <InputLabel>Reason for Contact *</InputLabel>
                       <Select
                         value={formData.reason}
                         label="Reason for Contact *"
-                        onChange={handleChange("reason")}
-                      >
-                        {contactReasons.map((reason) => (
-                          <MenuItem key={reason} value={reason}>
+                        onChange={handleChange("reason")}>
+
+                        {contactReasons.map((reason) =>
+                        <MenuItem key={reason} value={reason}>
                             {reason}
                           </MenuItem>
-                        ))}
+                        )}
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       label="Booking Reference (if applicable)"
                       placeholder="e.g., BK-2024-001"
                       value={formData.bookingCode}
-                      onChange={handleChange("bookingCode")}
-                    />
+                      onChange={handleChange("bookingCode")} />
+
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid item xs={12}>
                     <TextField
                       fullWidth
                       multiline
@@ -242,8 +230,8 @@ export default function ContactUsPage() {
                       onChange={handleChange("message")}
                       error={!!errors.message}
                       helperText={errors.message}
-                      required
-                    />
+                      required />
+
                   </Grid>
                 </Grid>
 
@@ -253,8 +241,8 @@ export default function ContactUsPage() {
                   size="large"
                   startIcon={<SendIcon />}
                   disabled={loading}
-                  sx={{ mt: 3 }}
-                >
+                  sx={{ mt: 3 }}>
+
                   {loading ? "Sending..." : "Send Message"}
                 </Button>
               </Box>
@@ -262,7 +250,7 @@ export default function ContactUsPage() {
           </Grid>
 
           {/* Contact Info Sidebar */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid item xs={12} md={4}>
             {/* Quick Contact */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -270,8 +258,8 @@ export default function ContactUsPage() {
               </Typography>
 
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
-              >
+                sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+
                 <Box
                   sx={{
                     width: 48,
@@ -280,9 +268,9 @@ export default function ContactUsPage() {
                     bgcolor: alpha(theme.palette.primary.main, 0.1),
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                    justifyContent: "center"
+                  }}>
+
                   <PhoneIcon color="primary" />
                 </Box>
                 <Box>
@@ -296,8 +284,8 @@ export default function ContactUsPage() {
               </Box>
 
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
-              >
+                sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+
                 <Box
                   sx={{
                     width: 48,
@@ -306,9 +294,9 @@ export default function ContactUsPage() {
                     bgcolor: alpha(theme.palette.primary.main, 0.1),
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                    justifyContent: "center"
+                  }}>
+
                   <EmailIcon color="primary" />
                 </Box>
                 <Box>
@@ -330,9 +318,9 @@ export default function ContactUsPage() {
                     bgcolor: alpha(theme.palette.primary.main, 0.1),
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+                    justifyContent: "center"
+                  }}>
+
                   <ChatIcon color="primary" />
                 </Box>
                 <Box>
@@ -386,6 +374,6 @@ export default function ContactUsPage() {
           </Grid>
         </Grid>
       </Container>
-    </Box>
-  );
+    </Box>);
+
 }

@@ -1,29 +1,8 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-    Box,
-    Typography,
-    Button,
-    Paper,
-    Grid,
-    Chip,
-    Avatar,
-    Divider,
-    Tabs,
-    Tab,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    IconButton,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-} from "@mui/material";
+import { Box, Typography, Button, Paper, Chip, Avatar, Divider, Tabs, Tab, List, ListItem, ListItemIcon, ListItemText, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -49,89 +28,89 @@ import { properties, rooms, bookings, owners } from "../../data/mockData";
 
 // Amenity icons
 const amenityIcons = {
-    WiFi: WifiIcon,
-    Pool: PoolIcon,
-    Spa: SpaIcon,
-    Gym: FitnessCenterIcon,
-    Restaurant: RestaurantIcon,
-    Parking: LocalParkingIcon,
+  WiFi: WifiIcon,
+  Pool: PoolIcon,
+  Spa: SpaIcon,
+  Gym: FitnessCenterIcon,
+  Restaurant: RestaurantIcon,
+  Parking: LocalParkingIcon
 };
 
 const PropertyDetailsPage = () => {
-    const theme = useTheme();
-    const navigate = useNavigate();
-    const { id } = useParams();
-    const [selectedTab, setSelectedTab] = useState(0);
-    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-    // Find property
-    const property = properties.find((p) => p.id === parseInt(id));
+  // Find property
+  const property = properties.find((p) => p.id === parseInt(id));
 
-    // Get property rooms
-    const propertyRooms = rooms.filter((r) => r.propertyId === parseInt(id));
+  // Get property rooms
+  const propertyRooms = rooms.filter((r) => r.propertyId === parseInt(id));
 
-    // Get property bookings
-    const propertyBookings = bookings.filter((b) => b.propertyId === parseInt(id));
+  // Get property bookings
+  const propertyBookings = bookings.filter((b) => b.propertyId === parseInt(id));
 
-    // Get owner details
-    const owner = property ? owners.find((o) => o.id === property.ownerId) : null;
+  // Get owner details
+  const owner = property ? owners.find((o) => o.id === property.ownerId) : null;
 
-    // Format date
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-        });
+  // Format date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+
+  // Format currency
+  const formatCurrency = (amount) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0
+  }).format(amount);
+
+  // Get status color
+  const getStatusColor = (status) => {
+    const colors = {
+      approved: "success",
+      pending: "warning",
+      rejected: "error",
+      available: "success",
+      occupied: "error",
+      maintenance: "warning",
+      reserved: "info"
     };
+    return colors[status] || "default";
+  };
 
-    // Format currency
-    const formatCurrency = (amount) =>
-        new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0,
-        }).format(amount);
+  // Handle delete
+  const handleDelete = () => {
+    // In real app, delete property
+    navigate("/properties/all");
+  };
 
-    // Get status color
-    const getStatusColor = (status) => {
-        const colors = {
-            approved: "success",
-            pending: "warning",
-            rejected: "error",
-            available: "success",
-            occupied: "error",
-            maintenance: "warning",
-            reserved: "info",
-        };
-        return colors[status] || "default";
-    };
-
-    // Handle delete
-    const handleDelete = () => {
-        // In real app, delete property
-        navigate("/properties/all");
-    };
-
-    if (!property) {
-        return (
-            <Box sx={{ textAlign: "center", py: 8 }}>
+  if (!property) {
+    return (
+      <Box sx={{ textAlign: "center", py: 8 }}>
                 <Typography variant="h5" color="text.secondary" gutterBottom>
                     Property not found
                 </Typography>
                 <Button
-                    variant="contained"
-                    startIcon={<ArrowBackIcon />}
-                    onClick={() => navigate("/properties/all")}
-                >
+          variant="contained"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate("/properties/all")}>
+
                     Back to Properties
                 </Button>
-            </Box>
-        );
-    }
+            </Box>);
 
-    return (
-        <Box>
+  }
+
+  return (
+    <Box>
             {/* Header */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
                 <IconButton onClick={() => navigate("/properties/all")}>
@@ -143,10 +122,10 @@ const PropertyDetailsPage = () => {
                             {property.name}
                         </Typography>
                         <Chip
-                            label={property.status}
-                            color={getStatusColor(property.status)}
-                            size="small"
-                        />
+              label={property.status}
+              color={getStatusColor(property.status)}
+              size="small" />
+
                         <Chip label={property.type} size="small" variant="outlined" />
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.5 }}>
@@ -157,18 +136,18 @@ const PropertyDetailsPage = () => {
                     </Box>
                 </Box>
                 <Button
-                    variant="outlined"
-                    startIcon={<EditIcon />}
-                    sx={{ mr: 1 }}
-                >
+          variant="outlined"
+          startIcon={<EditIcon />}
+          sx={{ mr: 1 }}>
+
                     Edit
                 </Button>
                 <Button
-                    variant="outlined"
-                    color="error"
-                    startIcon={<DeleteIcon />}
-                    onClick={() => setOpenDeleteDialog(true)}
-                >
+          variant="outlined"
+          color="error"
+          startIcon={<DeleteIcon />}
+          onClick={() => setOpenDeleteDialog(true)}>
+
                     Delete
                 </Button>
             </Box>
@@ -179,16 +158,16 @@ const PropertyDetailsPage = () => {
                 <Grid item xs={12} lg={8}>
                     {/* Images */}
                     <Paper
-                        sx={{
-                            height: 300,
-                            mb: 3,
-                            borderRadius: 2,
-                            backgroundColor: alpha(theme.palette.primary.main, 0.05),
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                    >
+            sx={{
+              height: 300,
+              mb: 3,
+              borderRadius: 2,
+              backgroundColor: alpha(theme.palette.primary.main, 0.05),
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+
                         <Box sx={{ textAlign: "center" }}>
                             <ImageIcon sx={{ fontSize: 80, color: theme.palette.primary.light }} />
                             <Typography color="text.secondary">Property Images</Typography>
@@ -198,10 +177,10 @@ const PropertyDetailsPage = () => {
                     {/* Tabs */}
                     <Paper sx={{ borderRadius: 2, mb: 3 }}>
                         <Tabs
-                            value={selectedTab}
-                            onChange={(e, newValue) => setSelectedTab(newValue)}
-                            sx={{ borderBottom: 1, borderColor: "divider" }}
-                        >
+              value={selectedTab}
+              onChange={(e, newValue) => setSelectedTab(newValue)}
+              sx={{ borderBottom: 1, borderColor: "divider" }}>
+
                             <Tab label="Overview" />
                             <Tab label={`Rooms (${propertyRooms.length})`} />
                             <Tab label={`Bookings (${propertyBookings.length})`} />
@@ -209,8 +188,8 @@ const PropertyDetailsPage = () => {
 
                         <Box sx={{ p: 3 }}>
                             {/* Overview Tab */}
-                            {selectedTab === 0 && (
-                                <Box>
+                            {selectedTab === 0 &&
+              <Box>
                                     <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                                         Description
                                     </Typography>
@@ -225,17 +204,17 @@ const PropertyDetailsPage = () => {
                                     </Typography>
                                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                                         {property.amenities.map((amenity) => {
-                                            const IconComponent = amenityIcons[amenity] || WifiIcon;
-                                            return (
-                                                <Chip
-                                                    key={amenity}
-                                                    icon={<IconComponent sx={{ fontSize: 16 }} />}
-                                                    label={amenity}
-                                                    variant="outlined"
-                                                    size="small"
-                                                />
-                                            );
-                                        })}
+                    const IconComponent = amenityIcons[amenity] || WifiIcon;
+                    return (
+                      <Chip
+                        key={amenity}
+                        icon={<IconComponent sx={{ fontSize: 16 }} />}
+                        label={amenity}
+                        variant="outlined"
+                        size="small" />);
+
+
+                  })}
                                     </Box>
 
                                     <Divider sx={{ my: 2 }} />
@@ -262,25 +241,25 @@ const PropertyDetailsPage = () => {
                                         </Grid>
                                     </Grid>
                                 </Box>
-                            )}
+              }
 
                             {/* Rooms Tab */}
-                            {selectedTab === 1 && (
-                                <Box>
+                            {selectedTab === 1 &&
+              <Box>
                                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                                         <Typography variant="subtitle1" fontWeight={600}>
                                             Rooms
                                         </Typography>
                                         <Button
-                                            size="small"
-                                            variant="contained"
-                                            startIcon={<AddIcon />}
-                                        >
+                    size="small"
+                    variant="contained"
+                    startIcon={<AddIcon />}>
+
                                             Add Room
                                         </Button>
                                     </Box>
-                                    {propertyRooms.length > 0 ? (
-                                        <TableContainer>
+                                    {propertyRooms.length > 0 ?
+                <TableContainer>
                                             <Table size="small">
                                                 <TableHead>
                                                     <TableRow>
@@ -292,8 +271,8 @@ const PropertyDetailsPage = () => {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {propertyRooms.map((room) => (
-                                                        <TableRow key={room.id}>
+                                                    {propertyRooms.map((room) =>
+                      <TableRow key={room.id}>
                                                             <TableCell>
                                                                 <Typography variant="body2" fontWeight={500}>
                                                                     Room {room.roomNumber}
@@ -307,35 +286,35 @@ const PropertyDetailsPage = () => {
                                                             <TableCell>{formatCurrency(room.basePrice)}</TableCell>
                                                             <TableCell>
                                                                 <Chip
-                                                                    label={room.status}
-                                                                    color={getStatusColor(room.status)}
-                                                                    size="small"
-                                                                />
+                            label={room.status}
+                            color={getStatusColor(room.status)}
+                            size="small" />
+
                                                             </TableCell>
                                                         </TableRow>
-                                                    ))}
+                      )}
                                                 </TableBody>
                                             </Table>
-                                        </TableContainer>
-                                    ) : (
-                                        <Box sx={{ textAlign: "center", py: 4 }}>
+                                        </TableContainer> :
+
+                <Box sx={{ textAlign: "center", py: 4 }}>
                                             <MeetingRoomIcon sx={{ fontSize: 48, color: "text.disabled" }} />
                                             <Typography color="text.secondary">
                                                 No rooms added yet
                                             </Typography>
                                         </Box>
-                                    )}
+                }
                                 </Box>
-                            )}
+              }
 
                             {/* Bookings Tab */}
-                            {selectedTab === 2 && (
-                                <Box>
+                            {selectedTab === 2 &&
+              <Box>
                                     <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
                                         Recent Bookings
                                     </Typography>
-                                    {propertyBookings.length > 0 ? (
-                                        <TableContainer>
+                                    {propertyBookings.length > 0 ?
+                <TableContainer>
                                             <Table size="small">
                                                 <TableHead>
                                                     <TableRow>
@@ -349,8 +328,8 @@ const PropertyDetailsPage = () => {
                                                     </TableRow>
                                                 </TableHead>
                                                 <TableBody>
-                                                    {propertyBookings.map((booking) => (
-                                                        <TableRow key={booking.id}>
+                                                    {propertyBookings.map((booking) =>
+                      <TableRow key={booking.id}>
                                                             <TableCell>
                                                                 <Typography variant="body2" fontWeight={500}>
                                                                     {booking.bookingCode}
@@ -363,26 +342,26 @@ const PropertyDetailsPage = () => {
                                                             <TableCell>{formatCurrency(booking.grandTotal)}</TableCell>
                                                             <TableCell>
                                                                 <Chip
-                                                                    label={booking.bookingStatus}
-                                                                    color={getStatusColor(booking.bookingStatus)}
-                                                                    size="small"
-                                                                />
+                            label={booking.bookingStatus}
+                            color={getStatusColor(booking.bookingStatus)}
+                            size="small" />
+
                                                             </TableCell>
                                                         </TableRow>
-                                                    ))}
+                      )}
                                                 </TableBody>
                                             </Table>
-                                        </TableContainer>
-                                    ) : (
-                                        <Box sx={{ textAlign: "center", py: 4 }}>
+                                        </TableContainer> :
+
+                <Box sx={{ textAlign: "center", py: 4 }}>
                                             <CalendarTodayIcon sx={{ fontSize: 48, color: "text.disabled" }} />
                                             <Typography color="text.secondary">
                                                 No bookings yet
                                             </Typography>
                                         </Box>
-                                    )}
+                }
                                 </Box>
-                            )}
+              }
                         </Box>
                     </Paper>
                 </Grid>
@@ -397,13 +376,13 @@ const PropertyDetailsPage = () => {
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Box
-                                    sx={{
-                                        p: 2,
-                                        textAlign: "center",
-                                        backgroundColor: alpha(theme.palette.primary.main, 0.05),
-                                        borderRadius: 1,
-                                    }}
-                                >
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                    borderRadius: 1
+                  }}>
+
                                     <MeetingRoomIcon color="primary" sx={{ mb: 1 }} />
                                     <Typography variant="h5" fontWeight={700}>
                                         {property.totalRooms}
@@ -415,13 +394,13 @@ const PropertyDetailsPage = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Box
-                                    sx={{
-                                        p: 2,
-                                        textAlign: "center",
-                                        backgroundColor: alpha(theme.palette.success.main, 0.05),
-                                        borderRadius: 1,
-                                    }}
-                                >
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    backgroundColor: alpha(theme.palette.success.main, 0.05),
+                    borderRadius: 1
+                  }}>
+
                                     <CheckCircleIcon color="success" sx={{ mb: 1 }} />
                                     <Typography variant="h5" fontWeight={700}>
                                         {property.availableRooms}
@@ -433,13 +412,13 @@ const PropertyDetailsPage = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Box
-                                    sx={{
-                                        p: 2,
-                                        textAlign: "center",
-                                        backgroundColor: alpha(theme.palette.warning.main, 0.05),
-                                        borderRadius: 1,
-                                    }}
-                                >
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    backgroundColor: alpha(theme.palette.warning.main, 0.05),
+                    borderRadius: 1
+                  }}>
+
                                     <StarIcon color="warning" sx={{ mb: 1 }} />
                                     <Typography variant="h5" fontWeight={700}>
                                         {property.rating || "N/A"}
@@ -451,13 +430,13 @@ const PropertyDetailsPage = () => {
                             </Grid>
                             <Grid item xs={6}>
                                 <Box
-                                    sx={{
-                                        p: 2,
-                                        textAlign: "center",
-                                        backgroundColor: alpha(theme.palette.info.main, 0.05),
-                                        borderRadius: 1,
-                                    }}
-                                >
+                  sx={{
+                    p: 2,
+                    textAlign: "center",
+                    backgroundColor: alpha(theme.palette.info.main, 0.05),
+                    borderRadius: 1
+                  }}>
+
                                     <PercentIcon color="info" sx={{ mb: 1 }} />
                                     <Typography variant="h5" fontWeight={700}>
                                         {property.commissionRate}%
@@ -475,16 +454,16 @@ const PropertyDetailsPage = () => {
                         <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                             Property Owner
                         </Typography>
-                        {owner ? (
-                            <Box>
+                        {owner ?
+            <Box>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
                                     <Avatar
-                                        sx={{
-                                            width: 56,
-                                            height: 56,
-                                            backgroundColor: theme.palette.primary.main,
-                                        }}
-                                    >
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    backgroundColor: theme.palette.primary.main
+                  }}>
+
                                         {owner.name.charAt(0)}
                                     </Avatar>
                                     <Box>
@@ -492,10 +471,10 @@ const PropertyDetailsPage = () => {
                                             {owner.name}
                                         </Typography>
                                         <Chip
-                                            label={owner.status}
-                                            color={owner.status === "verified" ? "success" : "warning"}
-                                            size="small"
-                                        />
+                    label={owner.status}
+                    color={owner.status === "verified" ? "success" : "warning"}
+                    size="small" />
+
                                     </Box>
                                 </Box>
                                 <List dense>
@@ -504,34 +483,34 @@ const PropertyDetailsPage = () => {
                                             <EmailIcon fontSize="small" color="action" />
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary={owner.email}
-                                            primaryTypographyProps={{ variant: "body2" }}
-                                        />
+                    primary={owner.email}
+                    primaryTypographyProps={{ variant: "body2" }} />
+
                                     </ListItem>
                                     <ListItem sx={{ px: 0 }}>
                                         <ListItemIcon sx={{ minWidth: 36 }}>
                                             <PhoneIcon fontSize="small" color="action" />
                                         </ListItemIcon>
                                         <ListItemText
-                                            primary={owner.phone}
-                                            primaryTypographyProps={{ variant: "body2" }}
-                                        />
+                    primary={owner.phone}
+                    primaryTypographyProps={{ variant: "body2" }} />
+
                                     </ListItem>
                                 </List>
                                 <Button
-                                    fullWidth
-                                    variant="outlined"
-                                    size="small"
-                                    onClick={() => navigate(`/users/owners`)}
-                                >
+                fullWidth
+                variant="outlined"
+                size="small"
+                onClick={() => navigate(`/admin/users/owners`)}>
+
                                     View Owner Profile
                                 </Button>
-                            </Box>
-                        ) : (
-                            <Typography color="text.secondary">
+                            </Box> :
+
+            <Typography color="text.secondary">
                                 Owner information not available
                             </Typography>
-                        )}
+            }
                     </Paper>
 
                     {/* Timeline */}
@@ -545,21 +524,21 @@ const PropertyDetailsPage = () => {
                                     <CalendarTodayIcon fontSize="small" color="action" />
                                 </ListItemIcon>
                                 <ListItemText
-                                    primary="Created"
-                                    secondary={formatDate(property.createdAt)}
-                                />
+                  primary="Created"
+                  secondary={formatDate(property.createdAt)} />
+
                             </ListItem>
-                            {property.status === "approved" && (
-                                <ListItem sx={{ px: 0 }}>
+                            {property.status === "approved" &&
+              <ListItem sx={{ px: 0 }}>
                                     <ListItemIcon sx={{ minWidth: 36 }}>
                                         <CheckCircleIcon fontSize="small" color="success" />
                                     </ListItemIcon>
                                     <ListItemText
-                                        primary="Approved"
-                                        secondary={formatDate(property.createdAt)}
-                                    />
+                  primary="Approved"
+                  secondary={formatDate(property.createdAt)} />
+
                                 </ListItem>
-                            )}
+              }
                         </List>
                     </Paper>
                 </Grid>
@@ -567,16 +546,16 @@ const PropertyDetailsPage = () => {
 
             {/* Delete Dialog */}
             <ConfirmDialog
-                open={openDeleteDialog}
-                onClose={() => setOpenDeleteDialog(false)}
-                onConfirm={handleDelete}
-                title="Delete Property"
-                message={`Are you sure you want to delete "${property.name}"? This will also remove all rooms and bookings associated with this property. This action cannot be undone.`}
-                confirmText="Delete"
-                type="danger"
-            />
-        </Box>
-    );
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        onConfirm={handleDelete}
+        title="Delete Property"
+        message={`Are you sure you want to delete "${property.name}"? This will also remove all rooms and bookings associated with this property. This action cannot be undone.`}
+        confirmText="Delete"
+        type="danger" />
+
+        </Box>);
+
 };
 
 export default PropertyDetailsPage;

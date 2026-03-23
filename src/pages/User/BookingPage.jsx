@@ -1,29 +1,9 @@
 // src/pages/User/BookingPage.jsx
 import React, { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Stepper,
-  Step,
-  StepLabel,
-  Divider,
-  FormControlLabel,
-  Checkbox,
-  Radio,
-  RadioGroup,
-  FormControl,
-  FormLabel,
-  Alert,
-  Avatar,
-  Collapse,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, Stepper, Step, StepLabel, Divider, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, FormLabel, Alert, Avatar, Collapse } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
 
 // Icons
@@ -46,7 +26,7 @@ const steps = ["Guest Details", "Payment", "Confirmation"];
 export default function BookingPage() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { propertyId, roomId } = useParams();
+  const { roomId } = useParams();
   const [searchParams] = useSearchParams();
 
   const [activeStep, setActiveStep] = useState(0);
@@ -56,13 +36,13 @@ export default function BookingPage() {
 
   // Get booking details from URL
   const checkIn =
-    searchParams.get("checkIn") || dayjs().add(7, "day").format("YYYY-MM-DD");
+  searchParams.get("checkIn") || dayjs().add(7, "day").format("YYYY-MM-DD");
   const checkOut =
-    searchParams.get("checkOut") || dayjs().add(10, "day").format("YYYY-MM-DD");
+  searchParams.get("checkOut") || dayjs().add(10, "day").format("YYYY-MM-DD");
   const guestsParam = searchParams.get("guests");
-  const guests = guestsParam
-    ? JSON.parse(guestsParam)
-    : { adults: 2, children: 0, rooms: 1 };
+  const guests = guestsParam ?
+  JSON.parse(guestsParam) :
+  { adults: 2, children: 0, rooms: 1 };
 
   // Calculate nights
   const nights = dayjs(checkOut).diff(dayjs(checkIn), "day");
@@ -70,7 +50,7 @@ export default function BookingPage() {
   // Mock property and room data
   const property = propertyDetails;
   const room =
-    property.rooms.find((r) => r.id === parseInt(roomId)) || property.rooms[0];
+  property.rooms.find((r) => r.id === parseInt(roomId)) || property.rooms[0];
 
   // Form states
   const [guestDetails, setGuestDetails] = useState({
@@ -83,7 +63,7 @@ export default function BookingPage() {
     arrivalTime: "",
     bookingForSomeoneElse: false,
     guestFirstName: "",
-    guestLastName: "",
+    guestLastName: ""
   });
 
   const [paymentDetails, setPaymentDetails] = useState({
@@ -92,7 +72,7 @@ export default function BookingPage() {
     cardName: "",
     expiryDate: "",
     cvv: "",
-    saveCard: false,
+    saveCard: false
   });
 
   const [addBreakfast, setAddBreakfast] = useState(false);
@@ -109,11 +89,11 @@ export default function BookingPage() {
 
     // Format card number
     if (field === "cardNumber") {
-      value = value
-        .replace(/\s/g, "")
-        .replace(/(.{4})/g, "Nu 1 ")
-        .trim()
-        .slice(0, 19);
+      value = value.
+      replace(/\s/g, "").
+      replace(/(.{4})/g, "Nu 1 ").
+      trim().
+      slice(0, 19);
     }
 
     // Format expiry date
@@ -138,9 +118,9 @@ export default function BookingPage() {
   const validateGuestDetails = () => {
     const newErrors = {};
     if (!guestDetails.firstName.trim())
-      newErrors.firstName = "First name is required";
+    newErrors.firstName = "First name is required";
     if (!guestDetails.lastName.trim())
-      newErrors.lastName = "Last name is required";
+    newErrors.lastName = "Last name is required";
     if (!guestDetails.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(guestDetails.email)) {
@@ -150,9 +130,9 @@ export default function BookingPage() {
 
     if (guestDetails.bookingForSomeoneElse) {
       if (!guestDetails.guestFirstName.trim())
-        newErrors.guestFirstName = "Guest first name is required";
+      newErrors.guestFirstName = "Guest first name is required";
       if (!guestDetails.guestLastName.trim())
-        newErrors.guestLastName = "Guest last name is required";
+      newErrors.guestLastName = "Guest last name is required";
     }
 
     setErrors(newErrors);
@@ -163,17 +143,17 @@ export default function BookingPage() {
     const newErrors = {};
     if (paymentDetails.paymentMethod === "credit_card") {
       if (
-        !paymentDetails.cardNumber.trim() ||
-        paymentDetails.cardNumber.replace(/\s/g, "").length < 16
-      ) {
+      !paymentDetails.cardNumber.trim() ||
+      paymentDetails.cardNumber.replace(/\s/g, "").length < 16)
+      {
         newErrors.cardNumber = "Valid card number is required";
       }
       if (!paymentDetails.cardName.trim())
-        newErrors.cardName = "Name on card is required";
+      newErrors.cardName = "Name on card is required";
       if (
-        !paymentDetails.expiryDate.trim() ||
-        paymentDetails.expiryDate.length < 5
-      ) {
+      !paymentDetails.expiryDate.trim() ||
+      paymentDetails.expiryDate.length < 5)
+      {
         newErrors.expiryDate = "Valid expiry date is required";
       }
       if (!paymentDetails.cvv.trim() || paymentDetails.cvv.length < 3) {
@@ -218,9 +198,9 @@ export default function BookingPage() {
   const roomRate = room.pricePerNight;
   const subtotal = roomRate * nights * guests.rooms;
   const breakfastTotal =
-    addBreakfast && !room.breakfastIncluded
-      ? room.breakfastPrice * nights * guests.rooms
-      : 0;
+  addBreakfast && !room.breakfastIncluded ?
+  room.breakfastPrice * nights * guests.rooms :
+  0;
   const taxes = (subtotal + breakfastTotal) * 0.1;
   const total = subtotal + breakfastTotal + taxes;
 
@@ -230,52 +210,52 @@ export default function BookingPage() {
         {/* Stepper */}
         <Paper sx={{ p: 3, mb: 3 }}>
           <Stepper activeStep={activeStep} alternativeLabel>
-            {steps.map((label, index) => (
-              <Step key={label}>
+            {steps.map((label, index) =>
+            <Step key={label}>
                 <StepLabel
-                  StepIconComponent={() => (
-                    <Avatar
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        bgcolor:
-                          activeStep > index
-                            ? theme.palette.success.main
-                            : activeStep === index
-                              ? theme.palette.primary.main
-                              : "grey.300",
-                        fontSize: 14,
-                      }}
-                    >
-                      {activeStep > index ? (
-                        <CheckCircleIcon fontSize="small" />
-                      ) : (
-                        index + 1
-                      )}
+                StepIconComponent={() =>
+                <Avatar
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor:
+                    activeStep > index ?
+                    theme.palette.success.main :
+                    activeStep === index ?
+                    theme.palette.primary.main :
+                    "grey.300",
+                    fontSize: 14
+                  }}>
+
+                      {activeStep > index ?
+                  <CheckCircleIcon fontSize="small" /> :
+
+                  index + 1
+                  }
                     </Avatar>
-                  )}
-                >
+                }>
+
                   {label}
                 </StepLabel>
               </Step>
-            ))}
+            )}
           </Stepper>
         </Paper>
 
         <Grid container spacing={3}>
           {/* Left Column - Form */}
-          <Grid size={{ xs: 12, md: 8 }}>
+          <Grid item xs={12} md={8}>
             {/* Guest Details Step */}
-            {activeStep === 0 && (
-              <Paper sx={{ p: 3, mb: 3 }}>
+            {activeStep === 0 &&
+            <Paper sx={{ p: 3, mb: 3 }}>
                 <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 3,
-                  }}
-                >
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 3
+                }}>
+
                   <PersonIcon color="primary" />
                   <Typography variant="h6" fontWeight={600}>
                     Guest Details
@@ -283,75 +263,75 @@ export default function BookingPage() {
                 </Box>
 
                 <Grid container spacing={2}>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      label="First Name"
-                      value={guestDetails.firstName}
-                      onChange={handleGuestChange("firstName")}
-                      error={!!errors.firstName}
-                      helperText={errors.firstName}
-                      required
-                    />
+                    fullWidth
+                    label="First Name"
+                    value={guestDetails.firstName}
+                    onChange={handleGuestChange("firstName")}
+                    error={!!errors.firstName}
+                    helperText={errors.firstName}
+                    required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      label="Last Name"
-                      value={guestDetails.lastName}
-                      onChange={handleGuestChange("lastName")}
-                      error={!!errors.lastName}
-                      helperText={errors.lastName}
-                      required
-                    />
+                    fullWidth
+                    label="Last Name"
+                    value={guestDetails.lastName}
+                    onChange={handleGuestChange("lastName")}
+                    error={!!errors.lastName}
+                    helperText={errors.lastName}
+                    required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      label="Email"
-                      type="email"
-                      value={guestDetails.email}
-                      onChange={handleGuestChange("email")}
-                      error={!!errors.email}
-                      helperText={errors.email}
-                      required
-                    />
+                    fullWidth
+                    label="Email"
+                    type="email"
+                    value={guestDetails.email}
+                    onChange={handleGuestChange("email")}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      label="Phone Number"
-                      value={guestDetails.phone}
-                      onChange={handleGuestChange("phone")}
-                      error={!!errors.phone}
-                      helperText={errors.phone}
-                      required
-                    />
+                    fullWidth
+                    label="Phone Number"
+                    value={guestDetails.phone}
+                    onChange={handleGuestChange("phone")}
+                    error={!!errors.phone}
+                    helperText={errors.phone}
+                    required />
+
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      select
-                      label="Country/Region"
-                      value={guestDetails.country}
-                      onChange={handleGuestChange("country")}
-                      SelectProps={{ native: true }}
-                    >
+                    fullWidth
+                    select
+                    label="Country/Region"
+                    value={guestDetails.country}
+                    onChange={handleGuestChange("country")}
+                    SelectProps={{ native: true }}>
+
                       <option value="USA">United States</option>
                       <option value="UK">United Kingdom</option>
                       <option value="Canada">Canada</option>
                       <option value="Australia">Australia</option>
                     </TextField>
                   </Grid>
-                  <Grid size={{ xs: 12, sm: 6 }}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
-                      fullWidth
-                      select
-                      label="Estimated Arrival Time"
-                      value={guestDetails.arrivalTime}
-                      onChange={handleGuestChange("arrivalTime")}
-                      SelectProps={{ native: true }}
-                    >
+                    fullWidth
+                    select
+                    label="Estimated Arrival Time"
+                    value={guestDetails.arrivalTime}
+                    onChange={handleGuestChange("arrivalTime")}
+                    SelectProps={{ native: true }}>
+
                       <option value="">Select time</option>
                       <option value="14:00">2:00 PM - 3:00 PM</option>
                       <option value="15:00">3:00 PM - 4:00 PM</option>
@@ -362,16 +342,16 @@ export default function BookingPage() {
                       <option value="20:00">After 8:00 PM</option>
                     </TextField>
                   </Grid>
-                  <Grid size={{ xs: 12 }}>
+                  <Grid item xs={12}>
                     <TextField
-                      fullWidth
-                      multiline
-                      rows={3}
-                      label="Special Requests (Optional)"
-                      placeholder="Any special requests for the property?"
-                      value={guestDetails.specialRequests}
-                      onChange={handleGuestChange("specialRequests")}
-                    />
+                    fullWidth
+                    multiline
+                    rows={3}
+                    label="Special Requests (Optional)"
+                    placeholder="Any special requests for the property?"
+                    value={guestDetails.specialRequests}
+                    onChange={handleGuestChange("specialRequests")} />
+
                   </Grid>
                 </Grid>
 
@@ -379,204 +359,204 @@ export default function BookingPage() {
 
                 {/* Booking for someone else */}
                 <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={guestDetails.bookingForSomeoneElse}
-                      onChange={(e) =>
-                        setGuestDetails((prev) => ({
-                          ...prev,
-                          bookingForSomeoneElse: e.target.checked,
-                        }))
-                      }
-                    />
-                  }
-                  label="I'm booking for someone else"
-                />
+                control={
+                <Checkbox
+                  checked={guestDetails.bookingForSomeoneElse}
+                  onChange={(e) =>
+                  setGuestDetails((prev) => ({
+                    ...prev,
+                    bookingForSomeoneElse: e.target.checked
+                  }))
+                  } />
+
+                }
+                label="I'm booking for someone else" />
+
 
                 <Collapse in={guestDetails.bookingForSomeoneElse}>
                   <Grid container spacing={2} sx={{ mt: 1 }}>
-                    <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
-                        label="Guest First Name"
-                        value={guestDetails.guestFirstName}
-                        onChange={handleGuestChange("guestFirstName")}
-                        error={!!errors.guestFirstName}
-                        helperText={errors.guestFirstName}
-                      />
+                      fullWidth
+                      label="Guest First Name"
+                      value={guestDetails.guestFirstName}
+                      onChange={handleGuestChange("guestFirstName")}
+                      error={!!errors.guestFirstName}
+                      helperText={errors.guestFirstName} />
+
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 6 }}>
+                    <Grid item xs={12} sm={6}>
                       <TextField
-                        fullWidth
-                        label="Guest Last Name"
-                        value={guestDetails.guestLastName}
-                        onChange={handleGuestChange("guestLastName")}
-                        error={!!errors.guestLastName}
-                        helperText={errors.guestLastName}
-                      />
+                      fullWidth
+                      label="Guest Last Name"
+                      value={guestDetails.guestLastName}
+                      onChange={handleGuestChange("guestLastName")}
+                      error={!!errors.guestLastName}
+                      helperText={errors.guestLastName} />
+
                     </Grid>
                   </Grid>
                 </Collapse>
               </Paper>
-            )}
+            }
 
             {/* Payment Step */}
-            {activeStep === 1 && (
-              <Paper sx={{ p: 3, mb: 3 }}>
+            {activeStep === 1 &&
+            <Paper sx={{ p: 3, mb: 3 }}>
                 <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 3,
-                  }}
-                >
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mb: 3
+                }}>
+
                   <PaymentIcon color="primary" />
                   <Typography variant="h6" fontWeight={600}>
                     Payment Details
                   </Typography>
                 </Box>
 
-                {errors.payment && (
-                  <Alert severity="error" sx={{ mb: 3 }}>
+                {errors.payment &&
+              <Alert severity="error" sx={{ mb: 3 }}>
                     {errors.payment}
                   </Alert>
-                )}
+              }
 
                 {/* Payment Method Selection */}
                 <FormControl component="fieldset" sx={{ mb: 3 }}>
                   <FormLabel component="legend">Payment Method</FormLabel>
                   <RadioGroup
-                    value={paymentDetails.paymentMethod}
-                    onChange={(e) =>
-                      setPaymentDetails((prev) => ({
-                        ...prev,
-                        paymentMethod: e.target.value,
-                      }))
-                    }
-                  >
+                  value={paymentDetails.paymentMethod}
+                  onChange={(e) =>
+                  setPaymentDetails((prev) => ({
+                    ...prev,
+                    paymentMethod: e.target.value
+                  }))
+                  }>
+
                     <FormControlLabel
-                      value="credit_card"
-                      control={<Radio />}
-                      label={
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1,
-                          }}
-                        >
+                    value="credit_card"
+                    control={<Radio />}
+                    label={
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1
+                      }}>
+
                           <CreditCardIcon />
                           <span>Credit / Debit Card</span>
                         </Box>
-                      }
-                    />
+                    } />
+
                     <FormControlLabel
-                      value="paypal"
-                      control={<Radio />}
-                      label="PayPal"
-                    />
+                    value="paypal"
+                    control={<Radio />}
+                    label="PayPal" />
+
                     <FormControlLabel
-                      value="pay_at_property"
-                      control={<Radio />}
-                      label="Pay at Property"
-                    />
+                    value="pay_at_property"
+                    control={<Radio />}
+                    label="Pay at Property" />
+
                   </RadioGroup>
                 </FormControl>
 
                 {/* Credit Card Form */}
-                {paymentDetails.paymentMethod === "credit_card" && (
-                  <Box
-                    sx={{
-                      p: 3,
-                      bgcolor: alpha(theme.palette.primary.main, 0.02),
-                      borderRadius: 2,
-                      border: `1px solid ${theme.palette.divider}`,
-                    }}
-                  >
+                {paymentDetails.paymentMethod === "credit_card" &&
+              <Box
+                sx={{
+                  p: 3,
+                  bgcolor: alpha(theme.palette.primary.main, 0.02),
+                  borderRadius: 2,
+                  border: `1px solid ${theme.palette.divider}`
+                }}>
+
                     <Grid container spacing={2}>
-                      <Grid size={{ xs: 12 }}>
+                      <Grid item xs={12}>
                         <TextField
-                          fullWidth
-                          label="Card Number"
-                          placeholder="1234 5678 9012 3456"
-                          value={paymentDetails.cardNumber}
-                          onChange={handlePaymentChange("cardNumber")}
-                          error={!!errors.cardNumber}
-                          helperText={errors.cardNumber}
-                          InputProps={{
-                            startAdornment: (
-                              <CreditCardIcon color="action" sx={{ mr: 1 }} />
-                            ),
-                          }}
-                        />
+                      fullWidth
+                      label="Card Number"
+                      placeholder="1234 5678 9012 3456"
+                      value={paymentDetails.cardNumber}
+                      onChange={handlePaymentChange("cardNumber")}
+                      error={!!errors.cardNumber}
+                      helperText={errors.cardNumber}
+                      InputProps={{
+                        startAdornment:
+                        <CreditCardIcon color="action" sx={{ mr: 1 }} />
+
+                      }} />
+
                       </Grid>
-                      <Grid size={{ xs: 12 }}>
+                      <Grid item xs={12}>
                         <TextField
-                          fullWidth
-                          label="Name on Card"
-                          placeholder="John Doe"
-                          value={paymentDetails.cardName}
-                          onChange={handlePaymentChange("cardName")}
-                          error={!!errors.cardName}
-                          helperText={errors.cardName}
-                        />
+                      fullWidth
+                      label="Name on Card"
+                      placeholder="John Doe"
+                      value={paymentDetails.cardName}
+                      onChange={handlePaymentChange("cardName")}
+                      error={!!errors.cardName}
+                      helperText={errors.cardName} />
+
                       </Grid>
-                      <Grid size={{ xs: 12, sm: 6 }}>
+                      <Grid item xs={12} sm={6}>
                         <TextField
-                          fullWidth
-                          label="Expiry Date"
-                          placeholder="MM/YY"
-                          value={paymentDetails.expiryDate}
-                          onChange={handlePaymentChange("expiryDate")}
-                          error={!!errors.expiryDate}
-                          helperText={errors.expiryDate}
-                        />
+                      fullWidth
+                      label="Expiry Date"
+                      placeholder="MM/YY"
+                      value={paymentDetails.expiryDate}
+                      onChange={handlePaymentChange("expiryDate")}
+                      error={!!errors.expiryDate}
+                      helperText={errors.expiryDate} />
+
                       </Grid>
-                      <Grid size={{ xs: 12, sm: 6 }}>
+                      <Grid item xs={12} sm={6}>
                         <TextField
-                          fullWidth
-                          label="CVV"
-                          placeholder="123"
-                          type="password"
-                          value={paymentDetails.cvv}
-                          onChange={handlePaymentChange("cvv")}
-                          error={!!errors.cvv}
-                          helperText={errors.cvv}
-                        />
+                      fullWidth
+                      label="CVV"
+                      placeholder="123"
+                      type="password"
+                      value={paymentDetails.cvv}
+                      onChange={handlePaymentChange("cvv")}
+                      error={!!errors.cvv}
+                      helperText={errors.cvv} />
+
                       </Grid>
                     </Grid>
 
                     <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={paymentDetails.saveCard}
-                          onChange={(e) =>
-                            setPaymentDetails((prev) => ({
-                              ...prev,
-                              saveCard: e.target.checked,
-                            }))
-                          }
-                        />
-                      }
-                      label="Save this card for future bookings"
-                      sx={{ mt: 2 }}
-                    />
+                  control={
+                  <Checkbox
+                    checked={paymentDetails.saveCard}
+                    onChange={(e) =>
+                    setPaymentDetails((prev) => ({
+                      ...prev,
+                      saveCard: e.target.checked
+                    }))
+                    } />
+
+                  }
+                  label="Save this card for future bookings"
+                  sx={{ mt: 2 }} />
+
                   </Box>
-                )}
+              }
 
                 {/* Security Notice */}
                 <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mt: 3,
-                    p: 2,
-                    bgcolor: alpha(theme.palette.success.main, 0.1),
-                    borderRadius: 1,
-                  }}
-                >
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mt: 3,
+                  p: 2,
+                  bgcolor: alpha(theme.palette.success.main, 0.1),
+                  borderRadius: 1
+                }}>
+
                   <LockIcon color="success" fontSize="small" />
                   <Typography variant="body2" color="text.secondary">
                     Your payment information is encrypted and secure. We never
@@ -584,50 +564,50 @@ export default function BookingPage() {
                   </Typography>
                 </Box>
               </Paper>
-            )}
+            }
 
             {/* Add-ons */}
             {activeStep === 0 &&
-              !room.breakfastIncluded &&
-              room.breakfastPrice > 0 && (
-                <Paper sx={{ p: 3, mb: 3 }}>
+            !room.breakfastIncluded &&
+            room.breakfastPrice > 0 &&
+            <Paper sx={{ p: 3, mb: 3 }}>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
                     Add-ons
                   </Typography>
 
                   <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={addBreakfast}
-                        onChange={(e) => setAddBreakfast(e.target.checked)}
-                      />
-                    }
-                    label={
-                      <Box>
+                control={
+                <Checkbox
+                  checked={addBreakfast}
+                  onChange={(e) => setAddBreakfast(e.target.checked)} />
+
+                }
+                label={
+                <Box>
                         <Typography variant="body1">Add Breakfast</Typography>
                         <Typography variant="body2" color="text.secondary">
                           Nu {room.breakfastPrice}/person/night - Continental
                           breakfast buffet
                         </Typography>
                       </Box>
-                    }
-                  />
+                } />
+
                 </Paper>
-              )}
+            }
 
             {/* Navigation Buttons */}
             <Box
               sx={{
                 display: "flex",
                 gap: 2,
-                justifyContent: "space-between",
-              }}
-            >
+                justifyContent: "space-between"
+              }}>
+
               <Button
                 variant="outlined"
                 onClick={activeStep === 0 ? () => navigate(-1) : handleBack}
-                disabled={loading}
-              >
+                disabled={loading}>
+
                 {activeStep === 0 ? "Cancel" : "Back"}
               </Button>
               <Button
@@ -635,19 +615,19 @@ export default function BookingPage() {
                 onClick={handleNext}
                 disabled={loading}
                 size="large"
-                sx={{ minWidth: 200 }}
-              >
-                {loading
-                  ? "Processing..."
-                  : activeStep === 1
-                    ? `Pay Nu ${total.toFixed(2)}`
-                    : "Continue to Payment"}
+                sx={{ minWidth: 200 }}>
+
+                {loading ?
+                "Processing..." :
+                activeStep === 1 ?
+                `Pay Nu ${total.toFixed(2)}` :
+                "Continue to Payment"}
               </Button>
             </Box>
           </Grid>
 
           {/* Right Column - Booking Summary */}
-          <Grid size={{ xs: 12, md: 4 }}>
+          <Grid item xs={12} md={4}>
             <Paper sx={{ p: 3, position: "sticky", top: 100 }}>
               {/* Property Summary */}
               <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
@@ -659,17 +639,17 @@ export default function BookingPage() {
                     width: 100,
                     height: 80,
                     borderRadius: 1,
-                    objectFit: "cover",
-                  }}
-                />
+                    objectFit: "cover"
+                  }} />
+
                 <Box>
                   <Typography variant="subtitle1" fontWeight={600}>
                     {property.name}
                   </Typography>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                     <StarIcon
-                      sx={{ fontSize: 14, color: theme.palette.warning.main }}
-                    />
+                      sx={{ fontSize: 14, color: theme.palette.warning.main }} />
+
                     <Typography variant="body2">
                       {property.rating} ({property.reviewsCount})
                     </Typography>
@@ -696,9 +676,9 @@ export default function BookingPage() {
                   display: "flex",
                   flexDirection: "column",
                   gap: 1.5,
-                  my: 2,
-                }}
-              >
+                  my: 2
+                }}>
+
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CalendarTodayIcon fontSize="small" color="action" />
                   <Box>
@@ -733,7 +713,7 @@ export default function BookingPage() {
                   <Typography variant="body2">
                     {guests.adults} Adult{guests.adults > 1 ? "s" : ""}
                     {guests.children > 0 &&
-                      `, ${guests.children} Child${guests.children > 1 ? "ren" : ""}`}
+                    `, ${guests.children} Child${guests.children > 1 ? "ren" : ""}`}
                   </Typography>
                 </Box>
               </Box>
@@ -746,10 +726,10 @@ export default function BookingPage() {
                 variant="text"
                 onClick={() => setShowPriceDetails(!showPriceDetails)}
                 endIcon={
-                  showPriceDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />
+                showPriceDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />
                 }
-                sx={{ justifyContent: "space-between", mb: 1 }}
-              >
+                sx={{ justifyContent: "space-between", mb: 1 }}>
+
                 Price Details
               </Button>
 
@@ -761,21 +741,21 @@ export default function BookingPage() {
                   taxes={taxes}
                   breakfastIncluded={room.breakfastIncluded}
                   breakfastPrice={room.breakfastPrice}
-                  addBreakfast={addBreakfast}
-                />
+                  addBreakfast={addBreakfast} />
+
               </Collapse>
 
-              {!showPriceDetails && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: 2,
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
-                    borderRadius: 2,
-                  }}
-                >
+              {!showPriceDetails &&
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 2,
+                  bgcolor: alpha(theme.palette.primary.main, 0.05),
+                  borderRadius: 2
+                }}>
+
                   <Typography variant="h6" fontWeight={600}>
                     Total
                   </Typography>
@@ -783,31 +763,31 @@ export default function BookingPage() {
                     Nu {total.toFixed(2)}
                   </Typography>
                 </Box>
-              )}
+              }
 
               {/* Free Cancellation Notice */}
-              {room.freeCancellation && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mt: 2,
-                    p: 1.5,
-                    bgcolor: alpha(theme.palette.success.main, 0.1),
-                    borderRadius: 1,
-                  }}
-                >
+              {room.freeCancellation &&
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  mt: 2,
+                  p: 1.5,
+                  bgcolor: alpha(theme.palette.success.main, 0.1),
+                  borderRadius: 1
+                }}>
+
                   <CheckCircleIcon color="success" fontSize="small" />
                   <Typography variant="body2" color="success.main">
                     Free cancellation before check-in
                   </Typography>
                 </Box>
-              )}
+              }
             </Paper>
           </Grid>
         </Grid>
       </Container>
-    </Box>
-  );
+    </Box>);
+
 }

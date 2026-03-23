@@ -1,31 +1,18 @@
 // src/components/User/Modals/WriteReviewModal.jsx
 import React, { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Box,
-  Typography,
-  TextField,
-  Button,
-  Rating,
-  IconButton,
-  Divider,
-  Grid,
-} from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Box, Typography, TextField, Button, Rating, IconButton, Divider, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import StarIcon from "@mui/icons-material/Star";
 
 const ratingCategories = [
-  { id: "cleanliness", label: "Cleanliness" },
-  { id: "comfort", label: "Comfort" },
-  { id: "location", label: "Location" },
-  { id: "facilities", label: "Facilities" },
-  { id: "staff", label: "Staff" },
-  { id: "value", label: "Value for Money" },
-];
+{ id: "cleanliness", label: "Cleanliness" },
+{ id: "comfort", label: "Comfort" },
+{ id: "location", label: "Location" },
+{ id: "facilities", label: "Facilities" },
+{ id: "staff", label: "Staff" },
+{ id: "value", label: "Value for Money" }];
+
 
 export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
   const theme = useTheme();
@@ -43,11 +30,11 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
   const validate = () => {
     const newErrors = {};
     if (overallRating === 0)
-      newErrors.overall = "Please provide an overall rating";
+    newErrors.overall = "Please provide an overall rating";
     if (!title.trim()) newErrors.title = "Please add a title";
     if (!comment.trim()) newErrors.comment = "Please write your review";
     if (comment.length < 50)
-      newErrors.comment = "Review should be at least 50 characters";
+    newErrors.comment = "Review should be at least 50 characters";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -62,7 +49,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
         categoryRatings,
         title,
         comment,
-        bookingId: booking?.id,
+        bookingId: booking?.id
       });
       handleClose();
     } catch (error) {
@@ -88,9 +75,9 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+            alignItems: "center"
+          }}>
+
           <Typography variant="h6" fontWeight={600}>
             Write a Review
           </Typography>
@@ -102,28 +89,28 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
 
       <DialogContent dividers>
         {/* Property Info */}
-        {booking && (
-          <Box
-            sx={{
-              display: "flex",
-              gap: 2,
-              mb: 3,
-              p: 2,
-              bgcolor: "grey.50",
-              borderRadius: 2,
-            }}
-          >
+        {booking &&
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            mb: 3,
+            p: 2,
+            bgcolor: "grey.50",
+            borderRadius: 2
+          }}>
+
             <Box
-              component="img"
-              src={booking.property?.image}
-              alt={booking.property?.name}
-              sx={{
-                width: 80,
-                height: 60,
-                borderRadius: 1,
-                objectFit: "cover",
-              }}
-            />
+            component="img"
+            src={booking.property?.image}
+            alt={booking.property?.name}
+            sx={{
+              width: 80,
+              height: 60,
+              borderRadius: 1,
+              objectFit: "cover"
+            }} />
+
             <Box>
               <Typography fontWeight={600}>{booking.property?.name}</Typography>
               <Typography variant="body2" color="text.secondary">
@@ -133,7 +120,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
               </Typography>
             </Box>
           </Box>
-        )}
+        }
 
         {/* Overall Rating */}
         <Box sx={{ textAlign: "center", mb: 3 }}>
@@ -148,14 +135,14 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
             emptyIcon={<StarIcon fontSize="inherit" />}
             sx={{
               "& .MuiRating-iconFilled": { color: theme.palette.warning.main },
-              fontSize: 40,
-            }}
-          />
-          {errors.overall && (
-            <Typography color="error" variant="caption" display="block">
+              fontSize: 40
+            }} />
+
+          {errors.overall &&
+          <Typography color="error" variant="caption" display="block">
               {errors.overall}
             </Typography>
-          )}
+          }
         </Box>
 
         <Divider sx={{ my: 2 }} />
@@ -165,26 +152,26 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
           Rate by Category (Optional)
         </Typography>
         <Grid container spacing={2} sx={{ mb: 3 }}>
-          {ratingCategories.map((category) => (
-            <Grid size={{ xs: 6 }} key={category.id}>
+          {ratingCategories.map((category) =>
+          <Grid item key={category.id} xs={6}>
               <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}>
+
                 <Typography variant="body2">{category.label}</Typography>
                 <Rating
-                  size="small"
-                  value={categoryRatings[category.id] || 0}
-                  onChange={(e, value) =>
-                    handleCategoryRating(category.id, value)
-                  }
-                />
+                size="small"
+                value={categoryRatings[category.id] || 0}
+                onChange={(e, value) =>
+                handleCategoryRating(category.id, value)
+                } />
+
               </Box>
             </Grid>
-          ))}
+          )}
         </Grid>
 
         <Divider sx={{ my: 2 }} />
@@ -198,8 +185,8 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
           onChange={(e) => setTitle(e.target.value)}
           error={!!errors.title}
           helperText={errors.title}
-          sx={{ mb: 2 }}
-        />
+          sx={{ mb: 2 }} />
+
 
         {/* Review Comment */}
         <TextField
@@ -212,9 +199,9 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
           onChange={(e) => setComment(e.target.value)}
           error={!!errors.comment}
           helperText={
-            errors.comment || `${comment.length}/50 characters minimum`
-          }
-        />
+          errors.comment || `${comment.length}/50 characters minimum`
+          } />
+
       </DialogContent>
 
       <DialogActions sx={{ px: 3, py: 2 }}>
@@ -225,6 +212,6 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
           {loading ? "Submitting..." : "Submit Review"}
         </Button>
       </DialogActions>
-    </Dialog>
-  );
+    </Dialog>);
+
 }

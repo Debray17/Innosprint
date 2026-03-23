@@ -1,21 +1,8 @@
 // src/pages/User/Account/NotificationsSettingsPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Switch,
-  Divider,
-  Button,
-  Alert,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, Switch, Divider, Button, Alert, List, ListItem, ListItemText, ListItemSecondaryAction } from "@mui/material";
 // import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import EmailIcon from "@mui/icons-material/Email";
@@ -46,7 +33,7 @@ export default function NotificationsSettingsPage() {
     // SMS Notifications
     smsBookingConfirmation: false,
     smsCheckInReminder: true,
-    smsUrgentUpdates: true,
+    smsUrgentUpdates: true
   });
 
   const [loading, setLoading] = useState(false);
@@ -67,8 +54,8 @@ export default function NotificationsSettingsPage() {
     }
   };
 
-  const NotificationSection = ({ title, icon: Icon, children }) => (
-    <Box sx={{ mb: 4 }}>
+  const NotificationSection = ({ title, icon: Icon, children }) =>
+  <Box sx={{ mb: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
         <Icon color="primary" />
         <Typography variant="h6" fontWeight={600}>
@@ -78,45 +65,45 @@ export default function NotificationsSettingsPage() {
       <Paper sx={{ overflow: "hidden" }}>
         <List disablePadding>{children}</List>
       </Paper>
-    </Box>
-  );
+    </Box>;
 
-  const NotificationItem = ({ label, description, settingKey }) => (
-    <>
+
+  const NotificationItem = ({ label, description, settingKey }) =>
+  <>
       <ListItem sx={{ py: 2 }}>
         <ListItemText
-          primary={label}
-          secondary={description}
-          primaryTypographyProps={{ fontWeight: 500 }}
-        />
+        primary={label}
+        secondary={description}
+        primaryTypographyProps={{ fontWeight: 500 }} />
+
         <ListItemSecondaryAction>
           <Switch
-            checked={settings[settingKey]}
-            onChange={handleChange(settingKey)}
-            color="primary"
-          />
+          checked={settings[settingKey]}
+          onChange={handleChange(settingKey)}
+          color="primary" />
+
         </ListItemSecondaryAction>
       </ListItem>
       <Divider component="li" />
-    </>
-  );
+    </>;
+
 
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
-            {success && (
-              <Alert severity="success" sx={{ mb: 3 }}>
+          <Grid item xs={12} md={9}>
+            {success &&
+            <Alert severity="success" sx={{ mb: 3 }}>
                 Notification preferences saved successfully!
               </Alert>
-            )}
+            }
 
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -132,45 +119,45 @@ export default function NotificationsSettingsPage() {
               <NotificationItem
                 label="Booking Confirmations"
                 description="Receive confirmation emails when you make a booking"
-                settingKey="emailBookingConfirmation"
-              />
+                settingKey="emailBookingConfirmation" />
+
               <NotificationItem
                 label="Booking Reminders"
                 description="Get reminders before your check-in date"
-                settingKey="emailBookingReminder"
-              />
+                settingKey="emailBookingReminder" />
+
               <NotificationItem
                 label="Booking Changes"
                 description="Updates about modifications or cancellations"
-                settingKey="emailBookingChanges"
-              />
+                settingKey="emailBookingChanges" />
+
               <NotificationItem
                 label="Promotions & Deals"
                 description="Special offers and discount codes"
-                settingKey="emailPromotions"
-              />
+                settingKey="emailPromotions" />
+
               <NotificationItem
                 label="Price Alerts"
                 description="Get notified when prices drop for saved properties"
-                settingKey="emailPriceAlerts"
-              />
+                settingKey="emailPriceAlerts" />
+
               <NotificationItem
                 label="Review Reminders"
                 description="Reminders to review properties after your stay"
-                settingKey="emailReviewReminder"
-              />
+                settingKey="emailReviewReminder" />
+
               <ListItem sx={{ py: 2 }}>
                 <ListItemText
                   primary="Newsletter"
                   secondary="Travel tips, destination guides, and inspiration"
-                  primaryTypographyProps={{ fontWeight: 500 }}
-                />
+                  primaryTypographyProps={{ fontWeight: 500 }} />
+
                 <ListItemSecondaryAction>
                   <Switch
                     checked={settings.emailNewsletter}
                     onChange={handleChange("emailNewsletter")}
-                    color="primary"
-                  />
+                    color="primary" />
+
                 </ListItemSecondaryAction>
               </ListItem>
             </NotificationSection>
@@ -178,35 +165,35 @@ export default function NotificationsSettingsPage() {
             {/* Push Notifications */}
             <NotificationSection
               title="Push Notifications"
-              icon={PhoneIphoneIcon}
-            >
+              icon={PhoneIphoneIcon}>
+
               <NotificationItem
                 label="Booking Updates"
                 description="Real-time updates about your bookings"
-                settingKey="pushBookingUpdates"
-              />
+                settingKey="pushBookingUpdates" />
+
               <NotificationItem
                 label="Price Drops"
                 description="Alerts when wishlist properties have price drops"
-                settingKey="pushPriceDrops"
-              />
+                settingKey="pushPriceDrops" />
+
               <NotificationItem
                 label="Messages"
                 description="Messages from properties and hosts"
-                settingKey="pushMessages"
-              />
+                settingKey="pushMessages" />
+
               <ListItem sx={{ py: 2 }}>
                 <ListItemText
                   primary="Promotions"
                   secondary="Special offers and flash deals"
-                  primaryTypographyProps={{ fontWeight: 500 }}
-                />
+                  primaryTypographyProps={{ fontWeight: 500 }} />
+
                 <ListItemSecondaryAction>
                   <Switch
                     checked={settings.pushPromotions}
                     onChange={handleChange("pushPromotions")}
-                    color="primary"
-                  />
+                    color="primary" />
+
                 </ListItemSecondaryAction>
               </ListItem>
             </NotificationSection>
@@ -216,25 +203,25 @@ export default function NotificationsSettingsPage() {
               <NotificationItem
                 label="Booking Confirmations"
                 description="Receive SMS confirmation for bookings"
-                settingKey="smsBookingConfirmation"
-              />
+                settingKey="smsBookingConfirmation" />
+
               <NotificationItem
                 label="Check-in Reminders"
                 description="SMS reminder on your check-in day"
-                settingKey="smsCheckInReminder"
-              />
+                settingKey="smsCheckInReminder" />
+
               <ListItem sx={{ py: 2 }}>
                 <ListItemText
                   primary="Urgent Updates"
                   secondary="Important changes that require immediate attention"
-                  primaryTypographyProps={{ fontWeight: 500 }}
-                />
+                  primaryTypographyProps={{ fontWeight: 500 }} />
+
                 <ListItemSecondaryAction>
                   <Switch
                     checked={settings.smsUrgentUpdates}
                     onChange={handleChange("smsUrgentUpdates")}
-                    color="primary"
-                  />
+                    color="primary" />
+
                 </ListItemSecondaryAction>
               </ListItem>
             </NotificationSection>
@@ -245,14 +232,14 @@ export default function NotificationsSettingsPage() {
                 variant="contained"
                 size="large"
                 onClick={handleSave}
-                disabled={loading}
-              >
+                disabled={loading}>
+
                 {loading ? "Saving..." : "Save Preferences"}
               </Button>
             </Box>
           </Grid>
         </Grid>
       </Container>
-    </Box>
-  );
+    </Box>);
+
 }

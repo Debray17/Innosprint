@@ -1,26 +1,8 @@
 // src/pages/User/Account/PaymentMethodsPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  Card,
-  CardContent,
-  IconButton,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Alert,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, Button, Card, CardContent, IconButton, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, FormControlLabel, Checkbox, Alert } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -37,31 +19,31 @@ const cardBrands = {
   visa: { name: "Visa", color: "#1A1F71" },
   mastercard: { name: "Mastercard", color: "#EB001B" },
   amex: { name: "American Express", color: "#006FCF" },
-  discover: { name: "Discover", color: "#FF6600" },
+  discover: { name: "Discover", color: "#FF6600" }
 };
 
 const initialPaymentMethods = [
-  {
-    id: 1,
-    type: "credit_card",
-    brand: "visa",
-    last4: "4242",
-    expiryMonth: 12,
-    expiryYear: 2025,
-    holderName: "Alex Thompson",
-    isDefault: true,
-  },
-  {
-    id: 2,
-    type: "credit_card",
-    brand: "mastercard",
-    last4: "5678",
-    expiryMonth: 8,
-    expiryYear: 2024,
-    holderName: "Alex Thompson",
-    isDefault: false,
-  },
-];
+{
+  id: 1,
+  type: "credit_card",
+  brand: "visa",
+  last4: "4242",
+  expiryMonth: 12,
+  expiryYear: 2025,
+  holderName: "Alex Thompson",
+  isDefault: true
+},
+{
+  id: 2,
+  type: "credit_card",
+  brand: "mastercard",
+  last4: "5678",
+  expiryMonth: 8,
+  expiryYear: 2024,
+  holderName: "Alex Thompson",
+  isDefault: false
+}];
+
 
 export default function PaymentMethodsPage() {
   const theme = useTheme();
@@ -78,7 +60,7 @@ export default function PaymentMethodsPage() {
     cardName: "",
     expiryDate: "",
     cvv: "",
-    setDefault: false,
+    setDefault: false
   });
   const [errors, setErrors] = useState({});
 
@@ -86,11 +68,11 @@ export default function PaymentMethodsPage() {
     let value = e.target.value;
 
     if (field === "cardNumber") {
-      value = value
-        .replace(/\s/g, "")
-        .replace(/(.{4})/g, "Nu 1 ")
-        .trim()
-        .slice(0, 19);
+      value = value.
+      replace(/\s/g, "").
+      replace(/(.{4})/g, "Nu 1 ").
+      trim().
+      slice(0, 19);
     }
     if (field === "expiryDate") {
       value = value.replace(/\D/g, "").slice(0, 4);
@@ -120,13 +102,13 @@ export default function PaymentMethodsPage() {
   const validate = () => {
     const newErrors = {};
     if (
-      !formData.cardNumber.trim() ||
-      formData.cardNumber.replace(/\s/g, "").length < 16
-    ) {
+    !formData.cardNumber.trim() ||
+    formData.cardNumber.replace(/\s/g, "").length < 16)
+    {
       newErrors.cardNumber = "Valid card number is required";
     }
     if (!formData.cardName.trim())
-      newErrors.cardName = "Name on card is required";
+    newErrors.cardName = "Name on card is required";
     if (!formData.expiryDate.trim() || formData.expiryDate.length < 5) {
       newErrors.expiryDate = "Valid expiry date is required";
     }
@@ -153,12 +135,12 @@ export default function PaymentMethodsPage() {
         expiryMonth: parseInt(month),
         expiryYear: 2000 + parseInt(year),
         holderName: formData.cardName,
-        isDefault: formData.setDefault || paymentMethods.length === 0,
+        isDefault: formData.setDefault || paymentMethods.length === 0
       };
 
       if (newCard.isDefault) {
         setPaymentMethods((prev) =>
-          prev.map((pm) => ({ ...pm, isDefault: false })),
+        prev.map((pm) => ({ ...pm, isDefault: false }))
         );
       }
 
@@ -169,7 +151,7 @@ export default function PaymentMethodsPage() {
         cardName: "",
         expiryDate: "",
         cvv: "",
-        setDefault: false,
+        setDefault: false
       });
       setSuccess("Card added successfully!");
       setTimeout(() => setSuccess(""), 3000);
@@ -180,7 +162,7 @@ export default function PaymentMethodsPage() {
 
   const handleSetDefault = (id) => {
     setPaymentMethods((prev) =>
-      prev.map((pm) => ({ ...pm, isDefault: pm.id === id })),
+    prev.map((pm) => ({ ...pm, isDefault: pm.id === id }))
     );
     setSuccess("Default payment method updated!");
     setTimeout(() => setSuccess(""), 3000);
@@ -194,7 +176,7 @@ export default function PaymentMethodsPage() {
   const confirmDelete = () => {
     if (selectedMethod) {
       setPaymentMethods((prev) =>
-        prev.filter((pm) => pm.id !== selectedMethod.id),
+      prev.filter((pm) => pm.id !== selectedMethod.id)
       );
       setSuccess("Card removed successfully!");
       setTimeout(() => setSuccess(""), 3000);
@@ -208,19 +190,19 @@ export default function PaymentMethodsPage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid                 size={{xs:12, md:3 }}
->
+          <Grid item xs={12} md={3}>
+
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid                 size={{xs:12, md:9 }}
->
-            {success && (
-              <Alert severity="success" sx={{ mb: 3 }}>
+          <Grid item xs={12} md={9}>
+
+            {success &&
+            <Alert severity="success" sx={{ mb: 3 }}>
                 {success}
               </Alert>
-            )}
+            }
 
             <Paper sx={{ p: 3 }}>
               <Box
@@ -228,9 +210,9 @@ export default function PaymentMethodsPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  mb: 3,
-                }}
-              >
+                  mb: 3
+                }}>
+
                 <Box>
                   <Typography variant="h5" fontWeight={700}>
                     Payment Methods
@@ -242,63 +224,63 @@ export default function PaymentMethodsPage() {
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
-                  onClick={() => setAddDialogOpen(true)}
-                >
+                  onClick={() => setAddDialogOpen(true)}>
+
                   Add Card
                 </Button>
               </Box>
 
               {/* Payment Methods List */}
-              {paymentMethods.length > 0 ? (
-                <Grid container spacing={2}>
-                  {paymentMethods.map((method) => (
-                    <Grid                 size={{xs:12, sm:6 }}
- key={method.id}>
+              {paymentMethods.length > 0 ?
+              <Grid container spacing={2}>
+                  {paymentMethods.map((method) =>
+                <Grid item
+                key={method.id} xs={12} sm={6}>
                       <Card
-                        sx={{
-                          position: "relative",
-                          border: method.isDefault
-                            ? `2px solid ${theme.palette.primary.main}`
-                            : "1px solid",
-                          borderColor: method.isDefault
-                            ? theme.palette.primary.main
-                            : "divider",
-                        }}
-                      >
+                    sx={{
+                      position: "relative",
+                      border: method.isDefault ?
+                      `2px solid ${theme.palette.primary.main}` :
+                      "1px solid",
+                      borderColor: method.isDefault ?
+                      theme.palette.primary.main :
+                      "divider"
+                    }}>
+
                         <CardContent>
-                          {method.isDefault && (
-                            <Chip
-                              label="Default"
-                              size="small"
-                              color="primary"
-                              sx={{
-                                position: "absolute",
-                                top: 12,
-                                right: 12,
-                              }}
-                            />
-                          )}
+                          {method.isDefault &&
+                      <Chip
+                        label="Default"
+                        size="small"
+                        color="primary"
+                        sx={{
+                          position: "absolute",
+                          top: 12,
+                          right: 12
+                        }} />
+
+                      }
 
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 2,
-                              mb: 2,
-                            }}
-                          >
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                          mb: 2
+                        }}>
+
                             <Box
-                              sx={{
-                                width: 56,
-                                height: 36,
-                                bgcolor:
-                                  cardBrands[method.brand]?.color || "#333",
-                                borderRadius: 1,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
+                          sx={{
+                            width: 56,
+                            height: 36,
+                            bgcolor:
+                            cardBrands[method.brand]?.color || "#333",
+                            borderRadius: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                          }}>
+
                               <CreditCardIcon sx={{ color: "#fff" }} />
                             </Box>
                             <Box>
@@ -306,9 +288,9 @@ export default function PaymentMethodsPage() {
                                 •••• •••• •••• {method.last4}
                               </Typography>
                               <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
+                            variant="body2"
+                            color="text.secondary">
+
                                 {cardBrands[method.brand]?.name}
                               </Typography>
                             </Box>
@@ -324,51 +306,51 @@ export default function PaymentMethodsPage() {
                           </Typography>
 
                           <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-                            {!method.isDefault && (
-                              <Button
-                                size="small"
-                                onClick={() => handleSetDefault(method.id)}
-                              >
+                            {!method.isDefault &&
+                        <Button
+                          size="small"
+                          onClick={() => handleSetDefault(method.id)}>
+
                                 Set as Default
                               </Button>
-                            )}
+                        }
                             <Button
-                              size="small"
-                              color="error"
-                              onClick={() => handleDelete(method)}
-                            >
+                          size="small"
+                          color="error"
+                          onClick={() => handleDelete(method)}>
+
                               Remove
                             </Button>
                           </Box>
                         </CardContent>
                       </Card>
                     </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Box sx={{ textAlign: "center", py: 6 }}>
+                )}
+                </Grid> :
+
+              <Box sx={{ textAlign: "center", py: 6 }}>
                   <PaymentIcon
-                    sx={{ fontSize: 64, color: "text.disabled", mb: 2 }}
-                  />
+                  sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
+
                   <Typography variant="h6" gutterBottom>
                     No payment methods saved
                   </Typography>
                   <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3 }}
-                  >
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}>
+
                     Add a card to make booking faster
                   </Typography>
                   <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => setAddDialogOpen(true)}
-                  >
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={() => setAddDialogOpen(true)}>
+
                     Add Card
                   </Button>
                 </Box>
-              )}
+              }
 
               {/* Security Notice */}
               <Box
@@ -379,14 +361,14 @@ export default function PaymentMethodsPage() {
                   borderRadius: 1,
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: 1,
-                }}
-              >
+                  gap: 1
+                }}>
+
                 <CheckCircleIcon
                   color="info"
                   fontSize="small"
-                  sx={{ mt: 0.3 }}
-                />
+                  sx={{ mt: 0.3 }} />
+
                 <Box>
                   <Typography variant="subtitle2" fontWeight={600}>
                     Your payment info is secure
@@ -408,16 +390,16 @@ export default function PaymentMethodsPage() {
         open={addDialogOpen}
         onClose={() => setAddDialogOpen(false)}
         maxWidth="sm"
-        fullWidth
-      >
+        fullWidth>
+
         <DialogTitle>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+              alignItems: "center"
+            }}>
+
             <Typography variant="h6" fontWeight={600}>
               Add Payment Method
             </Typography>
@@ -428,8 +410,8 @@ export default function PaymentMethodsPage() {
         </DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2}>
-            <Grid                 size={{xs:12 }}
->
+            <Grid item xs={12}>
+
               <TextField
                 fullWidth
                 label="Card Number"
@@ -439,25 +421,25 @@ export default function PaymentMethodsPage() {
                 error={!!errors.cardNumber}
                 helperText={errors.cardNumber}
                 InputProps={{
-                  startAdornment: (
-                    <CreditCardIcon color="action" sx={{ mr: 1 }} />
-                  ),
-                }}
-              />
+                  startAdornment:
+                  <CreditCardIcon color="action" sx={{ mr: 1 }} />
+
+                }} />
+
             </Grid>
-            <Grid                 size={{xs:12 }}
->
+            <Grid item xs={12}>
+
               <TextField
                 fullWidth
                 label="Name on Card"
                 value={formData.cardName}
                 onChange={handleChange("cardName")}
                 error={!!errors.cardName}
-                helperText={errors.cardName}
-              />
+                helperText={errors.cardName} />
+
             </Grid>
-            <Grid                 size={{xs:6 }}
->
+            <Grid item xs={6}>
+
               <TextField
                 fullWidth
                 label="Expiry Date"
@@ -465,11 +447,11 @@ export default function PaymentMethodsPage() {
                 value={formData.expiryDate}
                 onChange={handleChange("expiryDate")}
                 error={!!errors.expiryDate}
-                helperText={errors.expiryDate}
-              />
+                helperText={errors.expiryDate} />
+
             </Grid>
-            <Grid                 size={{xs:6 }}
->
+            <Grid item xs={6}>
+
               <TextField
                 fullWidth
                 label="CVV"
@@ -478,25 +460,25 @@ export default function PaymentMethodsPage() {
                 value={formData.cvv}
                 onChange={handleChange("cvv")}
                 error={!!errors.cvv}
-                helperText={errors.cvv}
-              />
+                helperText={errors.cvv} />
+
             </Grid>
-            <Grid                 size={{xs:12 }}
->
+            <Grid item xs={12}>
+
               <FormControlLabel
                 control={
-                  <Checkbox
-                    checked={formData.setDefault}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        setDefault: e.target.checked,
-                      }))
-                    }
-                  />
+                <Checkbox
+                  checked={formData.setDefault}
+                  onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    setDefault: e.target.checked
+                  }))
+                  } />
+
                 }
-                label="Set as default payment method"
-              />
+                label="Set as default payment method" />
+
             </Grid>
           </Grid>
         </DialogContent>
@@ -507,8 +489,8 @@ export default function PaymentMethodsPage() {
           <Button
             variant="contained"
             onClick={handleAddCard}
-            disabled={loading}
-          >
+            disabled={loading}>
+
             {loading ? "Adding..." : "Add Card"}
           </Button>
         </DialogActions>
@@ -522,8 +504,8 @@ export default function PaymentMethodsPage() {
         title="Remove Payment Method?"
         message={`Are you sure you want to remove the card ending in ${selectedMethod?.last4}?`}
         confirmText="Remove"
-        type="warning"
-      />
-    </Box>
-  );
+        type="warning" />
+
+    </Box>);
+
 }

@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { Box, Card, CardContent, Typography, Button, Grid, Avatar, Chip, Divider } from "@mui/material";
-import { useTheme, alpha } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+import { Box, Card, CardContent, Typography, Snackbar, Alert } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import PageHeader from "../../components/PageHeader";
 import CustomTable from "../../components/CustomTable";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import OwnerDetailsModal from "../../components/modals/OwnerDetailsModal";
 import { owners } from "../../data/mockData";
-import DescriptionIcon from "@mui/icons-material/Description";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import { getOwnerList, updateOwner } from "../../services/ownerService";
 
 export default function PendingVerificationsPage() {
     const theme = useTheme();
@@ -17,6 +16,62 @@ export default function PendingVerificationsPage() {
     const [approveDialogOpen, setApproveDialogOpen] = useState(false);
     const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
     const [selectedOwner, setSelectedOwner] = useState(null);
+    const [isApproving, setIsApproving] = useState(false);
+    const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
+    const mapOwnerDto = (owner, index) => {
+        const status =
+            owner?.statusId === 1
+                ? "verified"
+                : owner?.statusId === 2
+                    ? "rejected"
+                    : "pending";
+
+        return {
+            id: owner?.id || owner?.primaryKeyValue || index,
+            name: owner?.name || owner?.email || "Unknown",
+            email: owner?.email || "",
+            phone: owner?.phoneNo || "",
+            avatar: owner?.avatarUrl || null,
+            status,
+            documentsSubmitted: Boolean(owner?.documentUrl),
+            documentUrl: owner?.documentUrl || null,
+            rejectionReason: owner?.rejectionReason || "",
+            verificationDate: owner?.verificationDate || "",
+            statusId: owner?.statusId ?? 0,
+            propertiesCount: 0,
+            totalRevenue: 0,
+            joinedDate: (owner?.transactedDate || owner?.lastChanged || "")
+                .toString()
+                .split("T")[0],
+            address: owner?.address || "",
+        };
+    };
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchOwners = async () => {
+            try {
+                const response = await getOwnerList({ language: "en" });
+                const ownersArray = Array.isArray(response) ? response : response ? [response] : [];
+                if (isMounted && ownersArray.length > 0) {
+                    const mapped = ownersArray.map(mapOwnerDto);
+                    setData(
+                        mapped.filter((o) => o.status === "pending")
+                    );
+                }
+            } catch (err) {
+                // Keep mock data on error.
+            }
+        };
+
+        fetchOwners();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
 
     const columns = [
         { id: "name", label: "Owner Name", type: "avatar", subField: "email", width: "250px" },
@@ -42,29 +97,87 @@ export default function PendingVerificationsPage() {
         }
     };
 
-    const handleApprove = () => {
-        setData(data.filter((item) => item.id !== selectedOwner.id));
-        setApproveDialogOpen(false);
-        setSelectedOwner(null);
-        // In real app: API call to update status
+    const handleApprove = async () => {
+        if (!selectedOwner?.id) return;
+        setIsApproving(true);
+        try {
+            await updateOwner(
+                {
+                    isActive: true,
+                    transactedBy: selectedOwner.email || "admin",
+                    name: selectedOwner.name,
+                    email: selectedOwner.email,
+                    phoneNo: selectedOwner.phone,
+                    address: selectedOwner.address,
+                    avatarUrl: selectedOwner.avatar || null,
+                    statusId: 1,
+                    documentUrl: selectedOwner.documentUrl || null,
+                    rejectionReason: "",
+                    verificationDate: new Date().toISOString(),
+                },
+                { language: "en" }
+            );
+
+            setData((prev) => prev.filter((item) => item.id !== selectedOwner.id));
+            setSnackbar({ open: true, message: "Owner approved successfully.", severity: "success" });
+            setApproveDialogOpen(false);
+            setSelectedOwner(null);
+        } catch (err) {
+            setSnackbar({
+                open: true,
+                message: err?.message || "Failed to approve owner.",
+                severity: "error",
+            });
+        } finally {
+            setIsApproving(false);
+        }
     };
 
-    const handleReject = () => {
-        setData(data.filter((item) => item.id !== selectedOwner.id));
-        setRejectDialogOpen(false);
-        setSelectedOwner(null);
-        // In real app: API call to update status
+    const handleReject = async () => {
+        if (!selectedOwner?.id) return;
+        setIsApproving(true);
+        try {
+            await updateOwner(
+                {
+                    isActive: true,
+                    transactedBy: selectedOwner.email || "admin",
+                    name: selectedOwner.name,
+                    email: selectedOwner.email,
+                    phoneNo: selectedOwner.phone,
+                    address: selectedOwner.address,
+                    avatarUrl: selectedOwner.avatar || null,
+                    statusId: 2,
+                    documentUrl: selectedOwner.documentUrl || null,
+                    rejectionReason: "Rejected by admin",
+                    verificationDate: new Date().toISOString(),
+                },
+                { language: "en" }
+            );
+
+            setData((prev) => prev.filter((item) => item.id !== selectedOwner.id));
+            setSnackbar({ open: true, message: "Owner rejected.", severity: "success" });
+            setRejectDialogOpen(false);
+            setSelectedOwner(null);
+        } catch (err) {
+            setSnackbar({
+                open: true,
+                message: err?.message || "Failed to reject owner.",
+                severity: "error",
+            });
+        } finally {
+            setIsApproving(false);
+        }
     };
 
     return (
         <Box>
             <PageHeader
-                title="Pending Verifications"
-                subtitle="Review and verify property owner registrations"
+                title="Owner Verifications"
+                subtitle="Review and verify owner registrations"
                 breadcrumbs={[
-                    { label: "Dashboard", path: "/dashboard" },
-                    { label: "User Management", path: "/users" },
-                    { label: "Pending Verifications", path: "/users/pending" },
+                    { label: "Dashboard", path: "/admin/dashboard" },
+                    { label: "User Management", path: "/admin/users" },
+                    { label: "Owner Verifications", path: "/admin/users/pending" },
                 ]}
             />
 
@@ -120,6 +233,7 @@ export default function PendingVerificationsPage() {
                 message={`Are you sure you want to approve "${selectedOwner?.name}" as a property owner? They will be able to register properties on the platform.`}
                 confirmText="Approve"
                 type="success"
+                loading={isApproving}
             />
 
             {/* Reject Dialog */}
@@ -134,11 +248,23 @@ export default function PendingVerificationsPage() {
                 message={`Are you sure you want to reject "${selectedOwner?.name}"? They will be notified of this decision.`}
                 confirmText="Reject"
                 type="error"
+                loading={isApproving}
             />
+
+            <Snackbar
+                open={snackbar.open}
+                autoHideDuration={3000}
+                onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            >
+                <Alert
+                    onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+                    severity={snackbar.severity}
+                    variant="filled"
+                >
+                    {snackbar.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 }
-
-
-
-

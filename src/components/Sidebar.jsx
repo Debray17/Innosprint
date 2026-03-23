@@ -86,10 +86,11 @@ const menuItems = [
         name: "User Management",
         icon: PeopleIcon,
         isDropdown: true,
-        path: "/users",
+        path: "/admin/users",
         subItems: [
+            { name: "All Users", path: "/admin/users/all", icon: PeopleIcon },
             { name: "All Owners", path: "/admin/users/owners", icon: PersonAddIcon },
-            { name: "Pending Verifications", path: "/admin/users/pending", icon: VerifiedUserIcon },
+            { name: "Owner Verifications", path: "/admin/users/pending", icon: VerifiedUserIcon },
         ],
     },
     {
@@ -101,6 +102,7 @@ const menuItems = [
             { name: "Registration Requests", path: "/admin/properties/requests", icon: AddBusinessIcon },
             { name: "All Properties", path: "/admin/properties/all", icon: BusinessIcon },
             { name: "Property Types", path: "/admin/properties/types", icon: CategoryIcon },
+            { name: "Property Amenities", path: "/admin/properties/amenities", icon: CategoryIcon },
         ],
     },
     {
@@ -111,6 +113,8 @@ const menuItems = [
         subItems: [
             { name: "All Rooms", path: "/admin/rooms/all", icon: BedroomParentIcon },
             { name: "Room Types", path: "/admin/rooms/types", icon: KingBedIcon },
+            { name: "Room Amenities", path: "/admin/rooms/amenities", icon: KingBedIcon },
+            { name: "Room Seasonal Pricing", path: "/admin/rooms/seasonal-pricing", icon: KingBedIcon },
         ],
     },
     {

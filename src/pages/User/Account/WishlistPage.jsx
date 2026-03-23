@@ -1,20 +1,9 @@
 // src/pages/User/Account/WishlistPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  Button,
-  IconButton,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, Button, IconButton, Card, CardContent, CardMedia, Chip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -51,7 +40,7 @@ export default function WishlistPage() {
     return new Date(dateStr).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
@@ -60,21 +49,21 @@ export default function WishlistPage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
+          <Grid item xs={12} md={9}>
             <Paper sx={{ p: 3 }}>
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  mb: 3,
-                }}
-              >
+                  mb: 3
+                }}>
+
                 <Box>
                   <Typography variant="h5" fontWeight={700}>
                     My Wishlist
@@ -85,103 +74,103 @@ export default function WishlistPage() {
                 </Box>
               </Box>
 
-              {wishlist.length > 0 ? (
-                <Grid container spacing={3}>
-                  {wishlist.map((item) => (
-                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
+              {wishlist.length > 0 ?
+              <Grid container spacing={3}>
+                  {wishlist.map((item) =>
+                <Grid item key={item.id} xs={12} sm={6} md={4}>
                       <Card
-                        sx={{
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          transition: "all 0.2s",
-                          "&:hover": {
-                            transform: "translateY(-4px)",
-                            boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-                          },
-                        }}
-                      >
+                    sx={{
+                      height: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        transform: "translateY(-4px)",
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.12)"
+                      }
+                    }}>
+
                         <Box sx={{ position: "relative" }}>
                           <CardMedia
-                            component="img"
-                            height={180}
-                            image={item.property.images[0]}
-                            alt={item.property.name}
-                            sx={{ cursor: "pointer" }}
-                            onClick={() =>
-                              navigate(`/property/${item.property.id}`)
-                            }
-                          />
+                        component="img"
+                        height={180}
+                        image={item.property.images[0]}
+                        alt={item.property.name}
+                        sx={{ cursor: "pointer" }}
+                        onClick={() =>
+                        navigate(`/property/${item.property.id}`)
+                        } />
+
 
                           {/* Discount Badge */}
-                          {item.property.discount > 0 && (
-                            <Chip
-                              label={`${item.property.discount}% OFF`}
-                              size="small"
-                              sx={{
-                                position: "absolute",
-                                top: 12,
-                                left: 12,
-                                bgcolor: theme.palette.error.main,
-                                color: "#fff",
-                                fontWeight: 600,
-                              }}
-                            />
-                          )}
+                          {item.property.discount > 0 &&
+                      <Chip
+                        label={`${item.property.discount}% OFF`}
+                        size="small"
+                        sx={{
+                          position: "absolute",
+                          top: 12,
+                          left: 12,
+                          bgcolor: theme.palette.error.main,
+                          color: "#fff",
+                          fontWeight: 600
+                        }} />
+
+                      }
 
                           {/* Remove Button */}
                           <IconButton
-                            size="small"
-                            onClick={() => handleRemove(item)}
-                            sx={{
-                              position: "absolute",
-                              top: 8,
-                              right: 8,
-                              bgcolor: "rgba(255,255,255,0.9)",
-                              "&:hover": { bgcolor: "#fff" },
-                            }}
-                          >
+                        size="small"
+                        onClick={() => handleRemove(item)}
+                        sx={{
+                          position: "absolute",
+                          top: 8,
+                          right: 8,
+                          bgcolor: "rgba(255,255,255,0.9)",
+                          "&:hover": { bgcolor: "#fff" }
+                        }}>
+
                             <FavoriteIcon
-                              sx={{ color: theme.palette.error.main }}
-                            />
+                          sx={{ color: theme.palette.error.main }} />
+
                           </IconButton>
 
                           {/* Property Type */}
                           <Chip
-                            label={item.property.type}
-                            size="small"
-                            sx={{
-                              position: "absolute",
-                              bottom: 12,
-                              left: 12,
-                              bgcolor: "rgba(0,0,0,0.7)",
-                              color: "#fff",
-                            }}
-                          />
+                        label={item.property.type}
+                        size="small"
+                        sx={{
+                          position: "absolute",
+                          bottom: 12,
+                          left: 12,
+                          bgcolor: "rgba(0,0,0,0.7)",
+                          color: "#fff"
+                        }} />
+
                         </Box>
 
                         <CardContent
-                          sx={{
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                          }}
-                        >
+                      sx={{
+                        flex: 1,
+                        display: "flex",
+                        flexDirection: "column"
+                      }}>
+
                           {/* Rating */}
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                              mb: 1,
-                            }}
-                          >
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                          mb: 1
+                        }}>
+
                             <StarIcon
-                              sx={{
-                                fontSize: 16,
-                                color: theme.palette.warning.main,
-                              }}
-                            />
+                          sx={{
+                            fontSize: 16,
+                            color: theme.palette.warning.main
+                          }} />
+
                             <Typography variant="body2" fontWeight={600}>
                               {item.property.rating}
                             </Typography>
@@ -192,31 +181,31 @@ export default function WishlistPage() {
 
                           {/* Name */}
                           <Typography
-                            variant="subtitle1"
-                            fontWeight={600}
-                            sx={{
-                              cursor: "pointer",
-                              "&:hover": { color: theme.palette.primary.main },
-                            }}
-                            onClick={() =>
-                              navigate(`/property/${item.property.id}`)
-                            }
-                          >
+                        variant="subtitle1"
+                        fontWeight={600}
+                        sx={{
+                          cursor: "pointer",
+                          "&:hover": { color: theme.palette.primary.main }
+                        }}
+                        onClick={() =>
+                        navigate(`/property/${item.property.id}`)
+                        }>
+
                             {item.property.name}
                           </Typography>
 
                           {/* Location */}
                           <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                              mb: 1,
-                            }}
-                          >
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                          mb: 1
+                        }}>
+
                             <LocationOnIcon
-                              sx={{ fontSize: 14, color: "text.secondary" }}
-                            />
+                          sx={{ fontSize: 14, color: "text.secondary" }} />
+
                             <Typography variant="body2" color="text.secondary">
                               {item.property.location.city},{" "}
                               {item.property.location.state}
@@ -225,55 +214,55 @@ export default function WishlistPage() {
 
                           {/* Tags */}
                           <Box
-                            sx={{
-                              display: "flex",
-                              gap: 0.5,
-                              flexWrap: "wrap",
-                              mb: 1,
-                            }}
-                          >
-                            {item.property.freeCancellation && (
-                              <Chip
-                                label="Free cancellation"
-                                size="small"
-                                variant="outlined"
-                                color="success"
-                                sx={{ fontSize: 10 }}
-                              />
-                            )}
+                        sx={{
+                          display: "flex",
+                          gap: 0.5,
+                          flexWrap: "wrap",
+                          mb: 1
+                        }}>
+
+                            {item.property.freeCancellation &&
+                        <Chip
+                          label="Free cancellation"
+                          size="small"
+                          variant="outlined"
+                          color="success"
+                          sx={{ fontSize: 10 }} />
+
+                        }
                           </Box>
 
                           {/* Price */}
                           <Box sx={{ mt: "auto" }}>
                             <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "baseline",
-                                gap: 0.5,
-                              }}
-                            >
-                              {item.property.originalPrice && (
-                                <Typography
-                                  variant="body2"
-                                  sx={{
-                                    textDecoration: "line-through",
-                                    color: "text.secondary",
-                                  }}
-                                >
+                          sx={{
+                            display: "flex",
+                            alignItems: "baseline",
+                            gap: 0.5
+                          }}>
+
+                              {item.property.originalPrice &&
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              textDecoration: "line-through",
+                              color: "text.secondary"
+                            }}>
+
                                   Nu {item.property.originalPrice}
                                 </Typography>
-                              )}
+                          }
                               <Typography
-                                variant="h6"
-                                fontWeight={700}
-                                color="primary"
-                              >
+                            variant="h6"
+                            fontWeight={700}
+                            color="primary">
+
                                 Nu {item.property.pricePerNight}
                               </Typography>
                               <Typography
-                                variant="body2"
-                                color="text.secondary"
-                              >
+                            variant="body2"
+                            color="text.secondary">
+
                                 /night
                               </Typography>
                             </Box>
@@ -281,41 +270,41 @@ export default function WishlistPage() {
 
                           {/* Saved Date */}
                           <Typography
-                            variant="caption"
-                            color="text.secondary"
-                            sx={{ mt: 1 }}
-                          >
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}>
+
                             Saved on {formatDate(item.addedAt)}
                           </Typography>
                         </CardContent>
                       </Card>
                     </Grid>
-                  ))}
-                </Grid>
-              ) : (
-                <Box sx={{ textAlign: "center", py: 8 }}>
+                )}
+                </Grid> :
+
+              <Box sx={{ textAlign: "center", py: 8 }}>
                   <FavoriteIcon
-                    sx={{ fontSize: 64, color: "text.disabled", mb: 2 }}
-                  />
+                  sx={{ fontSize: 64, color: "text.disabled", mb: 2 }} />
+
                   <Typography variant="h6" gutterBottom>
                     Your wishlist is empty
                   </Typography>
                   <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 3 }}
-                  >
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 3 }}>
+
                     Save properties you love to view them later
                   </Typography>
                   <Button
-                    variant="contained"
-                    startIcon={<SearchIcon />}
-                    onClick={() => navigate("/search")}
-                  >
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={() => navigate("/search")}>
+
                     Explore Properties
                   </Button>
                 </Box>
-              )}
+              }
             </Paper>
           </Grid>
         </Grid>
@@ -329,8 +318,8 @@ export default function WishlistPage() {
         title="Remove from Wishlist?"
         message={`Are you sure you want to remove "${selectedItem?.property?.name}" from your wishlist?`}
         confirmText="Remove"
-        type="warning"
-      />
-    </Box>
-  );
+        type="warning" />
+
+    </Box>);
+
 }

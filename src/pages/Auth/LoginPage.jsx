@@ -24,17 +24,19 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import HotelIcon from "@mui/icons-material/Hotel";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
+import { useLogin } from "../../hooks/useAuth";
 
 export default function LoginPage() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
+  const loginMutation = useLogin();
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -46,10 +48,8 @@ export default function LoginPage() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
     }
     if (!formData.password) {
       newErrors.password = "Password is required";
@@ -64,11 +64,13 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      // Mock successful login
+      await loginMutation.mutateAsync({
+        username: formData.username.trim(),
+        password: formData.password,
+      });
       navigate("/");
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      setError(err?.message || "Invalid username or password. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -128,12 +130,11 @@ export default function LoginPage() {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Email Address"
-              type="email"
-              value={formData.email}
-              onChange={handleChange("email")}
-              error={!!errors.email}
-              helperText={errors.email}
+              label="Username"
+              value={formData.username}
+              onChange={handleChange("username")}
+              error={!!errors.username}
+              helperText={errors.username}
               sx={{ mb: 2 }}
               InputProps={{
                 startAdornment: (

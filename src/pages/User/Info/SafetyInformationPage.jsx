@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Paper,
-  Divider,
-  Alert,
-  Card,
-  CardContent,
-  Grid,
-} from "@mui/material";
+import { Container, Typography, Box, Paper, Divider, Alert, Card, CardContent } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import SecurityIcon from "@mui/icons-material/Security";
@@ -18,31 +9,31 @@ import WarningIcon from "@mui/icons-material/Warning";
 
 export default function SafetyInformationPage() {
   const safetyFeatures = [
-    {
-      icon: <VerifiedUserIcon sx={{ fontSize: 50, color: "primary.main" }} />,
-      title: "Verified Properties",
-      description:
-        "All properties undergo verification. We check property ownership, quality standards, and host identity.",
-    },
-    {
-      icon: <SecurityIcon sx={{ fontSize: 50, color: "success.main" }} />,
-      title: "Secure Payments",
-      description:
-        "All transactions are encrypted and processed through secure payment gateways. We never share your financial information.",
-    },
-    {
-      icon: <SupportAgentIcon sx={{ fontSize: 50, color: "info.main" }} />,
-      title: "24/7 Support",
-      description:
-        "Our customer support team is available round the clock to assist with emergencies or concerns during your stay.",
-    },
-    {
-      icon: <LocalHospitalIcon sx={{ fontSize: 50, color: "error.main" }} />,
-      title: "Safety Standards",
-      description:
-        "Properties must meet safety requirements including fire safety, emergency exits, and first aid availability.",
-    },
-  ];
+  {
+    icon: <VerifiedUserIcon sx={{ fontSize: 50, color: "primary.main" }} />,
+    title: "Verified Properties",
+    description:
+    "All properties undergo verification. We check property ownership, quality standards, and host identity."
+  },
+  {
+    icon: <SecurityIcon sx={{ fontSize: 50, color: "success.main" }} />,
+    title: "Secure Payments",
+    description:
+    "All transactions are encrypted and processed through secure payment gateways. We never share your financial information."
+  },
+  {
+    icon: <SupportAgentIcon sx={{ fontSize: 50, color: "info.main" }} />,
+    title: "24/7 Support",
+    description:
+    "Our customer support team is available round the clock to assist with emergencies or concerns during your stay."
+  },
+  {
+    icon: <LocalHospitalIcon sx={{ fontSize: 50, color: "error.main" }} />,
+    title: "Safety Standards",
+    description:
+    "Properties must meet safety requirements including fire safety, emergency exits, and first aid availability."
+  }];
+
 
   return (
     <Container maxWidth="md" sx={{ py: 8 }}>
@@ -59,8 +50,8 @@ export default function SafetyInformationPage() {
       </Alert>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {safetyFeatures.map((feature, index) => (
-          <Grid size={{xs:12, sm:6}} key={index}>
+        {safetyFeatures.map((feature, index) =>
+        <Grid item key={index} xs={12} sm={6}>
             <Card elevation={2} sx={{ height: "100%" }}>
               <CardContent sx={{ textAlign: "center" }}>
                 {feature.icon}
@@ -73,7 +64,7 @@ export default function SafetyInformationPage() {
               </CardContent>
             </Card>
           </Grid>
-        ))}
+        )}
       </Grid>
 
       <Paper elevation={0} sx={{ p: 4, bgcolor: "grey.50" }}>
@@ -255,6 +246,6 @@ export default function SafetyInformationPage() {
           </Typography>
         </Box>
       </Paper>
-    </Container>
-  );
+    </Container>);
+
 }

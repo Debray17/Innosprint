@@ -1,52 +1,43 @@
 import React from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Paper,
-  Divider,
-  Alert,
-  Card,
-  CardContent,
-  Grid,
-} from "@mui/material";
+import { Container, Typography, Box, Paper, Divider, Alert, Card, CardContent } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import InfoIcon from "@mui/icons-material/Info";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function CancellationPolicyPage() {
   const policyTypes = [
-    {
-      name: "Flexible",
-      icon: <CheckCircleIcon sx={{ fontSize: 40, color: "success.main" }} />,
-      refund: "Full refund if cancelled 24 hours before check-in",
-      details: [
-        "100% refund: Cancel 24+ hours before check-in",
-        "50% refund: Cancel within 24 hours before check-in",
-        "No refund: Cancel after check-in or no-show",
-      ],
-    },
-    {
-      name: "Moderate",
-      icon: <InfoIcon sx={{ fontSize: 40, color: "info.main" }} />,
-      refund: "Full refund if cancelled 5 days before check-in",
-      details: [
-        "100% refund: Cancel 5+ days before check-in",
-        "50% refund: Cancel 2-5 days before check-in",
-        "No refund: Cancel within 48 hours or no-show",
-      ],
-    },
-    {
-      name: "Strict",
-      icon: <CancelIcon sx={{ fontSize: 40, color: "warning.main" }} />,
-      refund: "50% refund if cancelled 7 days before check-in",
-      details: [
-        "50% refund: Cancel 7+ days before check-in",
-        "25% refund: Cancel 3-7 days before check-in",
-        "No refund: Cancel within 72 hours or no-show",
-      ],
-    },
-  ];
+  {
+    name: "Flexible",
+    icon: <CheckCircleIcon sx={{ fontSize: 40, color: "success.main" }} />,
+    refund: "Full refund if cancelled 24 hours before check-in",
+    details: [
+    "100% refund: Cancel 24+ hours before check-in",
+    "50% refund: Cancel within 24 hours before check-in",
+    "No refund: Cancel after check-in or no-show"]
+
+  },
+  {
+    name: "Moderate",
+    icon: <InfoIcon sx={{ fontSize: 40, color: "info.main" }} />,
+    refund: "Full refund if cancelled 5 days before check-in",
+    details: [
+    "100% refund: Cancel 5+ days before check-in",
+    "50% refund: Cancel 2-5 days before check-in",
+    "No refund: Cancel within 48 hours or no-show"]
+
+  },
+  {
+    name: "Strict",
+    icon: <CancelIcon sx={{ fontSize: 40, color: "warning.main" }} />,
+    refund: "50% refund if cancelled 7 days before check-in",
+    details: [
+    "50% refund: Cancel 7+ days before check-in",
+    "25% refund: Cancel 3-7 days before check-in",
+    "No refund: Cancel within 72 hours or no-show"]
+
+  }];
+
 
   return (
     <Container maxWidth="md" sx={{ py: 8 }}>
@@ -83,8 +74,8 @@ export default function CancellationPolicyPage() {
       </Typography>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        {policyTypes.map((policy, index) => (
-          <Grid size={{xs:12}} key={index}>
+        {policyTypes.map((policy, index) =>
+        <Grid item key={index} xs={12}>
             <Card elevation={2}>
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -99,15 +90,15 @@ export default function CancellationPolicyPage() {
                   </Box>
                 </Box>
                 <Divider sx={{ my: 2 }} />
-                {policy.details.map((detail, idx) => (
-                  <Typography key={idx} variant="body2" sx={{ mb: 1, pl: 2 }}>
+                {policy.details.map((detail, idx) =>
+              <Typography key={idx} variant="body2" sx={{ mb: 1, pl: 2 }}>
                     • {detail}
                   </Typography>
-                ))}
+              )}
               </CardContent>
             </Card>
           </Grid>
-        ))}
+        )}
       </Grid>
 
       <Paper elevation={0} sx={{ p: 4, bgcolor: "grey.50" }}>
@@ -208,6 +199,6 @@ export default function CancellationPolicyPage() {
           </Typography>
         </Box>
       </Paper>
-    </Container>
-  );
+    </Container>);
+
 }

@@ -1,71 +1,58 @@
 import React, { useState } from "react";
-import {
-    Box,
-    Typography,
-    Card,
-    CardContent,
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Button,
-    Grid,
-    Chip,
-    Divider,
-    Alert,
-} from "@mui/material";
+import { Box, Typography, Card, CardContent, Dialog, DialogTitle, DialogContent, DialogActions, Button, Chip, Divider, Alert } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CustomTable from "../../components/CustomTable";
 import ConfirmDialog from "../../components/ConfirmDialog";
 import { properties } from "../../data/mockData";
 
 export default function PropertyRequestsPage() {
-    const [data, setData] = useState(properties.filter((p) => p.status === "pending"));
-    const [viewModalOpen, setViewModalOpen] = useState(false);
-    const [approveDialogOpen, setApproveDialogOpen] = useState(false);
-    const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
-    const [selectedProperty, setSelectedProperty] = useState(null);
+  const [data, setData] = useState(properties.filter((p) => p.status === "pending"));
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState(null);
 
-    const columns = [
-        { id: "name", label: "Property Name", type: "text", width: "200px" },
-        { id: "ownerName", label: "Owner", type: "text", width: "150px" },
-        {
-            id: "type",
-            label: "Type",
-            type: "select",
-            width: "120px",
-            options: ["Hotel", "Resort", "Villa", "Apartment", "Guest House", "Hostel"],
-        },
-        { id: "city", label: "City", type: "text", width: "120px" },
-        { id: "totalRooms", label: "Rooms", type: "number", width: "80px" },
-        { id: "createdAt", label: "Submitted", type: "date", width: "120px" },
-    ];
+  const columns = [
+  { id: "name", label: "Property Name", type: "text", width: "200px" },
+  { id: "ownerName", label: "Owner", type: "text", width: "150px" },
+  {
+    id: "type",
+    label: "Type",
+    type: "select",
+    width: "120px",
+    options: ["Hotel", "Resort", "Villa", "Apartment", "Guest House", "Hostel"]
+  },
+  { id: "city", label: "City", type: "text", width: "120px" },
+  { id: "totalRooms", label: "Rooms", type: "number", width: "80px" },
+  { id: "createdAt", label: "Submitted", type: "date", width: "120px" }];
 
-    const handleActionClick = (action, row) => {
-        setSelectedProperty(row);
-        if (action === "view") {
-            setViewModalOpen(true);
-        } else if (action === "approve") {
-            setApproveDialogOpen(true);
-        } else if (action === "reject") {
-            setRejectDialogOpen(true);
-        }
-    };
 
-    const handleApprove = () => {
-        setData(data.filter((p) => p.id !== selectedProperty.id));
-        setApproveDialogOpen(false);
-        setSelectedProperty(null);
-    };
+  const handleActionClick = (action, row) => {
+    setSelectedProperty(row);
+    if (action === "view") {
+      setViewModalOpen(true);
+    } else if (action === "approve") {
+      setApproveDialogOpen(true);
+    } else if (action === "reject") {
+      setRejectDialogOpen(true);
+    }
+  };
 
-    const handleReject = () => {
-        setData(data.filter((p) => p.id !== selectedProperty.id));
-        setRejectDialogOpen(false);
-        setSelectedProperty(null);
-    };
+  const handleApprove = () => {
+    setData(data.filter((p) => p.id !== selectedProperty.id));
+    setApproveDialogOpen(false);
+    setSelectedProperty(null);
+  };
 
-    return (
-        <Box>
+  const handleReject = () => {
+    setData(data.filter((p) => p.id !== selectedProperty.id));
+    setRejectDialogOpen(false);
+    setSelectedProperty(null);
+  };
+
+  return (
+    <Box>
             {/* Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
                 <Box>
@@ -77,15 +64,15 @@ export default function PropertyRequestsPage() {
                     </Typography>
                 </Box>
                 <Chip
-                    label={`${data.length} Pending`}
-                    color="warning"
-                    variant="outlined"
-                    sx={{ fontWeight: 600 }}
-                />
+          label={`${data.length} Pending`}
+          color="warning"
+          variant="outlined"
+          sx={{ fontWeight: 600 }} />
+
             </Box>
 
-            {data.length === 0 ? (
-                <Card>
+            {data.length === 0 ?
+      <Card>
                     <CardContent sx={{ textAlign: "center", py: 6 }}>
                         <Typography variant="h6" color="text.secondary">
                             No pending property requests
@@ -94,31 +81,31 @@ export default function PropertyRequestsPage() {
                             All property registrations have been processed
                         </Typography>
                     </CardContent>
-                </Card>
-            ) : (
-                <Card>
+                </Card> :
+
+      <Card>
                     <CardContent sx={{ p: 0 }}>
                         <CustomTable
-                            data={data}
-                            columns={columns}
-                            actions={["view", "approve", "reject"]}
-                            onActionClick={handleActionClick}
-                        />
+            data={data}
+            columns={columns}
+            actions={["view", "approve", "reject"]}
+            onActionClick={handleActionClick} />
+
                     </CardContent>
                 </Card>
-            )}
+      }
 
             {/* View Modal */}
             <Dialog
-                open={viewModalOpen}
-                onClose={() => setViewModalOpen(false)}
-                maxWidth="md"
-                fullWidth
-            >
+        open={viewModalOpen}
+        onClose={() => setViewModalOpen(false)}
+        maxWidth="md"
+        fullWidth>
+
                 <DialogTitle>Property Registration Request</DialogTitle>
                 <DialogContent dividers>
-                    {selectedProperty && (
-                        <Box>
+                    {selectedProperty &&
+          <Box>
                             <Alert severity="info" sx={{ mb: 3 }}>
                                 This property is pending approval. Please review all details before making a decision.
                             </Alert>
@@ -153,9 +140,9 @@ export default function PropertyRequestsPage() {
                                         Amenities
                                     </Typography>
                                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                                        {selectedProperty.amenities.map((amenity) => (
-                                            <Chip key={amenity} label={amenity} size="small" variant="outlined" />
-                                        ))}
+                                        {selectedProperty.amenities.map((amenity) =>
+                  <Chip key={amenity} label={amenity} size="small" variant="outlined" />
+                  )}
                                     </Box>
                                 </Grid>
 
@@ -185,30 +172,30 @@ export default function PropertyRequestsPage() {
                                 </Grid>
                             </Grid>
                         </Box>
-                    )}
+          }
                 </DialogContent>
                 <DialogActions sx={{ p: 2, gap: 1 }}>
                     <Button onClick={() => setViewModalOpen(false)} color="inherit">
                         Close
                     </Button>
                     <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={() => {
-                            setViewModalOpen(false);
-                            setRejectDialogOpen(true);
-                        }}
-                    >
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              setViewModalOpen(false);
+              setRejectDialogOpen(true);
+            }}>
+
                         Reject
                     </Button>
                     <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => {
-                            setViewModalOpen(false);
-                            setApproveDialogOpen(true);
-                        }}
-                    >
+            variant="contained"
+            color="success"
+            onClick={() => {
+              setViewModalOpen(false);
+              setApproveDialogOpen(true);
+            }}>
+
                         Approve
                     </Button>
                 </DialogActions>
@@ -216,25 +203,25 @@ export default function PropertyRequestsPage() {
 
             {/* Approve Dialog */}
             <ConfirmDialog
-                open={approveDialogOpen}
-                onClose={() => setApproveDialogOpen(false)}
-                onConfirm={handleApprove}
-                title="Approve Property"
-                message={`Are you sure you want to approve "${selectedProperty?.name}"? It will be visible to guests for booking.`}
-                confirmText="Approve"
-                type="success"
-            />
+        open={approveDialogOpen}
+        onClose={() => setApproveDialogOpen(false)}
+        onConfirm={handleApprove}
+        title="Approve Property"
+        message={`Are you sure you want to approve "${selectedProperty?.name}"? It will be visible to guests for booking.`}
+        confirmText="Approve"
+        type="success" />
+
 
             {/* Reject Dialog */}
             <ConfirmDialog
-                open={rejectDialogOpen}
-                onClose={() => setRejectDialogOpen(false)}
-                onConfirm={handleReject}
-                title="Reject Property"
-                message={`Are you sure you want to reject "${selectedProperty?.name}"? The owner will be notified.`}
-                confirmText="Reject"
-                type="error"
-            />
-        </Box>
-    );
+        open={rejectDialogOpen}
+        onClose={() => setRejectDialogOpen(false)}
+        onConfirm={handleReject}
+        title="Reject Property"
+        message={`Are you sure you want to reject "${selectedProperty?.name}"? The owner will be notified.`}
+        confirmText="Reject"
+        type="error" />
+
+        </Box>);
+
 }

@@ -1,30 +1,8 @@
 // src/pages/User/Account/SecurityPage.jsx
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Alert,
-  Divider,
-  Switch,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton,
-  Chip,
-  InputAdornment,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, Alert, Divider, Switch, List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, IconButton, Chip, InputAdornment, Dialog, DialogTitle, DialogContent, DialogActions } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import LockIcon from "@mui/icons-material/Lock";
@@ -42,34 +20,34 @@ import CloseIcon from "@mui/icons-material/Close";
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
 
 const activeSessions = [
-  {
-    id: 1,
-    device: "MacBook Pro",
-    type: "computer",
-    browser: "Chrome",
-    location: "San Francisco, CA",
-    lastActive: "Active now",
-    current: true,
-  },
-  {
-    id: 2,
-    device: "iPhone 14",
-    type: "phone",
-    browser: "Safari",
-    location: "San Francisco, CA",
-    lastActive: "2 hours ago",
-    current: false,
-  },
-  {
-    id: 3,
-    device: "iPad Pro",
-    type: "tablet",
-    browser: "Safari",
-    location: "Los Angeles, CA",
-    lastActive: "3 days ago",
-    current: false,
-  },
-];
+{
+  id: 1,
+  device: "MacBook Pro",
+  type: "computer",
+  browser: "Chrome",
+  location: "San Francisco, CA",
+  lastActive: "Active now",
+  current: true
+},
+{
+  id: 2,
+  device: "iPhone 14",
+  type: "phone",
+  browser: "Safari",
+  location: "San Francisco, CA",
+  lastActive: "2 hours ago",
+  current: false
+},
+{
+  id: 3,
+  device: "iPad Pro",
+  type: "tablet",
+  browser: "Safari",
+  location: "Los Angeles, CA",
+  lastActive: "3 days ago",
+  current: false
+}];
+
 
 export default function SecurityPage() {
   const theme = useTheme();
@@ -77,12 +55,12 @@ export default function SecurityPage() {
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
-    confirm: false,
+    confirm: false
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -129,7 +107,7 @@ export default function SecurityPage() {
       setPasswordForm({
         currentPassword: "",
         newPassword: "",
-        confirmPassword: "",
+        confirmPassword: ""
       });
       setTimeout(() => setSuccess(""), 3000);
     } finally {
@@ -182,17 +160,17 @@ export default function SecurityPage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
-            {success && (
-              <Alert severity="success" sx={{ mb: 3 }}>
+          <Grid item xs={12} md={9}>
+            {success &&
+            <Alert severity="success" sx={{ mb: 3 }}>
                 {success}
               </Alert>
-            )}
+            }
 
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
@@ -206,8 +184,8 @@ export default function SecurityPage() {
             {/* Change Password */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}
-              >
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+
                 <LockIcon color="primary" />
                 <Typography variant="h6" fontWeight={600}>
                   Change Password
@@ -215,7 +193,7 @@ export default function SecurityPage() {
               </Box>
 
               <Grid container spacing={2}>
-                <Grid size={{ xs: 12 }}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Current Password"
@@ -225,24 +203,24 @@ export default function SecurityPage() {
                     error={!!errors.currentPassword}
                     helperText={errors.currentPassword}
                     InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
+                      endAdornment:
+                      <InputAdornment position="end">
                           <IconButton
-                            onClick={() => toggleShowPassword("current")}
-                            edge="end"
-                          >
-                            {showPasswords.current ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
+                          onClick={() => toggleShowPassword("current")}
+                          edge="end">
+
+                            {showPasswords.current ?
+                          <VisibilityOffIcon /> :
+
+                          <VisibilityIcon />
+                          }
                           </IconButton>
                         </InputAdornment>
-                      ),
-                    }}
-                  />
+
+                    }} />
+
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="New Password"
@@ -252,24 +230,24 @@ export default function SecurityPage() {
                     error={!!errors.newPassword}
                     helperText={errors.newPassword}
                     InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
+                      endAdornment:
+                      <InputAdornment position="end">
                           <IconButton
-                            onClick={() => toggleShowPassword("new")}
-                            edge="end"
-                          >
-                            {showPasswords.new ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
+                          onClick={() => toggleShowPassword("new")}
+                          edge="end">
+
+                            {showPasswords.new ?
+                          <VisibilityOffIcon /> :
+
+                          <VisibilityIcon />
+                          }
                           </IconButton>
                         </InputAdornment>
-                      ),
-                    }}
-                  />
+
+                    }} />
+
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Confirm New Password"
@@ -279,22 +257,22 @@ export default function SecurityPage() {
                     error={!!errors.confirmPassword}
                     helperText={errors.confirmPassword}
                     InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
+                      endAdornment:
+                      <InputAdornment position="end">
                           <IconButton
-                            onClick={() => toggleShowPassword("confirm")}
-                            edge="end"
-                          >
-                            {showPasswords.confirm ? (
-                              <VisibilityOffIcon />
-                            ) : (
-                              <VisibilityIcon />
-                            )}
+                          onClick={() => toggleShowPassword("confirm")}
+                          edge="end">
+
+                            {showPasswords.confirm ?
+                          <VisibilityOffIcon /> :
+
+                          <VisibilityIcon />
+                          }
                           </IconButton>
                         </InputAdornment>
-                      ),
-                    }}
-                  />
+
+                    }} />
+
                 </Grid>
               </Grid>
 
@@ -302,8 +280,8 @@ export default function SecurityPage() {
                 variant="contained"
                 onClick={handleChangePassword}
                 disabled={loading}
-                sx={{ mt: 3 }}
-              >
+                sx={{ mt: 3 }}>
+
                 {loading ? "Updating..." : "Update Password"}
               </Button>
             </Paper>
@@ -311,8 +289,8 @@ export default function SecurityPage() {
             {/* Two-Factor Authentication */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
-              >
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+
                 <SecurityIcon color="primary" />
                 <Typography variant="h6" fontWeight={600}>
                   Two-Factor Authentication
@@ -325,36 +303,36 @@ export default function SecurityPage() {
                   justifyContent: "space-between",
                   alignItems: "center",
                   p: 2,
-                  bgcolor: twoFactorEnabled
-                    ? alpha(theme.palette.success.main, 0.1)
-                    : alpha(theme.palette.warning.main, 0.1),
-                  borderRadius: 2,
-                }}
-              >
+                  bgcolor: twoFactorEnabled ?
+                  alpha(theme.palette.success.main, 0.1) :
+                  alpha(theme.palette.warning.main, 0.1),
+                  borderRadius: 2
+                }}>
+
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  {twoFactorEnabled ? (
-                    <CheckCircleIcon color="success" />
-                  ) : (
-                    <WarningIcon color="warning" />
-                  )}
+                  {twoFactorEnabled ?
+                  <CheckCircleIcon color="success" /> :
+
+                  <WarningIcon color="warning" />
+                  }
                   <Box>
                     <Typography variant="subtitle1" fontWeight={600}>
-                      {twoFactorEnabled
-                        ? "2FA is enabled"
-                        : "2FA is not enabled"}
+                      {twoFactorEnabled ?
+                      "2FA is enabled" :
+                      "2FA is not enabled"}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {twoFactorEnabled
-                        ? "Your account is protected with two-factor authentication"
-                        : "Add an extra layer of security to your account"}
+                      {twoFactorEnabled ?
+                      "Your account is protected with two-factor authentication" :
+                      "Add an extra layer of security to your account"}
                     </Typography>
                   </Box>
                 </Box>
                 <Switch
                   checked={twoFactorEnabled}
                   onChange={handleToggle2FA}
-                  color="primary"
-                />
+                  color="primary" />
+
               </Box>
             </Paper>
 
@@ -365,75 +343,75 @@ export default function SecurityPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  mb: 2,
-                }}
-              >
+                  mb: 2
+                }}>
+
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <ComputerIcon color="primary" />
                   <Typography variant="h6" fontWeight={600}>
                     Active Sessions
                   </Typography>
                 </Box>
-                {sessions.length > 1 && (
-                  <Button
-                    color="error"
-                    size="small"
-                    onClick={handleRevokeAllSessions}
-                  >
+                {sessions.length > 1 &&
+                <Button
+                  color="error"
+                  size="small"
+                  onClick={handleRevokeAllSessions}>
+
                     Log out all other sessions
                   </Button>
-                )}
+                }
               </Box>
 
               <List>
-                {sessions.map((session, index) => (
-                  <React.Fragment key={session.id}>
+                {sessions.map((session, index) =>
+                <React.Fragment key={session.id}>
                     <ListItem sx={{ py: 2 }}>
                       <ListItemIcon>{getDeviceIcon(session.type)}</ListItemIcon>
                       <ListItemText
-                        primary={
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
+                      primary={
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1
+                        }}>
+
                             <Typography fontWeight={500}>
                               {session.device}
                             </Typography>
-                            {session.current && (
-                              <Chip
-                                label="Current"
-                                size="small"
-                                color="primary"
-                              />
-                            )}
-                          </Box>
+                            {session.current &&
+                        <Chip
+                          label="Current"
+                          size="small"
+                          color="primary" />
+
                         }
-                        secondary={
-                          <>
+                          </Box>
+                      }
+                      secondary={
+                      <>
                             {session.browser} • {session.location}
                             <br />
                             {session.lastActive}
                           </>
-                        }
-                      />
-                      {!session.current && (
-                        <ListItemSecondaryAction>
+                      } />
+
+                      {!session.current &&
+                    <ListItemSecondaryAction>
                           <IconButton
-                            edge="end"
-                            color="error"
-                            onClick={() => handleRevokeSession(session.id)}
-                          >
+                        edge="end"
+                        color="error"
+                        onClick={() => handleRevokeSession(session.id)}>
+
                             <DeleteIcon />
                           </IconButton>
                         </ListItemSecondaryAction>
-                      )}
+                    }
                     </ListItem>
                     {index < sessions.length - 1 && <Divider component="li" />}
                   </React.Fragment>
-                ))}
+                )}
               </List>
             </Paper>
           </Grid>
@@ -443,16 +421,16 @@ export default function SecurityPage() {
       {/* 2FA Setup Dialog */}
       <Dialog
         open={twoFactorDialogOpen}
-        onClose={() => setTwoFactorDialogOpen(false)}
-      >
+        onClose={() => setTwoFactorDialogOpen(false)}>
+
         <DialogTitle>
           <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+              alignItems: "center"
+            }}>
+
             Enable Two-Factor Authentication
             <IconButton onClick={() => setTwoFactorDialogOpen(false)}>
               <CloseIcon />
@@ -476,9 +454,9 @@ export default function SecurityPage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: 2,
-            }}
-          >
+              borderRadius: 2
+            }}>
+
             <Typography color="text.secondary">[QR Code]</Typography>
           </Box>
 
@@ -486,8 +464,8 @@ export default function SecurityPage() {
             fullWidth
             label="Enter 6-digit code"
             placeholder="000000"
-            inputProps={{ maxLength: 6 }}
-          />
+            inputProps={{ maxLength: 6 }} />
+
         </DialogContent>
         <DialogActions sx={{ px: 3, py: 2 }}>
           <Button onClick={() => setTwoFactorDialogOpen(false)} color="inherit">
@@ -498,6 +476,6 @@ export default function SecurityPage() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
-  );
+    </Box>);
+
 }

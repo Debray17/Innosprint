@@ -1,25 +1,8 @@
 // src/pages/User/Account/ProfilePage.jsx
-import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Avatar,
-  IconButton,
-  Alert,
-  Chip,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Container, Paper, Typography, TextField, Button, Avatar, IconButton, Alert, Chip } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
+import Grid from "@mui/material/Grid";
 
 // Icons
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
@@ -30,6 +13,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
 import { currentUser } from "../../../data/userMockData";
+import { getUserById, updateUser } from "../../../services/userService";
+
+const DEFAULT_PROFILE_USER_ID = "84826bd3-2e1a-445f-891e-1bb8c9951cf4";
 
 export default function ProfilePage() {
   const theme = useTheme();
@@ -37,24 +23,54 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
-    firstName: currentUser.firstName,
-    lastName: currentUser.lastName,
+    id: "",
+    aspNetUserId: "",
+    name: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
     email: currentUser.email,
-    phone: currentUser.phone,
-    dateOfBirth: currentUser.dateOfBirth
-      ? dayjs(currentUser.dateOfBirth)
-      : null,
-    gender: currentUser.gender || "",
-    nationality: currentUser.nationality || "",
-    street: currentUser.address?.street || "",
-    city: currentUser.address?.city || "",
-    state: currentUser.address?.state || "",
-    zipCode: currentUser.address?.zipCode || "",
-    country: currentUser.address?.country || "USA",
+    phoneNo: currentUser.phone,
+    avatarUrl: "",
+    lastLoginDate: "",
+    isBlocked: false,
+    isActive: true
   });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateFromApi = async () => {
+      try {
+        const user = await getUserById(DEFAULT_PROFILE_USER_ID, {
+          language: "en"
+        });
+        if (!user || !isMounted) return;
+
+        setFormData((prev) => ({
+          ...prev,
+          id: user?.id || user?.primaryKeyValue || prev.id,
+          aspNetUserId: user?.aspNetUserId || prev.aspNetUserId,
+          name: user?.name || prev.name,
+          email: user?.email || prev.email,
+          phoneNo: user?.phoneNo || prev.phoneNo,
+          avatarUrl: user?.avatarUrl || prev.avatarUrl,
+          lastLoginDate: user?.lastLoginDate || prev.lastLoginDate,
+          isBlocked: Boolean(user?.isBlocked),
+          isActive: user?.isActive !== false
+        }));
+      } catch (error) {
+
+        // Keep mock data on error.
+      }};
+
+    hydrateFromApi();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -63,21 +79,10 @@ export default function ProfilePage() {
     }
   };
 
-  const handleDateChange = (value) => {
-    setFormData((prev) => ({ ...prev, dateOfBirth: value }));
-  };
-
   const validate = () => {
     const newErrors = {};
-    if (!formData.firstName.trim())
-      newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.phoneNo.trim()) newErrors.phone = "Phone is required";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -86,35 +91,46 @@ export default function ProfilePage() {
     if (!validate()) return;
 
     setLoading(true);
+    setErrorMessage("");
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const payload = {
+        isActive: formData.isActive,
+        transactedBy: formData.email || "self",
+        aspNetUserId: formData.aspNetUserId,
+        name: formData.name,
+        email: formData.email,
+        phoneNo: formData.phoneNo,
+        avatarUrl: formData.avatarUrl || null,
+        lastLoginDate: formData.lastLoginDate || "0001-01-01T00:00:00",
+        isBlocked: formData.isBlocked
+      };
+      if (formData.id) {
+        payload.id = formData.id;
+      }
+
+      const response = await updateUser(payload, { language: "en" });
+      if (response?.hasErrors) {
+        const firstError =
+        response?.errorList?.[0]?.message || "Update failed.";
+        throw new Error(firstError);
+      }
       setSuccess(true);
       setIsEditing(false);
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
-      console.error("Error saving profile:", error);
+      setErrorMessage(error?.message || "Error saving profile.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    setFormData({
-      firstName: currentUser.firstName,
-      lastName: currentUser.lastName,
+    setFormData((prev) => ({
+      ...prev,
+      name: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
       email: currentUser.email,
-      phone: currentUser.phone,
-      dateOfBirth: currentUser.dateOfBirth
-        ? dayjs(currentUser.dateOfBirth)
-        : null,
-      gender: currentUser.gender || "",
-      nationality: currentUser.nationality || "",
-      street: currentUser.address?.street || "",
-      city: currentUser.address?.city || "",
-      state: currentUser.address?.state || "",
-      zipCode: currentUser.address?.zipCode || "",
-      country: currentUser.address?.country || "USA",
-    });
+      phoneNo: currentUser.phone
+    }));
     setIsEditing(false);
     setErrors({});
   };
@@ -124,17 +140,22 @@ export default function ProfilePage() {
       <Container maxWidth="lg">
         <Grid container spacing={3}>
           {/* Sidebar */}
-          <Grid size={{ xs: 12, md: 3 }}>
+          <Grid item xs={12} md={3}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid size={{ xs: 12, md: 9 }}>
-            {success && (
-              <Alert severity="success" sx={{ mb: 3 }}>
+          <Grid item xs={12} md={9}>
+            {success &&
+            <Alert severity="success" sx={{ mb: 3 }}>
                 Profile updated successfully!
               </Alert>
-            )}
+            }
+            {errorMessage &&
+            <Alert severity="error" sx={{ mb: 3 }}>
+                {errorMessage}
+              </Alert>
+            }
 
             {/* Profile Header */}
             <Paper sx={{ p: 3, mb: 3 }}>
@@ -145,11 +166,10 @@ export default function ProfilePage() {
                       width: 100,
                       height: 100,
                       bgcolor: theme.palette.primary.main,
-                      fontSize: 36,
-                    }}
-                  >
-                    {formData.firstName.charAt(0)}
-                    {formData.lastName.charAt(0)}
+                      fontSize: 36
+                    }}>
+
+                    {formData.name?.charAt(0) || "U"}
                   </Avatar>
                   <IconButton
                     size="small"
@@ -159,9 +179,9 @@ export default function ProfilePage() {
                       right: 0,
                       bgcolor: "#fff",
                       border: `2px solid ${theme.palette.primary.main}`,
-                      "&:hover": { bgcolor: "grey.100" },
-                    }}
-                  >
+                      "&:hover": { bgcolor: "grey.100" }
+                    }}>
+
                     <CameraAltIcon fontSize="small" color="primary" />
                   </IconButton>
                 </Box>
@@ -171,15 +191,15 @@ export default function ProfilePage() {
                       display: "flex",
                       alignItems: "center",
                       gap: 1,
-                      mb: 0.5,
-                    }}
-                  >
+                      mb: 0.5
+                    }}>
+
                     <Typography variant="h5" fontWeight={700}>
-                      {formData.firstName} {formData.lastName}
+                      {formData.name}
                     </Typography>
-                    {currentUser.isVerified && (
-                      <CheckCircleIcon color="primary" fontSize="small" />
-                    )}
+                    {currentUser.isVerified &&
+                    <CheckCircleIcon color="primary" fontSize="small" />
+                    }
                   </Box>
                   <Typography variant="body2" color="text.secondary">
                     {formData.email}
@@ -190,208 +210,113 @@ export default function ProfilePage() {
                       size="small"
                       sx={{
                         bgcolor:
-                          currentUser.membershipTier === "Gold"
-                            ? "#FFD700"
-                            : theme.palette.primary.main,
+                        currentUser.membershipTier === "Gold" ?
+                        "#FFD700" :
+                        theme.palette.primary.main,
                         color:
-                          currentUser.membershipTier === "Gold"
-                            ? "#000"
-                            : "#fff",
-                      }}
-                    />
+                        currentUser.membershipTier === "Gold" ?
+                        "#000" :
+                        "#fff"
+                      }} />
+
                     <Chip
                       label={`Member since ${new Date(currentUser.memberSince).getFullYear()}`}
                       size="small"
-                      variant="outlined"
-                    />
+                      variant="outlined" />
+
                   </Box>
                 </Box>
-                {!isEditing ? (
-                  <Button
-                    variant="outlined"
-                    startIcon={<EditIcon />}
-                    onClick={() => setIsEditing(true)}
-                  >
+                {!isEditing ?
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={() => setIsEditing(true)}>
+
                     Edit Profile
-                  </Button>
-                ) : (
-                  <Box sx={{ display: "flex", gap: 1 }}>
+                  </Button> :
+
+                <Box sx={{ display: "flex", gap: 1 }}>
                     <Button
-                      variant="outlined"
-                      color="inherit"
-                      startIcon={<CancelIcon />}
-                      onClick={handleCancel}
-                    >
+                    variant="outlined"
+                    color="inherit"
+                    startIcon={<CancelIcon />}
+                    onClick={handleCancel}>
+
                       Cancel
                     </Button>
                     <Button
-                      variant="contained"
-                      startIcon={<SaveIcon />}
-                      onClick={handleSave}
-                      disabled={loading}
-                    >
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                    onClick={handleSave}
+                    disabled={loading}>
+
                       {loading ? "Saving..." : "Save"}
                     </Button>
                   </Box>
-                )}
+                }
               </Box>
             </Paper>
 
             {/* Personal Information */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Personal Information
+                User Information
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="First Name"
-                    value={formData.firstName}
-                    onChange={handleChange("firstName")}
-                    error={!!errors.firstName}
-                    helperText={errors.firstName}
-                    disabled={!isEditing}
-                  />
+                    label="Name"
+                    value={formData.name}
+                    onChange={handleChange("name")}
+                    error={!!errors.name}
+                    helperText={errors.name}
+                    disabled={!isEditing} />
+
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="Last Name"
-                    value={formData.lastName}
-                    onChange={handleChange("lastName")}
-                    error={!!errors.lastName}
-                    helperText={errors.lastName}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Email"
                     type="email"
                     value={formData.email}
-                    onChange={handleChange("email")}
-                    error={!!errors.email}
-                    helperText={errors.email}
-                    disabled={!isEditing}
-                  />
+                    disabled />
+
                 </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange("phone")}
+                    value={formData.phoneNo}
+                    onChange={handleChange("phoneNo")}
                     error={!!errors.phone}
                     helperText={errors.phone}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <DatePicker
-                    label="Date of Birth"
-                    value={formData.dateOfBirth}
-                    onChange={handleDateChange}
-                    disabled={!isEditing}
-                    slotProps={{
-                      textField: { fullWidth: true },
-                    }}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth disabled={!isEditing}>
-                    <InputLabel>Gender</InputLabel>
-                    <Select
-                      value={formData.gender}
-                      label="Gender"
-                      onChange={handleChange("gender")}
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                      <MenuItem value="other">Other</MenuItem>
-                      <MenuItem value="prefer_not_to_say">
-                        Prefer not to say
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="Nationality"
-                    value={formData.nationality}
-                    onChange={handleChange("nationality")}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-              </Grid>
-            </Paper>
+                    disabled={!isEditing} />
 
-            {/* Address */}
-            <Paper sx={{ p: 3 }}>
-              <Typography variant="h6" fontWeight={600} gutterBottom>
-                Address
-              </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="ASP.NET User Id"
+                    value={formData.aspNetUserId}
+                    disabled />
 
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12 }}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Street Address"
-                    value={formData.street}
-                    onChange={handleChange("street")}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="City"
-                    value={formData.city}
-                    onChange={handleChange("city")}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="State/Province"
-                    value={formData.state}
-                    onChange={handleChange("state")}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <TextField
-                    fullWidth
-                    label="ZIP/Postal Code"
-                    value={formData.zipCode}
-                    onChange={handleChange("zipCode")}
-                    disabled={!isEditing}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6 }}>
-                  <FormControl fullWidth disabled={!isEditing}>
-                    <InputLabel>Country</InputLabel>
-                    <Select
-                      value={formData.country}
-                      label="Country"
-                      onChange={handleChange("country")}
-                    >
-                      <MenuItem value="USA">United States</MenuItem>
-                      <MenuItem value="UK">United Kingdom</MenuItem>
-                      <MenuItem value="Canada">Canada</MenuItem>
-                      <MenuItem value="Australia">Australia</MenuItem>
-                    </Select>
-                  </FormControl>
+                    label="Avatar URL"
+                    value={formData.avatarUrl}
+                    onChange={handleChange("avatarUrl")}
+                    disabled={!isEditing} />
+
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
         </Grid>
       </Container>
-    </Box>
-  );
+    </Box>);
+
 }

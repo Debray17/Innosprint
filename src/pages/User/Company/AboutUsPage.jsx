@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Paper,
-  Grid,
-  Card,
-  CardContent,
-  Avatar,
-} from "@mui/material";
+import { Container, Typography, Box, Paper, Card, CardContent } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import Grid from "@mui/material/Grid";
 import ExploreIcon from "@mui/icons-material/Explore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -19,34 +11,34 @@ export default function AboutUsPage() {
   const theme = useTheme();
 
   const values = [
-    {
-      icon: <ExploreIcon sx={{ fontSize: 40 }} />,
-      title: "Discovery",
-      description: "Helping travelers discover authentic Bhutanese experiences",
-    },
-    {
-      icon: <FavoriteIcon sx={{ fontSize: 40 }} />,
-      title: "Trust",
-      description: "Building trust between guests and property owners",
-    },
-    {
-      icon: <GroupsIcon sx={{ fontSize: 40 }} />,
-      title: "Community",
-      description: "Supporting local communities and sustainable tourism",
-    },
-    {
-      icon: <EmojiEventsIcon sx={{ fontSize: 40 }} />,
-      title: "Excellence",
-      description: "Delivering exceptional service and experiences",
-    },
-  ];
+  {
+    icon: <ExploreIcon sx={{ fontSize: 40 }} />,
+    title: "Discovery",
+    description: "Helping travelers discover authentic Bhutanese experiences"
+  },
+  {
+    icon: <FavoriteIcon sx={{ fontSize: 40 }} />,
+    title: "Trust",
+    description: "Building trust between guests and property owners"
+  },
+  {
+    icon: <GroupsIcon sx={{ fontSize: 40 }} />,
+    title: "Community",
+    description: "Supporting local communities and sustainable tourism"
+  },
+  {
+    icon: <EmojiEventsIcon sx={{ fontSize: 40 }} />,
+    title: "Excellence",
+    description: "Delivering exceptional service and experiences"
+  }];
+
 
   const stats = [
-    { number: "500+", label: "Properties Listed" },
-    { number: "10,000+", label: "Happy Guests" },
-    { number: "20", label: "Districts Covered" },
-    { number: "4.8/5", label: "Average Rating" },
-  ];
+  { number: "500+", label: "Properties Listed" },
+  { number: "10,000+", label: "Happy Guests" },
+  { number: "20", label: "Districts Covered" },
+  { number: "4.8/5", label: "Average Rating" }];
+
 
   return (
     <Container maxWidth="lg" sx={{ py: 8 }}>
@@ -58,8 +50,8 @@ export default function AboutUsPage() {
         <Typography
           variant="h5"
           color="text.secondary"
-          sx={{ maxWidth: 800, mx: "auto" }}
-        >
+          sx={{ maxWidth: 800, mx: "auto" }}>
+
           Your trusted platform for discovering and booking unique
           accommodations across the Kingdom of Bhutan
         </Typography>
@@ -99,29 +91,29 @@ export default function AboutUsPage() {
           variant="h4"
           fontWeight={600}
           gutterBottom
-          sx={{ textAlign: "center", mb: 4 }}
-        >
+          sx={{ textAlign: "center", mb: 4 }}>
+
           Our Values
         </Typography>
         <Grid container spacing={3}>
-          {values.map((value, index) => (
-            <Grid size={{ xs: 6, sm: 6, md: 3 }} key={index}>
+          {values.map((value, index) =>
+          <Grid item key={index} xs={6} sm={6} md={3}>
               <Card
-                elevation={2}
-                sx={{
-                  height: "100%",
-                  textAlign: "center",
-                  transition: "transform 0.2s",
-                  "&:hover": { transform: "translateY(-8px)" },
-                }}
-              >
+              elevation={2}
+              sx={{
+                height: "100%",
+                textAlign: "center",
+                transition: "transform 0.2s",
+                "&:hover": { transform: "translateY(-8px)" }
+              }}>
+
                 <CardContent sx={{ p: 3 }}>
                   <Box
-                    sx={{
-                      color: theme.palette.primary.main,
-                      mb: 2,
-                    }}
-                  >
+                  sx={{
+                    color: theme.palette.primary.main,
+                    mb: 2
+                  }}>
+
                     {value.icon}
                   </Box>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -133,7 +125,7 @@ export default function AboutUsPage() {
                 </CardContent>
               </Card>
             </Grid>
-          ))}
+          )}
         </Grid>
       </Box>
 
@@ -144,12 +136,12 @@ export default function AboutUsPage() {
           p: 6,
           bgcolor: theme.palette.primary.main,
           color: "white",
-          mb: 6,
-        }}
-      >
+          mb: 6
+        }}>
+
         <Grid container spacing={4}>
-          {stats.map((stat, index) => (
-            <Grid size={{ xs: 6, md: 3 }} key={index}>
+          {stats.map((stat, index) =>
+          <Grid item key={index} xs={6} md={3}>
               <Box sx={{ textAlign: "center" }}>
                 <Typography variant="h3" fontWeight={700}>
                   {stat.number}
@@ -159,7 +151,7 @@ export default function AboutUsPage() {
                 </Typography>
               </Box>
             </Grid>
-          ))}
+          )}
         </Grid>
       </Paper>
 
@@ -233,9 +225,9 @@ export default function AboutUsPage() {
           p: 4,
           textAlign: "center",
           bgcolor: "primary.light",
-          color: "white",
-        }}
-      >
+          color: "white"
+        }}>
+
         <Typography variant="h5" fontWeight={600} gutterBottom>
           Join Us on This Journey
         </Typography>
@@ -247,6 +239,6 @@ export default function AboutUsPage() {
           Email: hello@bhutanstay.com | Phone: +975 XXXX XXXX
         </Typography>
       </Paper>
-    </Container>
-  );
+    </Container>);
+
 }
