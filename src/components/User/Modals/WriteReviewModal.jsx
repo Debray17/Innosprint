@@ -153,7 +153,7 @@ export default function WriteReviewModal({ open, onClose, onSubmit, booking }) {
         </Typography>
         <Grid container spacing={2} sx={{ mb: 3 }}>
           {ratingCategories.map((category) =>
-          <Grid item key={category.id} xs={6}>
+          <Grid size={6} key={category.id}>
               <Box
               sx={{
                 display: "flex",

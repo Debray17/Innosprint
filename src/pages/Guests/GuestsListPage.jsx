@@ -247,7 +247,7 @@ const GuestsListPage = () => {
     // Guest Form Component
     const GuestForm = () => (
         <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="First Name"
@@ -257,7 +257,7 @@ const GuestsListPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="Last Name"
@@ -267,7 +267,7 @@ const GuestsListPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="Email"
@@ -278,7 +278,7 @@ const GuestsListPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="Phone"
@@ -288,7 +288,7 @@ const GuestsListPage = () => {
                     required
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="Nationality"
@@ -297,7 +297,7 @@ const GuestsListPage = () => {
                     onChange={handleFormChange}
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="Date of Birth"
@@ -308,7 +308,7 @@ const GuestsListPage = () => {
                     InputLabelProps={{ shrink: true }}
                 />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <FormControl fullWidth>
                     <InputLabel>ID Type</InputLabel>
                     <Select
@@ -325,7 +325,7 @@ const GuestsListPage = () => {
                     </Select>
                 </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                     fullWidth
                     label="ID Number"
@@ -334,7 +334,7 @@ const GuestsListPage = () => {
                     onChange={handleFormChange}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <TextField
                     fullWidth
                     label="Address"
@@ -345,7 +345,7 @@ const GuestsListPage = () => {
                     rows={2}
                 />
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
                 <TextField
                     fullWidth
                     label="Notes"
@@ -389,7 +389,7 @@ const GuestsListPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -405,7 +405,7 @@ const GuestsListPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -421,7 +421,7 @@ const GuestsListPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -437,7 +437,7 @@ const GuestsListPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
                         sx={{
                             p: 2,
@@ -593,7 +593,7 @@ const GuestsListPage = () => {
                     {selectedGuest && (
                         <Grid container spacing={3}>
                             {/* Guest Header */}
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Paper
                                     sx={{
                                         p: 3,
@@ -660,7 +660,7 @@ const GuestsListPage = () => {
                             </Grid>
 
                             {/* Contact Information */}
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <Paper sx={{ p: 2, height: "100%" }}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                         Contact Information
@@ -692,7 +692,7 @@ const GuestsListPage = () => {
                             </Grid>
 
                             {/* Personal Information */}
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <Paper sx={{ p: 2, height: "100%" }}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                         Personal Information
@@ -731,7 +731,7 @@ const GuestsListPage = () => {
 
                             {/* Notes */}
                             {selectedGuest.notes && (
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Paper
                                         sx={{
                                             p: 2,
@@ -750,7 +750,7 @@ const GuestsListPage = () => {
                             )}
 
                             {/* Booking History */}
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Paper sx={{ p: 2 }}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                         Booking History

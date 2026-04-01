@@ -21,7 +21,11 @@ import RateReviewIcon from "@mui/icons-material/RateReview";
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
 import CancelBookingModal from "../../../components/User/Modals/CancelBookingModal";
 import WriteReviewModal from "../../../components/User/Modals/WriteReviewModal";
-import { userBookings } from "../../../data/userMockData";
+import {
+  useBookingRecord,
+  useDeleteBookingMutation,
+  useUpdateBookingMutation,
+} from "../../../hooks/useBooking";
 
 export default function BookingDetailsPage() {
   const theme = useTheme();
@@ -33,9 +37,11 @@ export default function BookingDetailsPage() {
   const [reviewModalOpen, setReviewModalOpen] = useState(
     searchParams.get("review") === "true"
   );
-
-  // Find booking
-  const booking = userBookings.find((b) => b.id === parseInt(id));
+  const [modifyMessage, setModifyMessage] = useState("");
+  const [modifyError, setModifyError] = useState("");
+  const { data: booking } = useBookingRecord(id);
+  const updateBookingMutation = useUpdateBookingMutation();
+  const deleteBookingMutation = useDeleteBookingMutation();
 
   if (!booking) {
     return (
@@ -58,6 +64,8 @@ export default function BookingDetailsPage() {
     switch (status) {
       case "confirmed":
         return "success";
+      case "pending":
+        return "warning";
       case "completed":
         return "default";
       case "cancelled":
@@ -98,9 +106,100 @@ export default function BookingDetailsPage() {
   };
 
   const handleCancelBooking = async (data) => {
-    console.log("Cancelling booking:", data);
-    setCancelModalOpen(false);
-    // Refresh or navigate
+    if (!booking) return;
+
+    setModifyMessage("");
+    setModifyError("");
+
+    const guest = booking.guestDetails || {};
+    const deletePayload = {
+      id: booking.id,
+      isActive: booking.api?.isActive ?? true,
+      transactedBy: guest.email || booking.api?.transactedBy || "self",
+      bookingNo: booking.bookingNo || 0,
+      bookingCode: booking.bookingCode || "",
+      userId: booking.userId || "",
+      roomId: booking.room?.id || booking.roomId || "",
+      checkinDate: new Date(booking.checkIn).toISOString(),
+      checkoutDate: new Date(booking.checkOut).toISOString(),
+      totalAmount: booking.pricing?.total || 0,
+      amountPaid: booking.api?.amountPaid ?? booking.pricing?.total ?? 0,
+      paymentStatusId: booking.api?.paymentStatusId ?? 0,
+      paymentStatusLabel: booking.paymentStatus || "",
+      journalNo: booking.api?.journalNo || "",
+      statusId: booking.api?.statusId ?? 0,
+      statusLabel: booking.status || "",
+      propertyName: booking.property?.name || "",
+      roomNo: booking.room?.roomNo || booking.room?.name || "",
+      userName: `${guest.firstName || ""} ${guest.lastName || ""}`.trim(),
+      remark: data?.reason || null,
+    };
+
+    try {
+      await deleteBookingMutation.mutateAsync({
+        payload: deletePayload,
+        options: { language: "en" },
+      });
+      setCancelModalOpen(false);
+      navigate("/account/bookings");
+    } catch (error) {
+      setModifyError("Unable to cancel booking right now.");
+      throw error;
+    }
+  };
+
+  const handleModifyBooking = async () => {
+    if (!booking) return;
+    setModifyMessage("");
+    setModifyError("");
+
+    const fallbackUserId = "84826bd3-2e1a-445f-891e-1bb8c9951cf4";
+    const guest = booking.guestDetails || {};
+    const bookingPayload = {
+      id: booking.id || id,
+      isActive: true,
+      transactedBy: guest.email || "self",
+      userId: fallbackUserId,
+      roomId: booking.room?.id || booking.roomId,
+      checkinDate: new Date(booking.checkIn).toISOString(),
+      checkoutDate: new Date(booking.checkOut).toISOString(),
+      totalAmount: booking.pricing?.total || 0,
+      amountPaid: booking.pricing?.total || 0,
+      paymentStatusId: 1,
+      paymentStatusLabel: booking.paymentStatus || "Paid",
+      statusId: 1,
+      statusLabel: booking.status || "confirmed",
+      propertyName: booking.property?.name || "",
+      roomNo: booking.room?.roomNo || booking.room?.name || "",
+      userName: `${guest.firstName || ""} ${guest.lastName || ""}`.trim(),
+    };
+
+    try {
+      await updateBookingMutation.mutateAsync({
+        payload: bookingPayload,
+        options: { language: "en" },
+        context: {
+          id: booking.id || id,
+          userId: fallbackUserId,
+          property: booking.property,
+          room: booking.room,
+          guestDetails: booking.guestDetails,
+          guests: booking.guests,
+          pricing: booking.pricing,
+          checkIn: booking.checkIn,
+          checkOut: booking.checkOut,
+          nights: booking.nights,
+          paymentStatus: booking.paymentStatus,
+          status: booking.status,
+          canModify: booking.canModify,
+          canCancel: booking.canCancel,
+          reviewSubmitted: booking.reviewSubmitted,
+        },
+      });
+      setModifyMessage("Booking updated successfully.");
+    } catch (error) {
+      setModifyError("Unable to update booking right now.");
+    }
   };
 
   const handleSubmitReview = async (data) => {
@@ -114,14 +213,24 @@ export default function BookingDetailsPage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
+            {modifyMessage && (
+              <Alert severity="success" sx={{ mb: 3 }}>
+                {modifyMessage}
+              </Alert>
+            )}
+            {modifyError && (
+              <Alert severity="error" sx={{ mb: 3 }}>
+                {modifyError}
+              </Alert>
+            )}
             {/* Back Button & Header */}
             <Box
               sx={{
@@ -151,6 +260,12 @@ export default function BookingDetailsPage() {
             {booking.status === "confirmed" &&
             <Alert severity="success" sx={{ mb: 3 }}>
                 Your booking is confirmed! We look forward to welcoming you.
+              </Alert>
+            }
+
+            {booking.status === "pending" &&
+            <Alert severity="warning" sx={{ mb: 3 }}>
+                Your booking is pending verification.
               </Alert>
             }
 
@@ -200,7 +315,7 @@ export default function BookingDetailsPage() {
 
               {/* Property Info */}
               <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
+                <Grid size={{ xs: 12, md: 4 }}>
                   <Box
                     component="img"
                     src={booking.property.image}
@@ -213,7 +328,7 @@ export default function BookingDetailsPage() {
                     }} />
 
                 </Grid>
-                <Grid item xs={12} md={8}>
+                <Grid size={{ xs: 12, md: 8 }}>
                   <Box
                     sx={{ display: "flex", justifyContent: "space-between" }}>
 
@@ -263,7 +378,7 @@ export default function BookingDetailsPage() {
 
                   {/* Room & Stay Details */}
                   <Grid container spacing={2}>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Typography variant="caption" color="text.secondary">
                         Room Type
                       </Typography>
@@ -271,7 +386,7 @@ export default function BookingDetailsPage() {
                         {booking.room.name}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                       <Typography variant="caption" color="text.secondary">
                         Guests
                       </Typography>
@@ -289,7 +404,7 @@ export default function BookingDetailsPage() {
 
             <Grid container spacing={3}>
               {/* Stay Details */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Paper sx={{ p: 3, height: "100%" }}>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
                     Stay Details
@@ -340,7 +455,7 @@ export default function BookingDetailsPage() {
               </Grid>
 
               {/* Payment Summary */}
-              <Grid item xs={12} md={6}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Paper sx={{ p: 3, height: "100%" }}>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
                     Payment Summary
@@ -401,14 +516,18 @@ export default function BookingDetailsPage() {
             </Grid>
 
             {/* Actions */}
-            {booking.status === "confirmed" &&
+            {(booking.status === "confirmed" || booking.status === "pending") &&
             <Paper sx={{ p: 3, mt: 3 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Manage Booking
                 </Typography>
                 <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                   {booking.canModify &&
-                <Button variant="outlined" startIcon={<EditIcon />}>
+                <Button
+                  variant="outlined"
+                  startIcon={<EditIcon />}
+                  onClick={handleModifyBooking}
+                >
                       Modify Booking
                     </Button>
                 }

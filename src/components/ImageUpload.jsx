@@ -74,7 +74,7 @@ export default function ImageUpload({
             <Grid container spacing={2}>
                 {/* Uploaded Images */}
                 {images.map((image) =>
-        <Grid item xs={6} sm={4} md={3} key={image.id}>
+        <Grid size={{ xs: 6, sm: 4, md: 3 }} key={image.id}>
                         <Paper
             sx={{
               position: "relative",
@@ -119,7 +119,7 @@ export default function ImageUpload({
 
                 {/* Upload Button */}
                 {images.length < maxImages &&
-        <Grid item xs={6} sm={4} md={3}>
+        <Grid size={{ xs: 6, sm: 4, md: 3 }}>
                         <Paper
             onClick={handleUploadClick}
             sx={{

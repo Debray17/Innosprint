@@ -96,7 +96,7 @@ export default function AddOwnerModal({ open, onClose, onSubmit, owner, isEdit =
 
             <DialogContent dividers>
                 <Grid container spacing={2} sx={{ mt: 0.5 }}>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField
               fullWidth
               label="Full Name"
@@ -108,7 +108,7 @@ export default function AddOwnerModal({ open, onClose, onSubmit, owner, isEdit =
               required />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Email Address"
@@ -121,7 +121,7 @@ export default function AddOwnerModal({ open, onClose, onSubmit, owner, isEdit =
               required />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Phone Number"
@@ -133,7 +133,7 @@ export default function AddOwnerModal({ open, onClose, onSubmit, owner, isEdit =
               required />
 
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField
               fullWidth
               label="Address"

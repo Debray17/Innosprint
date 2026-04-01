@@ -31,6 +31,8 @@ const initialFormState = {
   amenities: [],
   contactEmail: "",
   contactPhone: "",
+  accountName: "",
+  accountNo: "",
   commissionRate: 12,
   images: []
 };
@@ -61,6 +63,8 @@ export default function AddPropertyModal({
         amenities: property.amenities || [],
         contactEmail: property.contactEmail || "",
         contactPhone: property.contactPhone || "",
+        accountName: property.accountName || "",
+        accountNo: property.accountNo || "",
         commissionRate: property.commissionRate || 0,
         images: property.images || []
       });
@@ -136,7 +140,7 @@ export default function AddPropertyModal({
 
             <DialogContent dividers>
                 <Grid container spacing={2} sx={{ mt: 0.5 }}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Property Name"
@@ -147,7 +151,7 @@ export default function AddPropertyModal({
               helperText={errors.name} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <FormControl fullWidth error={!!errors.ownerId}>
                             <InputLabel>Owner</InputLabel>
                             <Select
@@ -164,7 +168,7 @@ export default function AddPropertyModal({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <FormControl fullWidth error={!!errors.propertyTypeId}>
                             <InputLabel>Property Type</InputLabel>
                             <Select
@@ -181,7 +185,7 @@ export default function AddPropertyModal({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Total Rooms"
@@ -193,7 +197,7 @@ export default function AddPropertyModal({
               helperText={errors.totalRooms} />
 
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField
               fullWidth
               label="Address"
@@ -204,7 +208,7 @@ export default function AddPropertyModal({
               helperText={errors.address} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="City"
@@ -215,7 +219,7 @@ export default function AddPropertyModal({
               helperText={errors.city} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Country"
@@ -224,7 +228,7 @@ export default function AddPropertyModal({
               onChange={handleChange} />
 
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <TextField
               fullWidth
               label="Description"
@@ -235,7 +239,7 @@ export default function AddPropertyModal({
               onChange={handleChange} />
 
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid size={12}>
                         <FormControl fullWidth>
                             <InputLabel>Amenities</InputLabel>
                             <Select
@@ -259,7 +263,7 @@ export default function AddPropertyModal({
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Contact Email"
@@ -269,7 +273,7 @@ export default function AddPropertyModal({
               onChange={handleChange} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               label="Contact Phone"
@@ -278,8 +282,27 @@ export default function AddPropertyModal({
               onChange={handleChange} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
+              fullWidth
+              label="Account Name"
+              name="accountName"
+              value={formData.accountName}
+              onChange={handleChange} />
+
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 6 }}>
+                        <TextField
+              fullWidth
+              label="Account No"
+              name="accountNo"
+              value={formData.accountNo}
+              onChange={handleChange} />
+
+                    </Grid>
+                    {property &&
+          <Grid size={{ xs: 12, sm: 6 }}>
+                            <TextField
               fullWidth
               label="Commission Rate (%)"
               name="commissionRate"
@@ -288,8 +311,9 @@ export default function AddPropertyModal({
               onChange={handleChange}
               inputProps={{ min: 0, max: 100 }} />
 
-                    </Grid>
-                    <Grid item xs={12}>
+                        </Grid>
+          }
+                    <Grid size={12}>
                         <ImageUpload
               images={formData.images}
               onChange={handleImagesChange}

@@ -1,6 +1,6 @@
 // src/pages/User/Account/ProfilePage.jsx
 import React, { useEffect, useState } from "react";
-import { Box, Container, Paper, Typography, TextField, Button, Avatar, IconButton, Alert, Chip } from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, Avatar, IconButton, Alert } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
@@ -16,9 +16,19 @@ import { currentUser } from "../../../data/userMockData";
 import { getUserById, updateUser } from "../../../services/userService";
 
 const DEFAULT_PROFILE_USER_ID = "84826bd3-2e1a-445f-891e-1bb8c9951cf4";
+const DEFAULT_ASPNET_USER_ID = "907a00d0-b5ba-426b-909c-2c50df701b4e";
+const EMPTY_GUID = "00000000-0000-0000-0000-000000000000";
 
 export default function ProfilePage() {
   const theme = useTheme();
+
+  const resolveAspNetUserId = (value) => {
+    const normalized = (value || "").toString().trim();
+    if (!normalized || normalized === EMPTY_GUID) {
+      return DEFAULT_ASPNET_USER_ID;
+    }
+    return normalized;
+  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,7 +38,7 @@ export default function ProfilePage() {
 
   const [formData, setFormData] = useState({
     id: "",
-    aspNetUserId: "",
+    aspNetUserId: DEFAULT_ASPNET_USER_ID,
     name: `${currentUser.firstName} ${currentUser.lastName}`.trim(),
     email: currentUser.email,
     phoneNo: currentUser.phone,
@@ -51,7 +61,9 @@ export default function ProfilePage() {
         setFormData((prev) => ({
           ...prev,
           id: user?.id || user?.primaryKeyValue || prev.id,
-          aspNetUserId: user?.aspNetUserId || prev.aspNetUserId,
+          aspNetUserId: resolveAspNetUserId(
+            user?.aspNetUserId || prev.aspNetUserId,
+          ),
           name: user?.name || prev.name,
           email: user?.email || prev.email,
           phoneNo: user?.phoneNo || prev.phoneNo,
@@ -96,7 +108,7 @@ export default function ProfilePage() {
       const payload = {
         isActive: formData.isActive,
         transactedBy: formData.email || "self",
-        aspNetUserId: formData.aspNetUserId,
+        aspNetUserId: resolveAspNetUserId(formData.aspNetUserId),
         name: formData.name,
         email: formData.email,
         phoneNo: formData.phoneNo,
@@ -138,14 +150,14 @@ export default function ProfilePage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             {success &&
             <Alert severity="success" sx={{ mb: 3 }}>
                 Profile updated successfully!
@@ -204,27 +216,6 @@ export default function ProfilePage() {
                   <Typography variant="body2" color="text.secondary">
                     {formData.email}
                   </Typography>
-                  <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-                    <Chip
-                      label={currentUser.membershipTier}
-                      size="small"
-                      sx={{
-                        bgcolor:
-                        currentUser.membershipTier === "Gold" ?
-                        "#FFD700" :
-                        theme.palette.primary.main,
-                        color:
-                        currentUser.membershipTier === "Gold" ?
-                        "#000" :
-                        "#fff"
-                      }} />
-
-                    <Chip
-                      label={`Member since ${new Date(currentUser.memberSince).getFullYear()}`}
-                      size="small"
-                      variant="outlined" />
-
-                  </Box>
                 </Box>
                 {!isEditing ?
                 <Button
@@ -264,7 +255,7 @@ export default function ProfilePage() {
               </Typography>
 
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Name"
@@ -275,7 +266,7 @@ export default function ProfilePage() {
                     disabled={!isEditing} />
 
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Email"
@@ -284,7 +275,7 @@ export default function ProfilePage() {
                     disabled />
 
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Phone Number"
@@ -295,15 +286,7 @@ export default function ProfilePage() {
                     disabled={!isEditing} />
 
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="ASP.NET User Id"
-                    value={formData.aspNetUserId}
-                    disabled />
-
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <TextField
                     fullWidth
                     label="Avatar URL"

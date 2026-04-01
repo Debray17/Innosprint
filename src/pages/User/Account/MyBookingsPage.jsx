@@ -7,17 +7,18 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
 import BookingCard from "../../../components/User/Dashboard/BookingCard";
-import { userBookings } from "../../../data/userMockData";
+import { useBookingHistory } from "../../../hooks/useBooking";
 
 export default function MyBookingsPage() {
   // const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date_desc");
+  const { data: bookings = [] } = useBookingHistory();
 
   // Filter bookings based on tab
   const filterBookings = () => {
-    let filtered = [...userBookings];
+    let filtered = [...bookings];
 
     // Filter by tab
     switch (activeTab) {
@@ -71,25 +72,25 @@ export default function MyBookingsPage() {
   const filteredBookings = filterBookings();
 
   const tabCounts = {
-    all: userBookings.length,
-    upcoming: userBookings.filter(
+    all: bookings.length,
+    upcoming: bookings.filter(
       (b) => b.status === "confirmed" && new Date(b.checkIn) > new Date()
     ).length,
-    completed: userBookings.filter((b) => b.status === "completed").length,
-    cancelled: userBookings.filter((b) => b.status === "cancelled").length
+    completed: bookings.filter((b) => b.status === "completed").length,
+    cancelled: bookings.filter((b) => b.status === "cancelled").length
   };
 
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
                 My Bookings

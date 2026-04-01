@@ -69,7 +69,7 @@ export default function BookingCard({ booking, variant = "default" }) {
       <CardContent sx={{ p: 0 }}>
         <Grid container>
           {/* Property Image */}
-          <Grid item xs={12} sm={isCompact ? 3 : 4} md={isCompact ? 2 : 3}>
+          <Grid size={{ xs: 12, sm: isCompact ? 3 : 4, md: isCompact ? 2 : 3 }}>
             <Box
               sx={{
                 height: { xs: 160, sm: "100%" },
@@ -96,8 +96,8 @@ export default function BookingCard({ booking, variant = "default" }) {
           </Grid>
 
           {/* Booking Details */}
-          <Grid item xs={
-          12} sm={isCompact ? 9 : 8} md={isCompact ? 10 : 9}>
+          <Grid size={{ xs: 
+          12, sm: isCompact ? 9 : 8, md: isCompact ? 10 : 9 }}>
 
             <Box sx={{ p: 2.5 }}>
               {/* Header */}

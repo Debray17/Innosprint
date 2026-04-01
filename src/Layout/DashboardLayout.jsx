@@ -30,6 +30,7 @@ const getPageTitle = (pathname) => {
         "/settings/general": "General Settings",
         "/settings/commission": "Commission Settings",
         "/settings/seasonal-pricing": "Seasonal Pricing",
+        "/ai-assistant": "AI Assistant",
     };
 
     // Check for dynamic routes

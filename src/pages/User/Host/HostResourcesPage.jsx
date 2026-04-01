@@ -110,7 +110,7 @@ export default function HostResourcesPage() {
 
       {/* Quick Links */}
       <Grid container spacing={3} sx={{ mb: 8 }}>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Card
             elevation={2}
             sx={{
@@ -127,7 +127,7 @@ export default function HostResourcesPage() {
             </Typography>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Card
             elevation={2}
             sx={{
@@ -146,7 +146,7 @@ export default function HostResourcesPage() {
             </Typography>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid size={{ xs: 12, sm: 4 }}>
           <Card
             elevation={2}
             sx={{
@@ -172,7 +172,7 @@ export default function HostResourcesPage() {
         </Typography>
         <Grid container spacing={3}>
           {guides.map((guide, index) =>
-          <Grid item key={index} xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }} key={index}>
               <Card elevation={2}>
                 <CardContent sx={{ p: 3 }}>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -232,7 +232,7 @@ export default function HostResourcesPage() {
         </Typography>
         <Grid container spacing={2}>
           {downloads.map((download, index) =>
-          <Grid item key={index} xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }} key={index}>
               <Card elevation={1}>
                 <CardContent
                 sx={{

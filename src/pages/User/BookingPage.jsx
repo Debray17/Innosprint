@@ -1,38 +1,40 @@
 // src/pages/User/BookingPage.jsx
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { Box, Container, Paper, Typography, TextField, Button, Stepper, Step, StepLabel, Divider, FormControlLabel, Checkbox, Radio, RadioGroup, FormControl, FormLabel, Alert, Avatar, Collapse } from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, Stepper, Step, StepLabel, Divider, FormControlLabel, Checkbox, Alert, Avatar, Collapse } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import dayjs from "dayjs";
 
 // Icons
 import PersonIcon from "@mui/icons-material/Person";
-import PaymentIcon from "@mui/icons-material/Payment";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import LockIcon from "@mui/icons-material/Lock";
 import StarIcon from "@mui/icons-material/Star";
 
 import PriceBreakdown from "../../components/User/Booking/PriceBreakdown";
 import { propertyDetails, currentUser } from "../../data/userMockData";
+import { useCreateBookingMutation } from "../../hooks/useBooking";
+import { buildBookingPayload } from "../../services/bookingService";
+import { getPropertyById } from "../../services/propertyService";
+import { getRoomList } from "../../services/roomService";
 
-const steps = ["Guest Details", "Payment", "Confirmation"];
+const steps = ["Guest Details", "Booking Details", "Confirmation"];
 
 export default function BookingPage() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { roomId } = useParams();
+  const { propertyId, roomId } = useParams();
   const [searchParams] = useSearchParams();
 
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [showPriceDetails, setShowPriceDetails] = useState(false);
+  const createBookingMutation = useCreateBookingMutation();
 
   // Get booking details from URL
   const checkIn =
@@ -47,10 +49,100 @@ export default function BookingPage() {
   // Calculate nights
   const nights = dayjs(checkOut).diff(dayjs(checkIn), "day");
 
-  // Mock property and room data
-  const property = propertyDetails;
-  const room =
-  property.rooms.find((r) => r.id === parseInt(roomId)) || property.rooms[0];
+  const fallbackImages = useMemo(
+    () => [
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+      "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800",
+      "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",
+    ],
+    [],
+  );
+
+  const [propertyVm, setPropertyVm] = useState(propertyDetails);
+  const [roomVm, setRoomVm] = useState(
+    propertyDetails.rooms?.[0] || propertyDetails.rooms?.[0] || {}
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchBookingContext = async () => {
+      try {
+        const [propertyResponse, roomsResponse] = await Promise.all([
+          propertyId ? getPropertyById(propertyId, { language: "en" }) : null,
+          getRoomList({ language: "en" }),
+        ]);
+
+        const roomsList = Array.isArray(roomsResponse)
+          ? roomsResponse
+          : roomsResponse
+            ? [roomsResponse]
+            : [];
+
+        const propertyData = propertyResponse || null;
+        if (propertyData && isMounted) {
+          const propertyImage = fallbackImages[0];
+          setPropertyVm({
+            ...propertyDetails,
+            name: propertyData?.name || propertyDetails.name,
+            type: propertyData?.propertyTypeName || propertyDetails.type,
+            rating: Number(propertyData?.rating) || 0,
+            reviewsCount: Number(propertyData?.reviewCount) || 0,
+            location: {
+              address:
+                propertyData?.address ||
+                propertyDetails.location?.address ||
+                "",
+              city: propertyData?.city || "",
+              state:
+                propertyData?.state ||
+                propertyDetails.location?.state ||
+                "",
+              country:
+                propertyData?.country ||
+                propertyDetails.location?.country ||
+                "",
+            },
+            images: [{ url: propertyImage }],
+          });
+        }
+
+        const selectedRoom =
+          roomsList.find((room) => room?.id === roomId) ||
+          roomsList.find((room) => room?.primaryKeyValue === roomId) ||
+          roomsList.find((room) => room?.propertyId === propertyId) ||
+          null;
+
+        if (selectedRoom && isMounted) {
+          setRoomVm({
+            id: selectedRoom?.id || selectedRoom?.primaryKeyValue,
+            name: selectedRoom?.roomNo || selectedRoom?.name || "Room",
+            roomNo: selectedRoom?.roomNo || "",
+            type: selectedRoom?.roomTypeName || selectedRoom?.typeName || "",
+            pricePerNight: Number(selectedRoom?.basePrise) || 0,
+            breakfastIncluded: false,
+            breakfastPrice: 0,
+            freeCancellation: false,
+          });
+        }
+      } catch (error) {
+        // keep fallback mock data
+      }
+    };
+
+    fetchBookingContext();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [fallbackImages, propertyId, roomId]);
+
+  const property = propertyVm;
+  const room = roomVm;
+
+  const fallbackUserId = "84826bd3-2e1a-445f-891e-1bb8c9951cf4";
+  const resolvedUserId =
+    typeof currentUser?.id === "string" ? currentUser.id : fallbackUserId;
 
   // Form states
   const [guestDetails, setGuestDetails] = useState({
@@ -66,13 +158,8 @@ export default function BookingPage() {
     guestLastName: ""
   });
 
-  const [paymentDetails, setPaymentDetails] = useState({
-    paymentMethod: "credit_card",
-    cardNumber: "",
-    cardName: "",
-    expiryDate: "",
-    cvv: "",
-    saveCard: false
+  const [bookingDetails, setBookingDetails] = useState({
+    journalNo: ""
   });
 
   const [addBreakfast, setAddBreakfast] = useState(false);
@@ -84,32 +171,8 @@ export default function BookingPage() {
     }
   };
 
-  const handlePaymentChange = (field) => (e) => {
-    let value = e.target.value;
-
-    // Format card number
-    if (field === "cardNumber") {
-      value = value.
-      replace(/\s/g, "").
-      replace(/(.{4})/g, "Nu 1 ").
-      trim().
-      slice(0, 19);
-    }
-
-    // Format expiry date
-    if (field === "expiryDate") {
-      value = value.replace(/\D/g, "").slice(0, 4);
-      if (value.length >= 2) {
-        value = value.slice(0, 2) + "/" + value.slice(2);
-      }
-    }
-
-    // Format CVV
-    if (field === "cvv") {
-      value = value.replace(/\D/g, "").slice(0, 4);
-    }
-
-    setPaymentDetails((prev) => ({ ...prev, [field]: value }));
+  const handleBookingDetailChange = (field) => (e) => {
+    setBookingDetails((prev) => ({ ...prev, [field]: e.target.value }));
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
@@ -139,26 +202,10 @@ export default function BookingPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validatePaymentDetails = () => {
+  const validateBookingDetails = () => {
     const newErrors = {};
-    if (paymentDetails.paymentMethod === "credit_card") {
-      if (
-      !paymentDetails.cardNumber.trim() ||
-      paymentDetails.cardNumber.replace(/\s/g, "").length < 16)
-      {
-        newErrors.cardNumber = "Valid card number is required";
-      }
-      if (!paymentDetails.cardName.trim())
-      newErrors.cardName = "Name on card is required";
-      if (
-      !paymentDetails.expiryDate.trim() ||
-      paymentDetails.expiryDate.length < 5)
-      {
-        newErrors.expiryDate = "Valid expiry date is required";
-      }
-      if (!paymentDetails.cvv.trim() || paymentDetails.cvv.length < 3) {
-        newErrors.cvv = "Valid CVV is required";
-      }
+    if (!bookingDetails.journalNo.trim()) {
+      newErrors.journalNo = "Journal number is required";
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -168,16 +215,74 @@ export default function BookingPage() {
     if (activeStep === 0) {
       if (!validateGuestDetails()) return;
     } else if (activeStep === 1) {
-      if (!validatePaymentDetails()) return;
+      if (!validateBookingDetails()) return;
 
-      // Process payment
+      // Create booking
       setLoading(true);
       try {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        // Navigate to confirmation page
-        navigate(`/booking/confirmation/BK-${Date.now()}`);
+        const bookingPayload = buildBookingPayload({
+          userId: resolvedUserId,
+          roomId: roomId || room?.id,
+          checkIn: dayjs(checkIn).toISOString(),
+          checkOut: dayjs(checkOut).toISOString(),
+          totalAmount: total,
+          amountPaid: 0,
+          journalNo: bookingDetails.journalNo.trim(),
+          propertyName: property?.name || "",
+          roomNo: room?.roomNo || room?.name || "",
+          userName: `${guestDetails.firstName} ${guestDetails.lastName}`.trim(),
+          transactedBy: guestDetails.email || "self",
+        });
+
+        const { response, bookingRecord } =
+          await createBookingMutation.mutateAsync({
+            payload: bookingPayload,
+            options: { language: "en" },
+            context: {
+              userId: resolvedUserId,
+              property,
+              room,
+              guestDetails,
+              guests,
+              pricing: {
+                roomRate,
+                subtotal,
+                taxes,
+                total,
+              },
+              checkIn,
+              checkOut,
+              nights,
+            },
+          });
+        const bookingId =
+          bookingRecord?.id ||
+          response?.id ||
+          response?.primaryKeyValue ||
+          response?.bookingCode ||
+          `BK-${Date.now()}`;
+
+        navigate(`/booking/confirmation/${bookingId}`, {
+          state: {
+            bookingResponse: response,
+            booking: bookingRecord,
+            guestDetails,
+            guests,
+            pricing: {
+              roomRate,
+              subtotal,
+              taxes,
+              total,
+            },
+            property,
+            room,
+            checkIn,
+            checkOut,
+            nights,
+          },
+        });
       } catch (error) {
-        setErrors({ payment: "Payment failed. Please try again." });
+        setErrors({ journalNo: "Booking failed. Please try again." });
       } finally {
         setLoading(false);
       }
@@ -244,7 +349,7 @@ export default function BookingPage() {
 
         <Grid container spacing={3}>
           {/* Left Column - Form */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             {/* Guest Details Step */}
             {activeStep === 0 &&
             <Paper sx={{ p: 3, mb: 3 }}>
@@ -263,7 +368,7 @@ export default function BookingPage() {
                 </Box>
 
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     label="First Name"
@@ -274,7 +379,7 @@ export default function BookingPage() {
                     required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     label="Last Name"
@@ -285,7 +390,7 @@ export default function BookingPage() {
                     required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     label="Email"
@@ -297,7 +402,7 @@ export default function BookingPage() {
                     required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     label="Phone Number"
@@ -308,7 +413,7 @@ export default function BookingPage() {
                     required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     select
@@ -323,13 +428,14 @@ export default function BookingPage() {
                       <option value="Australia">Australia</option>
                     </TextField>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                     fullWidth
                     select
                     label="Estimated Arrival Time"
                     value={guestDetails.arrivalTime}
                     onChange={handleGuestChange("arrivalTime")}
+                    InputLabelProps={{ shrink: true }}
                     SelectProps={{ native: true }}>
 
                       <option value="">Select time</option>
@@ -342,7 +448,7 @@ export default function BookingPage() {
                       <option value="20:00">After 8:00 PM</option>
                     </TextField>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <TextField
                     fullWidth
                     multiline
@@ -375,7 +481,7 @@ export default function BookingPage() {
 
                 <Collapse in={guestDetails.bookingForSomeoneElse}>
                   <Grid container spacing={2} sx={{ mt: 1 }}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField
                       fullWidth
                       label="Guest First Name"
@@ -385,7 +491,7 @@ export default function BookingPage() {
                       helperText={errors.guestFirstName} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                       <TextField
                       fullWidth
                       label="Guest Last Name"
@@ -400,7 +506,7 @@ export default function BookingPage() {
               </Paper>
             }
 
-            {/* Payment Step */}
+            {/* Booking Details Step */}
             {activeStep === 1 &&
             <Paper sx={{ p: 3, mb: 3 }}>
                 <Box
@@ -411,156 +517,42 @@ export default function BookingPage() {
                   mb: 3
                 }}>
 
-                  <PaymentIcon color="primary" />
                   <Typography variant="h6" fontWeight={600}>
-                    Payment Details
+                    Booking Details
                   </Typography>
                 </Box>
 
-                {errors.payment &&
+                {errors.journalNo &&
               <Alert severity="error" sx={{ mb: 3 }}>
-                    {errors.payment}
+                    {errors.journalNo}
                   </Alert>
               }
 
-                {/* Payment Method Selection */}
-                <FormControl component="fieldset" sx={{ mb: 3 }}>
-                  <FormLabel component="legend">Payment Method</FormLabel>
-                  <RadioGroup
-                  value={paymentDetails.paymentMethod}
-                  onChange={(e) =>
-                  setPaymentDetails((prev) => ({
-                    ...prev,
-                    paymentMethod: e.target.value
-                  }))
-                  }>
+                <Grid container spacing={2}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
+                    <TextField
+                    fullWidth
+                    label="Journal Number"
+                    placeholder="Enter your payment journal number"
+                    value={bookingDetails.journalNo}
+                    onChange={handleBookingDetailChange("journalNo")}
+                    error={!!errors.journalNo}
+                    helperText={errors.journalNo} />
 
-                    <FormControlLabel
-                    value="credit_card"
-                    control={<Radio />}
-                    label={
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1
-                      }}>
+                  </Grid>
+                </Grid>
 
-                          <CreditCardIcon />
-                          <span>Credit / Debit Card</span>
-                        </Box>
-                    } />
-
-                    <FormControlLabel
-                    value="paypal"
-                    control={<Radio />}
-                    label="PayPal" />
-
-                    <FormControlLabel
-                    value="pay_at_property"
-                    control={<Radio />}
-                    label="Pay at Property" />
-
-                  </RadioGroup>
-                </FormControl>
-
-                {/* Credit Card Form */}
-                {paymentDetails.paymentMethod === "credit_card" &&
-              <Box
-                sx={{
-                  p: 3,
-                  bgcolor: alpha(theme.palette.primary.main, 0.02),
-                  borderRadius: 2,
-                  border: `1px solid ${theme.palette.divider}`
-                }}>
-
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                      fullWidth
-                      label="Card Number"
-                      placeholder="1234 5678 9012 3456"
-                      value={paymentDetails.cardNumber}
-                      onChange={handlePaymentChange("cardNumber")}
-                      error={!!errors.cardNumber}
-                      helperText={errors.cardNumber}
-                      InputProps={{
-                        startAdornment:
-                        <CreditCardIcon color="action" sx={{ mr: 1 }} />
-
-                      }} />
-
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                      fullWidth
-                      label="Name on Card"
-                      placeholder="John Doe"
-                      value={paymentDetails.cardName}
-                      onChange={handlePaymentChange("cardName")}
-                      error={!!errors.cardName}
-                      helperText={errors.cardName} />
-
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                      fullWidth
-                      label="Expiry Date"
-                      placeholder="MM/YY"
-                      value={paymentDetails.expiryDate}
-                      onChange={handlePaymentChange("expiryDate")}
-                      error={!!errors.expiryDate}
-                      helperText={errors.expiryDate} />
-
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                      fullWidth
-                      label="CVV"
-                      placeholder="123"
-                      type="password"
-                      value={paymentDetails.cvv}
-                      onChange={handlePaymentChange("cvv")}
-                      error={!!errors.cvv}
-                      helperText={errors.cvv} />
-
-                      </Grid>
-                    </Grid>
-
-                    <FormControlLabel
-                  control={
-                  <Checkbox
-                    checked={paymentDetails.saveCard}
-                    onChange={(e) =>
-                    setPaymentDetails((prev) => ({
-                      ...prev,
-                      saveCard: e.target.checked
-                    }))
-                    } />
-
-                  }
-                  label="Save this card for future bookings"
-                  sx={{ mt: 2 }} />
-
-                  </Box>
-              }
-
-                {/* Security Notice */}
                 <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
                   mt: 3,
                   p: 2,
-                  bgcolor: alpha(theme.palette.success.main, 0.1),
+                  bgcolor: alpha(theme.palette.info.main, 0.1),
                   borderRadius: 1
                 }}>
 
-                  <LockIcon color="success" fontSize="small" />
                   <Typography variant="body2" color="text.secondary">
-                    Your payment information is encrypted and secure. We never
-                    store your full card details.
+                    Your booking will be confirmed after the owner verifies the
+                    journal number.
                   </Typography>
                 </Box>
               </Paper>
@@ -620,20 +612,20 @@ export default function BookingPage() {
                 {loading ?
                 "Processing..." :
                 activeStep === 1 ?
-                `Pay Nu ${total.toFixed(2)}` :
-                "Continue to Payment"}
+                "Confirm Booking" :
+                "Continue"}
               </Button>
             </Box>
           </Grid>
 
           {/* Right Column - Booking Summary */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Paper sx={{ p: 3, position: "sticky", top: 100 }}>
               {/* Property Summary */}
               <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
                 <Box
                   component="img"
-                  src={property.images[0]?.url}
+                  src={property.images?.[0]?.url || property.images?.[0]}
                   alt={property.name}
                   sx={{
                     width: 100,

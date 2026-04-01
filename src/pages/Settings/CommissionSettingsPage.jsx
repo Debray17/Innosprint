@@ -127,7 +127,7 @@ const CommissionSettingsPage = () => {
 
             {/* Stats Cards */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item sm={6} md={3}>
+                <Grid size={{ sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -151,7 +151,7 @@ const CommissionSettingsPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item sm={6} md={3}>
+                <Grid size={{ sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -175,7 +175,7 @@ const CommissionSettingsPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item sm={6} md={3}>
+                <Grid size={{ sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -199,7 +199,7 @@ const CommissionSettingsPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item sm={6} md={3}>
+                <Grid size={{ sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -227,7 +227,7 @@ const CommissionSettingsPage = () => {
 
             <Grid container spacing={3}>
                 {/* Global Settings */}
-                <Grid item lg={5}>
+                <Grid size={{ lg: 5 }}>
                     <Paper sx={{ p: 3, borderRadius: 2, mb: 3 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Global Commission Settings
@@ -274,7 +274,7 @@ const CommissionSettingsPage = () => {
                             Commission Rate Range
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <TextField
                   fullWidth
                   label="Minimum Rate"
@@ -350,7 +350,7 @@ const CommissionSettingsPage = () => {
                 </Grid>
 
                 {/* Property Rates */}
-                <Grid item xs={12} lg={7}>
+                <Grid size={{ xs: 12, lg: 7 }}>
                     <Paper sx={{ p: 3, borderRadius: 2 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Property Commission Rates

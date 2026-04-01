@@ -253,7 +253,7 @@ const RoomSeasonalPricingPage = () => {
 
             <Grid container spacing={3}>
                 {entries.map((entry) =>
-        <Grid item xs={12} sm={6} md={4} key={entry.id}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={entry.id}>
                         <Card sx={{ height: "100%" }}>
                             <CardContent>
                                 <Box
@@ -319,7 +319,7 @@ const RoomSeasonalPricingPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Room</InputLabel>
                                 <Select
@@ -336,7 +336,7 @@ const RoomSeasonalPricingPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Season</InputLabel>
                                 <Select
@@ -353,7 +353,7 @@ const RoomSeasonalPricingPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Price"
@@ -406,7 +406,7 @@ const RoomSeasonalPricingPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Room</InputLabel>
                                 <Select
@@ -423,7 +423,7 @@ const RoomSeasonalPricingPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Season</InputLabel>
                                 <Select
@@ -440,7 +440,7 @@ const RoomSeasonalPricingPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Price"

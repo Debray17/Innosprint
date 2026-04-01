@@ -160,7 +160,7 @@ export default function OwnerDetailsModal({
 
                 {/* Stats */}
                 <Grid container spacing={2} sx={{ py: 2 }}>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Box
               sx={{
                 p: 2,
@@ -178,7 +178,7 @@ export default function OwnerDetailsModal({
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid size={6}>
                         <Box
               sx={{
                 p: 2,

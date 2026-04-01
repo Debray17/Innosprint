@@ -188,16 +188,14 @@ export default function PaymentMethodsPage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
-
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
-
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             {success &&
             <Alert severity="success" sx={{ mb: 3 }}>
                 {success}
@@ -234,8 +232,8 @@ export default function PaymentMethodsPage() {
               {paymentMethods.length > 0 ?
               <Grid container spacing={2}>
                   {paymentMethods.map((method) =>
-                <Grid item
-                key={method.id} xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}
+                key={method.id}>
                       <Card
                     sx={{
                       position: "relative",
@@ -410,7 +408,7 @@ export default function PaymentMethodsPage() {
         </DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid size={12}>
 
               <TextField
                 fullWidth
@@ -427,7 +425,7 @@ export default function PaymentMethodsPage() {
                 }} />
 
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
 
               <TextField
                 fullWidth
@@ -438,7 +436,7 @@ export default function PaymentMethodsPage() {
                 helperText={errors.cardName} />
 
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
 
               <TextField
                 fullWidth
@@ -450,7 +448,7 @@ export default function PaymentMethodsPage() {
                 helperText={errors.expiryDate} />
 
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
 
               <TextField
                 fullWidth
@@ -463,7 +461,7 @@ export default function PaymentMethodsPage() {
                 helperText={errors.cvv} />
 
             </Grid>
-            <Grid item xs={12}>
+            <Grid size={12}>
 
               <FormControlLabel
                 control={

@@ -155,7 +155,7 @@ const PropertyDetailsPage = () => {
             {/* Main Content */}
             <Grid container spacing={3}>
                 {/* Left Column - Images & Details */}
-                <Grid item xs={12} lg={8}>
+                <Grid size={{ xs: 12, lg: 8 }}>
                     {/* Images */}
                     <Paper
             sx={{
@@ -223,7 +223,7 @@ const PropertyDetailsPage = () => {
                                         Contact Information
                                     </Typography>
                                     <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={6}>
+                                        <Grid size={{ xs: 12, sm: 6 }}>
                                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                                 <EmailIcon color="action" fontSize="small" />
                                                 <Typography variant="body2">
@@ -231,7 +231,7 @@ const PropertyDetailsPage = () => {
                                                 </Typography>
                                             </Box>
                                         </Grid>
-                                        <Grid item xs={12} sm={6}>
+                                        <Grid size={{ xs: 12, sm: 6 }}>
                                             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                                                 <PhoneIcon color="action" fontSize="small" />
                                                 <Typography variant="body2">
@@ -367,14 +367,14 @@ const PropertyDetailsPage = () => {
                 </Grid>
 
                 {/* Right Column - Stats & Owner */}
-                <Grid item xs={12} lg={4}>
+                <Grid size={{ xs: 12, lg: 4 }}>
                     {/* Stats */}
                     <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                         <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                             Property Stats
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Box
                   sx={{
                     p: 2,
@@ -392,7 +392,7 @@ const PropertyDetailsPage = () => {
                                     </Typography>
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Box
                   sx={{
                     p: 2,
@@ -410,7 +410,7 @@ const PropertyDetailsPage = () => {
                                     </Typography>
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Box
                   sx={{
                     p: 2,
@@ -428,7 +428,7 @@ const PropertyDetailsPage = () => {
                                     </Typography>
                                 </Box>
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid size={6}>
                                 <Box
                   sx={{
                     p: 2,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box, Typography, Paper, Card, CardContent, Avatar, Button, Chip, Divider, Dialog, DialogTitle, DialogContent, DialogActions, TextField, IconButton, Tabs, Tab, Alert, FormControlLabel, Checkbox } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
@@ -13,40 +13,118 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PaymentIcon from "@mui/icons-material/Payment";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 
-import { bookings } from "../../data/mockData";
+import {
+  useBookingActionMutation,
+  useBookingHistory,
+} from "../../hooks/useBooking";
 
 const CheckInOutPage = () => {
   const theme = useTheme();
-  const [bookingsData, setBookingsData] = useState(bookings);
   const [selectedTab, setSelectedTab] = useState(0);
   const [openCheckInModal, setOpenCheckInModal] = useState(false);
   const [openCheckOutModal, setOpenCheckOutModal] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [checkInNotes, setCheckInNotes] = useState("");
   const [checkOutNotes, setCheckOutNotes] = useState("");
-  const [roomKeyIssued, setRoomKeyIssued] = useState(false);
-  const [idVerified, setIdVerified] = useState(false);
-  const [depositCollected, setDepositCollected] = useState(false);
   const [roomInspected, setRoomInspected] = useState(false);
   const [minibarChecked, setMinibarChecked] = useState(false);
   const [additionalCharges, setAdditionalCharges] = useState("");
+  const { data: bookingRecords = [] } = useBookingHistory();
+  const bookingActionMutation = useBookingActionMutation();
 
   // Get today's date string
   const today = new Date().toISOString().split("T")[0];
 
-  // Filter for today's check-ins (confirmed bookings with today's check-in date)
+  const mapPaymentStatus = (paymentStatus) => {
+    const normalizedValue = String(paymentStatus || "").toLowerCase();
+    if (normalizedValue.includes("full") || normalizedValue === "paid") return "paid";
+    if (normalizedValue.includes("part")) return "partial";
+    if (normalizedValue.includes("refund")) return "refunded";
+    return "pending";
+  };
+
+  const mapBookingStatus = (booking) => {
+    const apiStatus = String(booking?.api?.statusLabel || "").toLowerCase();
+    const normalizedStatus = String(booking?.status || "").toLowerCase();
+
+    if (
+      apiStatus.includes("checked out") ||
+      apiStatus.includes("checked-out") ||
+      apiStatus.includes("checkout") ||
+      normalizedStatus === "completed"
+    ) {
+      return "checked-out";
+    }
+    if (
+      apiStatus.includes("checked in") ||
+      apiStatus.includes("checked-in") ||
+      apiStatus.includes("checkin") ||
+      normalizedStatus === "checked-in"
+    ) {
+      return "checked-in";
+    }
+    if (apiStatus.includes("cancel") || normalizedStatus === "cancelled") {
+      return "cancelled";
+    }
+    return "confirmed";
+  };
+
+  const toDateOnly = (value) => {
+    if (!value) return "";
+    const parsedDate = new Date(value);
+    if (Number.isNaN(parsedDate.getTime())) return "";
+    return parsedDate.toISOString().split("T")[0];
+  };
+
+  const bookingsData = useMemo(
+    () =>
+      bookingRecords.map((booking) => ({
+        id: booking.id,
+        api: booking.api,
+        bookingCode: booking.bookingCode || "-",
+        guestName:
+          booking.api?.userName ||
+          `${booking.guestDetails?.firstName || ""} ${booking.guestDetails?.lastName || ""}`.trim() ||
+          "Guest",
+        propertyName: booking.property?.name || booking.api?.propertyName || "Unknown Property",
+        roomNumber: booking.room?.roomNo || booking.room?.name || "-",
+        roomType: booking.room?.type || "-",
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        grandTotal: booking.pricing?.total || 0,
+        paymentStatus: mapPaymentStatus(
+          booking.paymentStatus || booking.api?.paymentStatusLabel
+        ),
+        bookingStatus: mapBookingStatus(booking),
+        approvalStatus: booking.approvalStatus || "pending",
+        adults: booking.guests?.adults || 0,
+        children: booking.guests?.children || 0,
+        nights: booking.nights || 0,
+      })),
+    [bookingRecords]
+  );
+
+  // Filter for today's check-ins (approved + confirmed bookings with today's check-in date)
   const todayCheckIns = bookingsData.filter(
-    (b) => b.bookingStatus === "confirmed" && b.checkIn === today
+    (b) =>
+      b.approvalStatus === "approved" &&
+      b.bookingStatus === "confirmed" &&
+      toDateOnly(b.checkIn) === today
   );
 
-  // Filter for today's check-outs (checked-in bookings with today's check-out date)
+  // Filter for today's check-outs (approved + checked-in bookings with today's check-out date)
   const todayCheckOuts = bookingsData.filter(
-    (b) => b.bookingStatus === "checked-in" && b.checkOut === today
+    (b) =>
+      b.approvalStatus === "approved" &&
+      b.bookingStatus === "checked-in" &&
+      toDateOnly(b.checkOut) === today
   );
 
-  // For demo purposes, show all confirmed as potential check-ins and all checked-in as potential check-outs
-  const allPendingCheckIns = bookingsData.filter((b) => b.bookingStatus === "confirmed");
-  const allPendingCheckOuts = bookingsData.filter((b) => b.bookingStatus === "checked-in");
+  const allPendingCheckIns = bookingsData.filter(
+    (b) => b.approvalStatus === "approved" && b.bookingStatus === "confirmed"
+  );
+  const allPendingCheckOuts = bookingsData.filter(
+    (b) => b.approvalStatus === "approved" && b.bookingStatus === "checked-in"
+  );
 
   // Get displayed bookings based on tab
   const getDisplayedBookings = () => {
@@ -77,7 +155,6 @@ const CheckInOutPage = () => {
   const handleCheckInClick = (booking) => {
     setSelectedBooking(booking);
     setOpenCheckInModal(true);
-    resetCheckInForm();
   };
 
   // Handle check-out click
@@ -85,14 +162,6 @@ const CheckInOutPage = () => {
     setSelectedBooking(booking);
     setOpenCheckOutModal(true);
     resetCheckOutForm();
-  };
-
-  // Reset check-in form
-  const resetCheckInForm = () => {
-    setCheckInNotes("");
-    setRoomKeyIssued(false);
-    setIdVerified(false);
-    setDepositCollected(false);
   };
 
   // Reset check-out form
@@ -104,24 +173,61 @@ const CheckInOutPage = () => {
   };
 
   // Confirm check-in
-  const handleConfirmCheckIn = () => {
-    setBookingsData(
-      bookingsData.map((b) =>
-      b.id === selectedBooking.id ? { ...b, bookingStatus: "checked-in" } : b
-      )
-    );
+  const runBookingAction = async (action, booking, remark = "") => {
+    await bookingActionMutation.mutateAsync({
+      action,
+      payload: {
+        id: booking.id,
+        isActive: true,
+        transactedBy: "admin",
+        remark: remark || undefined,
+      },
+      options: { language: "en" },
+      context: {
+        id: booking.id,
+        roomId: booking.api?.roomId || "",
+        property: {
+          name: booking.propertyName,
+        },
+        room: {
+          id: booking.api?.roomId || "",
+          name: booking.roomNumber,
+          roomNo: booking.roomNumber,
+          type: booking.roomType,
+        },
+        guests: {
+          adults: booking.adults,
+          children: booking.children,
+        },
+        pricing: {
+          total: booking.grandTotal,
+        },
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        nights: booking.nights,
+        paymentStatus: booking.paymentStatus,
+        status: action === "checkin" ? "checked-in" : "completed",
+        approvalStatus: "approved",
+      },
+    });
+  };
+
+  const handleConfirmCheckIn = async () => {
+    await runBookingAction("checkin", selectedBooking);
     setOpenCheckInModal(false);
     setSelectedBooking(null);
-    resetCheckInForm();
   };
 
   // Confirm check-out
-  const handleConfirmCheckOut = () => {
-    setBookingsData(
-      bookingsData.map((b) =>
-      b.id === selectedBooking.id ? { ...b, bookingStatus: "checked-out" } : b
-      )
-    );
+  const handleConfirmCheckOut = async () => {
+    const checkoutRemark = [
+      checkOutNotes,
+      additionalCharges ? `Additional charges: Nu ${additionalCharges}` : "",
+    ]
+      .filter(Boolean)
+      .join(" | ");
+
+    await runBookingAction("checkout", selectedBooking, checkoutRemark);
     setOpenCheckOutModal(false);
     setSelectedBooking(null);
     resetCheckOutForm();
@@ -131,8 +237,8 @@ const CheckInOutPage = () => {
   const BookingCard = ({ booking, type }) => {
     const isCheckIn = type === "checkin";
     const isToday = isCheckIn ?
-    booking.checkIn === today :
-    booking.checkOut === today;
+    toDateOnly(booking.checkIn) === today :
+    toDateOnly(booking.checkOut) === today;
 
     return (
       <Card
@@ -200,7 +306,7 @@ const CheckInOutPage = () => {
             }}>
 
                         <Grid container spacing={1}>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Typography variant="caption" color="text.secondary">
                                     Check-in
                                 </Typography>
@@ -208,7 +314,7 @@ const CheckInOutPage = () => {
                                     {formatDate(booking.checkIn)}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Typography variant="caption" color="text.secondary">
                                     Check-out
                                 </Typography>
@@ -282,7 +388,7 @@ const CheckInOutPage = () => {
 
             {/* Stats Cards */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Paper
             sx={{
               p: 3,
@@ -300,7 +406,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Paper
             sx={{
               p: 3,
@@ -318,7 +424,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Paper
             sx={{
               p: 3,
@@ -336,7 +442,7 @@ const CheckInOutPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Paper
             sx={{
               p: 3,
@@ -390,7 +496,7 @@ const CheckInOutPage = () => {
             {getDisplayedBookings().length > 0 ?
       <Grid container spacing={3}>
                     {getDisplayedBookings().map((booking) =>
-        <Grid item key={booking.id} xs={12} sm={6} lg={4}>
+        <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={booking.id}>
                             <BookingCard
             booking={booking}
             type={selectedTab === 0 ? "checkin" : "checkout"} />
@@ -472,7 +578,7 @@ const CheckInOutPage = () => {
               }}>
 
                                 <Grid container spacing={2}>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                                             <Avatar
                       sx={{
@@ -493,7 +599,7 @@ const CheckInOutPage = () => {
                                             </Box>
                                         </Box>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Typography variant="caption" color="text.secondary">
                                             Check-in
                                         </Typography>
@@ -501,7 +607,7 @@ const CheckInOutPage = () => {
                                             {formatDate(selectedBooking.checkIn)}
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Typography variant="caption" color="text.secondary">
                                             Check-out
                                         </Typography>
@@ -512,60 +618,9 @@ const CheckInOutPage = () => {
                                 </Grid>
                             </Paper>
 
-                            {/* Payment Status Alert */}
-                            {selectedBooking.paymentStatus !== "paid" &&
-            <Alert severity="warning" sx={{ mb: 3 }}>
-                                    Payment is <strong>{selectedBooking.paymentStatus}</strong>.
-                                    Please collect {formatCurrency(selectedBooking.grandTotal)} before check-in.
-                                </Alert>
-            }
-
-                            {/* Check-In Checklist */}
-                            <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
-                                Check-In Checklist
-                            </Typography>
-                            <Box sx={{ mb: 3 }}>
-                                <FormControlLabel
-                control={
-                <Checkbox
-                  checked={idVerified}
-                  onChange={(e) => setIdVerified(e.target.checked)}
-                  color="success" />
-
-                }
-                label="Guest ID verified" />
-
-                                <FormControlLabel
-                control={
-                <Checkbox
-                  checked={depositCollected}
-                  onChange={(e) => setDepositCollected(e.target.checked)}
-                  color="success" />
-
-                }
-                label="Security deposit collected" />
-
-                                <FormControlLabel
-                control={
-                <Checkbox
-                  checked={roomKeyIssued}
-                  onChange={(e) => setRoomKeyIssued(e.target.checked)}
-                  color="success" />
-
-                }
-                label="Room key issued" />
-
-                            </Box>
-
-                            {/* Notes */}
-                            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              label="Check-In Notes"
-              placeholder="Add any notes about the check-in..."
-              value={checkInNotes}
-              onChange={(e) => setCheckInNotes(e.target.value)} />
+                            <Alert severity="info">
+                              Confirm check-in for this booking.
+                            </Alert>
 
                         </Box>
           }
@@ -578,8 +633,7 @@ const CheckInOutPage = () => {
             variant="contained"
             color="success"
             startIcon={<CheckCircleIcon />}
-            onClick={handleConfirmCheckIn}
-            disabled={!idVerified || !roomKeyIssued}>
+            onClick={handleConfirmCheckIn}>
 
                         Complete Check-In
                     </Button>
@@ -628,7 +682,7 @@ const CheckInOutPage = () => {
               }}>
 
                                 <Grid container spacing={2}>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                                             <Avatar
                       sx={{
@@ -649,7 +703,7 @@ const CheckInOutPage = () => {
                                             </Box>
                                         </Box>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Typography variant="caption" color="text.secondary">
                                             Stayed
                                         </Typography>
@@ -657,7 +711,7 @@ const CheckInOutPage = () => {
                                             {selectedBooking.nights} nights
                                         </Typography>
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid size={12}>
                                         <Typography variant="caption" color="text.secondary">
                                             Total Paid
                                         </Typography>

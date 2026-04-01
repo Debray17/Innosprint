@@ -35,10 +35,6 @@ import RoomSeasonalPricingPage from "../pages/Rooms/RoomSeasonalPricingPage";
 // Bookings
 import AllBookingsPage from "../pages/Bookings/AllBookingsPage";
 import CheckInOutPage from "../pages/Bookings/CheckInOutPage";
-import CalendarPage from "../pages/Bookings/CalenderPage";
-
-// Guests
-import GuestsListPage from "../pages/Guests/GuestsListPage";
 
 // Services
 import ServiceCategoriesPage from "../pages/Services/ServiceCategoriesPage";
@@ -52,6 +48,7 @@ import OccupancyReportPage from "../pages/Reports/OccupancyReportPage";
 import GeneralSettingsPage from "../pages/Settings/GeneralSettingsPage";
 import CommissionSettingsPage from "../pages/Settings/CommissionSettingsPage";
 import SeasonalPricingPage from "../pages/Settings/SeasonalPricingPage";
+import AiAssistantPage from "../pages/Admin/AiAssistantPage";
 
 // =====================================================
 // USER PAGES
@@ -60,6 +57,8 @@ import SeasonalPricingPage from "../pages/Settings/SeasonalPricingPage";
 import HomePage from "../pages/User/HomePage";
 import SearchResultsPage from "../pages/User/SearchResultsPage";
 import PropertyDetailsPage from "../pages/User/PropertyDetailsPage";
+import UserAllPropertiesPage from "../pages/User/AllPropertiesPage";
+import SeasonalOffersPage from "../pages/User/SeasonalOffersPage";
 
 // Booking Flow
 import BookingPage from "../pages/User/BookingPage";
@@ -156,10 +155,6 @@ export default function AppRouter() {
         <Route path="bookings" element={<Navigate to="all" replace />} />
         <Route path="bookings/all" element={<AllBookingsPage />} />
         <Route path="bookings/check-in-out" element={<CheckInOutPage />} />
-        <Route path="bookings/calendar" element={<CalendarPage />} />
-
-        {/* Guests */}
-        <Route path="guests" element={<GuestsListPage />} />
 
         {/* Services */}
         <Route path="services" element={<Navigate to="categories" replace />} />
@@ -182,6 +177,7 @@ export default function AppRouter() {
           path="settings/seasonal-pricing"
           element={<SeasonalPricingPage />}
         />
+        <Route path="ai-assistant" element={<AiAssistantPage />} />
 
         {/* Admin 404 */}
         <Route path="*" element={<Navigate to="dashboard" replace />} />
@@ -197,6 +193,8 @@ export default function AppRouter() {
         {/* Search & Property */}
         <Route path="/search" element={<SearchResultsPage />} />
         <Route path="/property/:id" element={<PropertyDetailsPage />} />
+        <Route path="/properties" element={<UserAllPropertiesPage />} />
+        <Route path="/offers" element={<SeasonalOffersPage />} />
 
         {/* Booking Flow */}
         <Route path="/booking/:propertyId/:roomId" element={<BookingPage />} />

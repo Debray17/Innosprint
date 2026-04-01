@@ -71,14 +71,14 @@ export default function MyReviewsPage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h5" fontWeight={700} gutterBottom>
                 My Reviews
@@ -86,7 +86,7 @@ export default function MyReviewsPage() {
 
               {/* Stats */}
               <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={4}>
+                <Grid size={4}>
                   <Box
                     sx={{
                       textAlign: "center",
@@ -103,7 +103,7 @@ export default function MyReviewsPage() {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={4}>
                   <Box
                     sx={{
                       textAlign: "center",
@@ -134,7 +134,7 @@ export default function MyReviewsPage() {
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid size={4}>
                   <Box
                     sx={{
                       textAlign: "center",

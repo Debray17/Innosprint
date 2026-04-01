@@ -1,6 +1,6 @@
 // src/pages/User/HomePage.jsx
-import React, { useEffect, useMemo, useState } from "react";
-import { Box, Container, Typography, Card, CardContent, CardMedia, Button, Chip, Paper } from "@mui/material";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Box, Container, Typography, Card, CardContent, CardMedia, Button, Chip, Paper, IconButton } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +14,7 @@ import {
 "../../data/userMockData";
 import { getPropertyTypeList } from "../../services/propertyTypeService";
 import { getPropertyList } from "../../services/propertyService";
-import { getRoomList } from "../../services/roomService";
+import { getAvailableRoomList, getRoomList } from "../../services/roomService";
 import { getSeasonalPricingList } from "../../services/seasonalPricingService";
 import { getRoomSeasonalPricingList } from "../../services/roomSeasonalPricingService";
 
@@ -26,6 +26,7 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import HomeIcon from "@mui/icons-material/Home";
 import NightShelterIcon from "@mui/icons-material/NightShelter";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import StarIcon from "@mui/icons-material/Star";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
@@ -47,11 +48,22 @@ export default function HomePage() {
   const [featuredPropertiesData, setFeaturedPropertiesData] =
   useState(featuredProperties);
   const [seasonalRoomOffers, setSeasonalRoomOffers] = useState([]);
-  const [cityStats, setCityStats] = useState({});
   const [dbDestinations, setDbDestinations] = useState([]);
+  const featuredCarouselRef = useRef(null);
+  const offersCarouselRef = useRef(null);
 
   const handleFavoriteToggle = (propertyId) => {
     console.log("Toggle favorite:", propertyId);
+  };
+
+  const scrollCarousel = (ref, direction) => {
+    if (!ref?.current) return;
+    const container = ref.current;
+    const scrollAmount = container.clientWidth * 0.8;
+    container.scrollBy({
+      left: direction === "next" ? scrollAmount : -scrollAmount,
+      behavior: "smooth",
+    });
   };
 
   const formatShortDate = (value) => {
@@ -131,7 +143,7 @@ export default function HomePage() {
       try {
         const [propertiesResponse, roomsResponse] = await Promise.all([
           getPropertyList({ language: "en" }),
-          getRoomList({ language: "en" }),
+          getAvailableRoomList({ language: "en" }),
         ]);
 
         const propertiesList = Array.isArray(propertiesResponse) ?
@@ -162,16 +174,22 @@ export default function HomePage() {
 
         const nextStats = {};
         const cityDisplayByKey = {};
+        const countryDisplayByKey = {};
         propertiesList.
         filter((property) => property?.isActive !== false).
         forEach((property) => {
           const cityKey = normalizeText(property?.city);
+          const countryKey = normalizeText(property?.country);
+          const destinationKey = `${cityKey}::${countryKey}`;
           if (!cityKey) return;
-          if (!cityDisplayByKey[cityKey] && property?.city) {
-            cityDisplayByKey[cityKey] = property.city.toString().trim();
+          if (!cityDisplayByKey[destinationKey] && property?.city) {
+            cityDisplayByKey[destinationKey] = property.city.toString().trim();
+          }
+          if (!countryDisplayByKey[destinationKey] && property?.country) {
+            countryDisplayByKey[destinationKey] = property.country.toString().trim();
           }
 
-          const prev = nextStats[cityKey] || { count: 0, minPrice: null };
+          const prev = nextStats[destinationKey] || { count: 0, minPrice: null };
           prev.count += 1;
 
           const roomMin = minRoomPriceByPropertyId[property?.id];
@@ -180,7 +198,7 @@ export default function HomePage() {
               prev.minPrice == null ? roomMin : Math.min(prev.minPrice, roomMin);
           }
 
-          nextStats[cityKey] = prev;
+          nextStats[destinationKey] = prev;
         });
 
         const destinationImages =
@@ -188,9 +206,10 @@ export default function HomePage() {
         filter(Boolean);
 
         const destinationsFromDb = Object.entries(nextStats).
-        map(([cityKey, stats], index) => ({
-          id: cityKey,
-          name: cityDisplayByKey[cityKey] || cityKey,
+        map(([destinationKey, stats], index) => ({
+          id: destinationKey,
+          name: cityDisplayByKey[destinationKey] || "Unknown",
+          country: countryDisplayByKey[destinationKey] || "",
           image: destinationImages.length > 0 ?
           destinationImages[index % destinationImages.length] :
           "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
@@ -201,12 +220,10 @@ export default function HomePage() {
         slice(0, 6);
 
         if (isMounted) {
-          setCityStats(nextStats);
           setDbDestinations(destinationsFromDb);
         }
       } catch (err) {
         if (isMounted) {
-          setCityStats({});
           setDbDestinations([]);
         }
       }
@@ -225,18 +242,41 @@ export default function HomePage() {
 
     const fetchFeaturedProperties = async () => {
       try {
-        const response = await getPropertyList({ language: "en" });
-        const list = Array.isArray(response) ? response : response ? [response] : [];
+        const [propertiesResponse, roomsResponse] = await Promise.all([
+          getPropertyList({ language: "en" }),
+          getAvailableRoomList({ language: "en" }),
+        ]);
+        const list = Array.isArray(propertiesResponse) ? propertiesResponse : propertiesResponse ? [propertiesResponse] : [];
+        const roomsList = Array.isArray(roomsResponse) ? roomsResponse : roomsResponse ? [roomsResponse] : [];
+        const minRoomByPropertyId = new Map();
+        roomsList
+          .filter((room) => room?.isActive !== false)
+          .forEach((room) => {
+            const propertyId = room?.propertyId;
+            if (!propertyId) return;
+            const current = minRoomByPropertyId.get(propertyId);
+            const nextPrice = Number(room?.basePrise) || 0;
+            const roomId = room?.id || room?.primaryKeyValue || null;
+            if (!current || (nextPrice > 0 && nextPrice < current.pricePerNight)) {
+              minRoomByPropertyId.set(propertyId, {
+                roomId,
+                pricePerNight: nextPrice,
+              });
+            }
+          });
         const normalized = list
           .filter((item) => item?.isActive !== false)
+          .filter((item) => minRoomByPropertyId.has(item?.id || item?.primaryKeyValue))
           .map((item, index) => {
             const typeName =
               propertyTypeNameById.get(item?.propertyTypeId) ||
               item?.icon ||
               "Property";
+            const roomInfo = minRoomByPropertyId.get(item?.id || item?.primaryKeyValue);
 
             return {
               id: item?.id || item?.primaryKeyValue || index,
+              roomId: roomInfo?.roomId || null,
               name: item?.name || "Untitled Property",
               type: typeName,
               location: {
@@ -248,7 +288,7 @@ export default function HomePage() {
               ],
               rating: Number(item?.rating) || 0,
               reviewsCount: Number(item?.reviewCount) || 0,
-              pricePerNight: 0,
+              pricePerNight: roomInfo?.pricePerNight || 0,
               originalPrice: null,
               discount: 0,
               amenities: [],
@@ -445,7 +485,7 @@ export default function HomePage() {
       </Box>
 
       {/* Property Categories */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 5, md: 8 } }}>
         <Typography
           variant="h4"
           fontWeight={700}
@@ -463,14 +503,14 @@ export default function HomePage() {
           Find the perfect accommodation for your next trip
         </Typography>
 
-        <Grid container spacing={2}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
           {propertyTypes.map((category) => {
             const IconComponent =
               propertyTypeIconMap[category.icon.toLowerCase()] ||
               categoryIcons[category.name] ||
               HotelIcon;
             return (
-              <Grid item key={category.id} xs={6} sm={4} md={2}>
+              <Grid size={{ xs: 6, sm: 4, md: 2 }} key={category.id}>
                 <Card
                   onClick={() =>
                   navigate(
@@ -478,8 +518,10 @@ export default function HomePage() {
                   )
                   }
                   sx={{
+                    height: "100%",
+                    minHeight: { xs: 140, sm: 160, md: 170 },
                     textAlign: "center",
-                    p: 2,
+                    p: { xs: 1.5, sm: 2 },
                     cursor: "pointer",
                     transition: "all 0.3s",
                     "&:hover": {
@@ -526,7 +568,7 @@ export default function HomePage() {
       </Container>
 
       {/* Popular Destinations */}
-      <Box sx={{ bgcolor: "grey.50", py: 8 }}>
+      <Box sx={{ bgcolor: "grey.50", py: { xs: 5, md: 8 } }}>
         <Container maxWidth="lg">
           <Box
             sx={{
@@ -554,16 +596,22 @@ export default function HomePage() {
           </Box>
 
           {dbDestinations.length > 0 ?
-          <Grid container spacing={3}>
+          <Grid container spacing={{ xs: 2, md: 3 }}>
               {dbDestinations.map((destination, index) => (
-              <Grid item key={destination.id} xs={12} sm={6} md={4}>
+              <Grid size={{ xs: 12, sm: 6, md: 4 }} key={destination.id}>
                 <Card
                 onClick={() =>
-                navigate(`/search?destination=${destination.name}`)
+                navigate(
+                  `/search?city=${encodeURIComponent(destination.name)}&country=${encodeURIComponent(destination.country || "")}`,
+                )
                 }
                 sx={{
                   position: "relative",
-                  height: index === 0 || index === 3 ? 300 : 200,
+                  height: {
+                    xs: 200,
+                    sm: 230,
+                    md: index === 0 || index === 3 ? 300 : 200,
+                  },
                   cursor: "pointer",
                   overflow: "hidden",
                   "&:hover img": {
@@ -596,6 +644,7 @@ export default function HomePage() {
                       {destination.name}
                     </Typography>
                     <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      {destination.country ? `${destination.country} • ` : ""}
                       {destination.propertiesCount} properties • From Nu
                       {destination.startingPrice}/night
                     </Typography>
@@ -615,7 +664,7 @@ export default function HomePage() {
       </Box>
 
       {/* Featured Properties */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 5, md: 8 } }}>
         <Box
           sx={{
             display: "flex",
@@ -634,121 +683,232 @@ export default function HomePage() {
           </Box>
           <Button
             endIcon={<ArrowForwardIcon />}
-            onClick={() => navigate("/search?featured=true")}
+            onClick={() => navigate("/properties")}
             sx={{ display: { xs: "none", sm: "flex" } }}>
 
             View All
           </Button>
         </Box>
 
-        <Grid container spacing={3}>
-          {featuredPropertiesData.slice(0, 4).map((property) =>
-          <Grid item key={property.id} xs={12} sm={6} md={3}>
-              <PropertyCard
-              property={property}
-              onFavoriteToggle={handleFavoriteToggle} />
+        <Box sx={{ position: "relative" }}>
+          <IconButton
+            onClick={() => scrollCarousel(featuredCarouselRef, "prev")}
+            sx={{
+              position: "absolute",
+              left: { xs: -6, md: -24 },
+              top: "45%",
+              zIndex: 2,
+              bgcolor: "#fff",
+              boxShadow: 2,
+              display: { xs: "none", sm: "flex" },
+              "&:hover": { bgcolor: "#fff" },
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Box
+            ref={featuredCarouselRef}
+            sx={{
+              display: "grid",
+              gridAutoFlow: "column",
+              gridAutoColumns: { xs: "85%", sm: "48%", md: "32%" },
+              gap: { xs: 2, md: 3 },
+              overflowX: "auto",
+              scrollSnapType: "x mandatory",
+              pb: 1,
+              "&::-webkit-scrollbar": { display: "none" },
+            }}
+          >
+            {featuredPropertiesData.slice(0, 5).map((property) => (
+              <Box
+                key={property.id}
+                sx={{ scrollSnapAlign: "start" }}
+              >
+                <PropertyCard
+                  property={property}
+                  onFavoriteToggle={handleFavoriteToggle}
+                />
+              </Box>
+            ))}
+          </Box>
+          <IconButton
+            onClick={() => scrollCarousel(featuredCarouselRef, "next")}
+            sx={{
+              position: "absolute",
+              right: { xs: -6, md: -24 },
+              top: "45%",
+              zIndex: 2,
+              bgcolor: "#fff",
+              boxShadow: 2,
+              display: { xs: "none", sm: "flex" },
+              "&:hover": { bgcolor: "#fff" },
+            }}
+          >
+            <ArrowForwardIcon />
+          </IconButton>
+        </Box>
 
-            </Grid>
-          )}
-        </Grid>
       </Container>
 
       {/* Special Offers */}
-      <Box sx={{ bgcolor: alpha(theme.palette.primary.main, 0.03), py: 8 }}>
+      <Box sx={{ bgcolor: alpha(theme.palette.primary.main, 0.03), py: { xs: 5, md: 8 } }}>
         <Container maxWidth="lg">
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            textAlign="center"
-            gutterBottom>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 4,
+              gap: 2,
+              flexWrap: "wrap",
+            }}
+          >
+            <Box>
+              <Typography variant="h4" fontWeight={700} gutterBottom>
+                Seasonal Offers
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Exclusive deals and discounts just for you
+              </Typography>
+            </Box>
+            <Button
+              endIcon={<ArrowForwardIcon />}
+              onClick={() => navigate("/offers")}
+            >
+              View All
+            </Button>
+          </Box>
 
-            Seasonal Offers
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            textAlign="center"
-            sx={{ mb: 4 }}>
-
-            Exclusive deals and discounts just for you
-          </Typography>
-
-          <Grid container spacing={3}>
-            {(seasonalRoomOffers.length > 0 ? seasonalRoomOffers : specialOffers).map((offer) =>
-            <Grid item key={offer.id} xs={12} md={4}>
-                <Card
-                sx={{
-                  position: "relative",
-                  overflow: "hidden",
-                  cursor: "pointer",
-                  "&:hover": {
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.15)"
-                  }
-                }}>
-
-                  <CardMedia
-                  component="img"
-                  height={200}
-                  image={offer.image}
-                  alt={offer.title} />
-
-                  <Chip
-                  label={
-                  typeof offer.price === "number" && offer.price > 0 ?
-                  `Nu ${offer.price}` :
-                  `Save ${typeof offer.discount === "number" && offer.discount > 50 ? `Nu ${offer.discount}` : `${offer.discount}%`}`
-                  }
-                  sx={{
-                    position: "absolute",
-                    top: 16,
-                    right: 16,
-                    bgcolor: theme.palette.error.main,
-                    color: "#fff",
-                    fontWeight: 600
-                  }} />
-
-                  <CardContent>
-                    <Typography variant="h6" fontWeight={600} gutterBottom>
-                      {offer.title}
-                    </Typography>
-                    <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    gutterBottom>
-
-                      {offer.description}
-                    </Typography>
-                    <Box
+          <Box sx={{ position: "relative" }}>
+            <IconButton
+              onClick={() => scrollCarousel(offersCarouselRef, "prev")}
+              sx={{
+                position: "absolute",
+                left: { xs: -6, md: -24 },
+                top: "45%",
+                zIndex: 2,
+                bgcolor: "#fff",
+                boxShadow: 2,
+                display: { xs: "none", sm: "flex" },
+                "&:hover": { bgcolor: "#fff" },
+              }}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Box
+              ref={offersCarouselRef}
+              sx={{
+                display: "grid",
+                gridAutoFlow: "column",
+                gridAutoColumns: { xs: "85%", sm: "48%", md: "32%" },
+                gap: { xs: 2, md: 3 },
+                overflowX: "auto",
+                scrollSnapType: "x mandatory",
+                pb: 1,
+                "&::-webkit-scrollbar": { display: "none" },
+              }}
+            >
+              {(seasonalRoomOffers.length > 0 ? seasonalRoomOffers : specialOffers)
+                .slice(0, 5)
+                .map((offer) => (
+                <Box key={offer.id} sx={{ scrollSnapAlign: "start" }}>
+                  <Card
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      mt: 2
-                    }}>
+                      position: "relative",
+                      overflow: "hidden",
+                      cursor: "pointer",
+                      "&:hover": {
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.15)"
+                      }
+                    }}
+                  >
 
-                      <Chip
-                      label={offer.code}
-                      variant="outlined"
-                      color="primary"
-                      sx={{ fontWeight: 600 }} />
+                    <CardMedia
+                      component="img"
+                      height={180}
+                      image={offer.image}
+                      alt={offer.title}
+                      sx={{ height: { xs: 180, sm: 200 } }}
+                    />
 
-                      <Button
-                      size="small"
-                      onClick={() => navigate("/search?special=seasonal")}>
+                    <Chip
+                      label={
+                        typeof offer.price === "number" && offer.price > 0 ?
+                        `Nu ${offer.price}` :
+                        `Save ${typeof offer.discount === "number" && offer.discount > 50 ? `Nu ${offer.discount}` : `${offer.discount}%`}`
+                      }
+                      sx={{
+                        position: "absolute",
+                        top: 16,
+                        right: 16,
+                        bgcolor: theme.palette.error.main,
+                        color: "#fff",
+                        fontWeight: 600
+                      }}
+                    />
 
-                        View
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            )}
-          </Grid>
+                    <CardContent>
+                      <Typography variant="h6" fontWeight={600} gutterBottom>
+                        {offer.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+
+                        {offer.description}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          mt: 2
+                        }}
+                      >
+
+                        <Chip
+                          label={offer.code}
+                          variant="outlined"
+                          color="primary"
+                          sx={{ fontWeight: 600 }}
+                        />
+
+                        <Button
+                          size="small"
+                          onClick={() => navigate("/offers")}
+                        >
+
+                          View
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Box>
+              ))}
+            </Box>
+            <IconButton
+              onClick={() => scrollCarousel(offersCarouselRef, "next")}
+              sx={{
+                position: "absolute",
+                right: { xs: -6, md: -24 },
+                top: "45%",
+                zIndex: 2,
+                bgcolor: "#fff",
+                boxShadow: 2,
+                display: { xs: "none", sm: "flex" },
+                "&:hover": { bgcolor: "#fff" },
+              }}
+            >
+              <ArrowForwardIcon />
+            </IconButton>
+          </Box>
         </Container>
       </Box>
 
       {/* Why Choose Us */}
-      <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 5, md: 8 } }}>
         <Typography
           variant="h4"
           fontWeight={700}
@@ -766,7 +926,7 @@ export default function HomePage() {
           We're committed to making your travel experience seamless
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} justifyContent="center">
           {[
             {
               icon: StarIcon,
@@ -793,8 +953,8 @@ export default function HomePage() {
                 "Your payments are protected with bank-level security encryption.",
             },
           ].map((feature) =>
-          <Grid item key={feature.title} xs={12} sm={6} md={3}>
-              <Box sx={{ textAlign: "center" }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={feature.title}>
+              <Box sx={{ textAlign: "center", mx: "auto", maxWidth: 260 }}>
                 <Box
                 sx={{
                   width: 80,
@@ -824,61 +984,6 @@ export default function HomePage() {
         </Grid>
       </Container>
 
-      {/* Newsletter Section */}
-      <Box
-        sx={{
-          bgcolor: theme.palette.primary.main,
-          color: "#fff",
-          py: 6
-        }}>
-
-        <Container maxWidth="md" sx={{ textAlign: "center" }}>
-          <Typography variant="h4" fontWeight={700} gutterBottom>
-            Get Exclusive Deals
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 3, opacity: 0.9 }}>
-            Subscribe to our newsletter and receive special offers directly in
-            your inbox
-          </Typography>
-          <Box
-            component="form"
-            sx={{
-              display: "flex",
-              gap: 1,
-              maxWidth: 500,
-              mx: "auto",
-              flexDirection: { xs: "column", sm: "row" }
-            }}>
-
-            <Box
-              component="input"
-              placeholder="Enter your email"
-              sx={{
-                flex: 1,
-                px: 2,
-                py: 1.5,
-                borderRadius: 1,
-                border: "none",
-                fontSize: 16,
-                outline: "none"
-              }} />
-
-            <Button
-              variant="contained"
-              sx={{
-                bgcolor: "#fff",
-                color: theme.palette.primary.main,
-                px: 4,
-                "&:hover": {
-                  bgcolor: alpha("#fff", 0.9)
-                }
-              }}>
-
-              Subscribe
-            </Button>
-          </Box>
-        </Container>
-      </Box>
     </Box>);
 
 }

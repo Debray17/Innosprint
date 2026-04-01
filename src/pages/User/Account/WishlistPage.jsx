@@ -47,14 +47,14 @@ export default function WishlistPage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             <Paper sx={{ p: 3 }}>
               <Box
                 sx={{
@@ -77,7 +77,7 @@ export default function WishlistPage() {
               {wishlist.length > 0 ?
               <Grid container spacing={3}>
                   {wishlist.map((item) =>
-                <Grid item key={item.id} xs={12} sm={6} md={4}>
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={item.id}>
                       <Card
                     sx={{
                       height: "100%",

@@ -277,7 +277,7 @@ const SeasonalPricingPage = () => {
 
 
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
           fullWidth
           label="Start Date"
@@ -289,7 +289,7 @@ const SeasonalPricingPage = () => {
           required />
 
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
           fullWidth
           label="End Date"
@@ -397,7 +397,7 @@ const SeasonalPricingPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item md={3} xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -421,7 +421,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item md={3} xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -445,7 +445,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item md={3} xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar
@@ -469,7 +469,7 @@ const SeasonalPricingPage = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item md={3} xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <Card>
                         <CardContent sx={{ textAlign: "center" }}>
                             <Avatar

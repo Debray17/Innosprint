@@ -13,7 +13,6 @@ import {
   Box,
   Container,
   Divider,
-  Badge,
   Drawer,
   List,
   ListItemButton,
@@ -23,11 +22,9 @@ import {
 } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import PersonIcon from "@mui/icons-material/Person";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HotelIcon from "@mui/icons-material/Hotel";
 import CloseIcon from "@mui/icons-material/Close";
@@ -59,8 +56,6 @@ export default function UserHeader({ transparent = false }) {
   const menuItems = [
     { label: "Dashboard", path: "/account/dashboard", icon: DashboardIcon },
     { label: "My Bookings", path: "/account/bookings", icon: BookOnlineIcon },
-    { label: "Wishlist", path: "/account/wishlist", icon: FavoriteIcon },
-    { label: "My Reviews", path: "/account/reviews", icon: RateReviewIcon },
     { label: "Profile", path: "/account/profile", icon: PersonIcon },
   ];
 
@@ -127,16 +122,6 @@ export default function UserHeader({ transparent = false }) {
             >
               {isLoggedIn ? (
                 <>
-                  <IconButton
-                    component={RouterLink}
-                    to="/account/wishlist"
-                    sx={{ color: "inherit" }}
-                  >
-                    <Badge badgeContent={3} color="error">
-                      <FavoriteIcon />
-                    </Badge>
-                  </IconButton>
-
                   <Button
                     onClick={handleProfileClick}
                     sx={{

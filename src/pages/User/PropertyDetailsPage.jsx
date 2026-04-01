@@ -1,16 +1,13 @@
 // src/pages/User/PropertyDetailsPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Box, Container, Typography, Button, Chip, Rating, Tabs, Tab, Paper, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Alert } from "@mui/material";
+import { Box, Container, Typography, Button, Chip, Tabs, Tab, Paper, Divider, Alert } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
 // Icons
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ShareIcon from "@mui/icons-material/Share";
 import WifiIcon from "@mui/icons-material/Wifi";
 import PoolIcon from "@mui/icons-material/Pool";
 import SpaIcon from "@mui/icons-material/Spa";
@@ -21,14 +18,9 @@ import RoomServiceIcon from "@mui/icons-material/RoomService";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import ChildCareIcon from "@mui/icons-material/ChildCare";
-import PetsIcon from "@mui/icons-material/Pets";
-import SmokeFreeIcon from "@mui/icons-material/SmokeFree";
 
 import SearchBar from "../../components/User/Search/SearchBar";
 import RoomCard from "../../components/User/Property/RoomCard";
-import ReviewCard from "../../components/User/Property/ReviewCard";
 import ImageGalleryModal from "../../components/User/Modals/ImageGalleryModal";
 import { propertyDetails } from "../../data/userMockData";
 import { getPropertyById } from "../../services/propertyService";
@@ -56,7 +48,6 @@ export default function PropertyDetailsPage() {
   const [searchParams] = useSearchParams();
 
   const [activeTab, setActiveTab] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -359,7 +350,7 @@ export default function PropertyDetailsPage() {
         <Paper sx={{ borderRadius: 3, overflow: "hidden", mb: 3 }}>
           <Grid container sx={{ height: { xs: 300, md: 450 } }}>
             {/* Main Image */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Box
                 onClick={() => handleImageClick(0)}
                 sx={{
@@ -375,10 +366,10 @@ export default function PropertyDetailsPage() {
             </Grid>
 
             {/* Side Images */}
-            <Grid item xs={12} md={6}>
+            <Grid size={{ xs: 12, md: 6 }}>
               <Grid container sx={{ height: "100%" }}>
                 {property.images.slice(1, 5).map((image, index) =>
-                <Grid item key={image.id} sx={{ height: "50%" }} xs={6}>
+                <Grid size={6} key={image.id} sx={{ height: "50%" }}>
                     <Box
                     onClick={() => handleImageClick(index + 1)}
                     sx={{
@@ -420,7 +411,7 @@ export default function PropertyDetailsPage() {
 
         <Grid container spacing={3}>
           {/* Left Column - Property Details */}
-          <Grid item xs={12} sm={8}>
+          <Grid size={{ xs: 12, sm: 8 }}>
             {/* Header */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Box
@@ -474,51 +465,6 @@ export default function PropertyDetailsPage() {
                   </Box>
                 </Box>
 
-                <Box sx={{ display: "flex", gap: 1 }}>
-                  <IconButton onClick={() => setIsFavorite(!isFavorite)}>
-                    {isFavorite ?
-                    <FavoriteIcon sx={{ color: theme.palette.error.main }} /> :
-
-                    <FavoriteBorderIcon />
-                    }
-                  </IconButton>
-                  <IconButton>
-                    <ShareIcon />
-                  </IconButton>
-                </Box>
-              </Box>
-
-              {/* Rating */}
-              <Box
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 1,
-                  p: 1.5,
-                  bgcolor: alpha(theme.palette.primary.main, 0.08),
-                  borderRadius: 2
-                }}>
-
-                <Box
-                  sx={{
-                    bgcolor: theme.palette.primary.main,
-                    color: "#fff",
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: 1,
-                    fontWeight: 700
-                  }}>
-
-                  {property.rating}
-                </Box>
-                <Box>
-                  <Typography variant="subtitle2" fontWeight={600}>
-                    Excellent
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {property.reviewsCount} reviews
-                  </Typography>
-                </Box>
               </Box>
             </Paper>
 
@@ -534,8 +480,8 @@ export default function PropertyDetailsPage() {
                 <Tab label="Overview" />
                 <Tab label="Rooms" />
                 <Tab label="Amenities" />
-                <Tab label="Reviews" />
-                <Tab label="Policies" />
+                {/* <Tab label="Reviews" /> */}
+                {/* <Tab label="Policies" /> */}
               </Tabs>
 
               <Box sx={{ p: 3 }}>
@@ -569,7 +515,7 @@ export default function PropertyDetailsPage() {
                       amenityIconByKey[iconKey] ||
                       CheckCircleIcon;
                       return (
-                        <Grid item key={amenity.name} xs={6} sm={4}>
+                        <Grid size={{ xs: 6, sm: 4 }} key={amenity.name}>
                             <Box
                             sx={{
                               display: "flex",
@@ -624,7 +570,7 @@ export default function PropertyDetailsPage() {
                       amenityIconByKey[iconKey] ||
                       CheckCircleIcon;
                       return (
-                        <Grid item key={amenity.name} xs={12} sm={6} md={4}>
+                        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={amenity.name}>
                             <Box
                             sx={{
                               display: "flex",
@@ -647,7 +593,7 @@ export default function PropertyDetailsPage() {
                   </Box>
                 }
 
-                {/* Reviews Tab */}
+                {/* Reviews Tab
                 {activeTab === 3 &&
                 <Box>
                     <Box
@@ -664,10 +610,9 @@ export default function PropertyDetailsPage() {
                       <Button variant="outlined">Write a Review</Button>
                     </Box>
 
-                    {/* Rating Summary */}
                     <Paper sx={{ p: 3, mb: 3, bgcolor: "grey.50" }}>
                       <Grid container spacing={3}>
-                        <Grid item xs={12} sm={4}>
+                        <Grid size={{ xs: 12, sm: 4 }}>
                           <Box sx={{ textAlign: "center" }}>
                             <Typography
                             variant="h2"
@@ -686,13 +631,11 @@ export default function PropertyDetailsPage() {
                             </Typography>
                           </Box>
                         </Grid>
-                        <Grid item xs={12} sm={8} md={2}>
-                          {/* Rating breakdown would go here */}
+                        <Grid size={{ xs: 12, sm: 8, md: 2 }}>
                         </Grid>
                       </Grid>
                     </Paper>
 
-                    {/* Reviews List */}
                     {property.reviews.length > 0 ?
                   property.reviews.map((review) =>
                   <ReviewCard key={review.id} review={review} />
@@ -706,8 +649,9 @@ export default function PropertyDetailsPage() {
                   }
                   </Box>
                 }
+                */}
 
-                {/* Policies Tab */}
+                {/* Policies Tab
                 {activeTab === 4 &&
                 <Box>
                     <Typography variant="h6" fontWeight={600} gutterBottom>
@@ -763,12 +707,13 @@ export default function PropertyDetailsPage() {
                     </List>
                   </Box>
                 }
+                */}
               </Box>
             </Paper>
           </Grid>
 
           {/* Right Column - Booking Widget */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Paper sx={{ p: 3, position: "sticky", top: 100 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 Reserve Your Stay
@@ -782,20 +727,6 @@ export default function PropertyDetailsPage() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   / night
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 3 }}>
-
-                <StarIcon
-                  sx={{ fontSize: 18, color: theme.palette.warning.main }} />
-
-                <Typography variant="body2" fontWeight={600}>
-                  {property.rating}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  ({property.reviewsCount} reviews)
                 </Typography>
               </Box>
 
@@ -813,31 +744,6 @@ export default function PropertyDetailsPage() {
 
                 View Available Rooms
               </Button>
-
-              <Box
-                sx={{
-                  mt: 3,
-                  p: 2,
-                  bgcolor: alpha(theme.palette.success.main, 0.1),
-                  borderRadius: 2
-                }}>
-
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-
-                  <CheckCircleIcon color="success" fontSize="small" />
-                  <Typography
-                    variant="body2"
-                    fontWeight={600}
-                    color="success.main">
-
-                    Free cancellation available
-                  </Typography>
-                </Box>
-                <Typography variant="caption" color="text.secondary">
-                  Cancel up to 24 hours before check-in for a full refund
-                </Typography>
-              </Box>
             </Paper>
           </Grid>
         </Grid>

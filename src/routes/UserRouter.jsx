@@ -28,10 +28,6 @@ import RoomSeasonalPricingPage from "../pages/Rooms/RoomSeasonalPricingPage";
 // Admin - Bookings
 import AllBookingsPage from "../pages/Bookings/AllBookingsPage";
 import CheckInOutPage from "../pages/Bookings/CheckInOutPage";
-import CalendarPage from "../pages/Bookings/CalenderPage";
-
-// Admin - Guests
-import GuestsListPage from "../pages/Guests/GuestsListPage";
 
 // Admin - Services
 import ServiceCategoriesPage from "../pages/Services/ServiceCategoriesPage";
@@ -53,6 +49,8 @@ import UserLayout from "../Layout/UserLayout";
 import HomePage from "../pages/User/HomePage";
 import SearchResultsPage from "../pages/User/SearchResultsPage";
 import PropertyDetailsPage from "../pages/User/PropertyDetailsPage";
+import UserAllPropertiesPage from "../pages/User/AllPropertiesPage";
+import SeasonalOffersPage from "../pages/User/SeasonalOffersPage";
 
 // User - Booking Flow
 import BookingPage from "../pages/User/BookingPage";
@@ -136,10 +134,6 @@ export default function AppRouter() {
         />
         <Route path="bookings/all" element={<AllBookingsPage />} />
         <Route path="bookings/check-in-out" element={<CheckInOutPage />} />
-        <Route path="bookings/calendar" element={<CalendarPage />} />
-
-        {/* Guests */}
-        <Route path="guests" element={<GuestsListPage />} />
 
         {/* Services */}
         <Route
@@ -182,6 +176,8 @@ export default function AppRouter() {
         <Route index element={<HomePage />} />
         <Route path="search" element={<SearchResultsPage />} />
         <Route path="property/:id" element={<PropertyDetailsPage />} />
+        <Route path="properties" element={<UserAllPropertiesPage />} />
+        <Route path="offers" element={<SeasonalOffersPage />} />
 
         {/* Booking Flow */}
         <Route path="booking/:propertyId/:roomId" element={<BookingPage />} />

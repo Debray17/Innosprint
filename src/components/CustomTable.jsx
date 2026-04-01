@@ -48,6 +48,7 @@ const CustomTable = ({
     data,
     columns,
     actions = [],
+    getRowActions,
     onActionClick,
     showFilters = true,
     defaultRowsPerPage = 10,
@@ -396,6 +397,10 @@ const CustomTable = ({
                 <TableBody sx={{ minHeight: minTableBodyHeight }}>
                     {paginatedData.length > 0 ? (
                         paginatedData.map((row) => (
+                            (() => {
+                                const rowActions = getRowActions ? getRowActions(row) : actions;
+                                const hasRowActions = rowActions && rowActions.length > 0;
+                                return (
                             <TableRow
                                 key={row.id}
                                 hover
@@ -420,7 +425,7 @@ const CustomTable = ({
                                 {hasActions && (
                                     <TableCell>
                                         <Box sx={{ display: "flex", gap: 0.5 }}>
-                                            {actions.map((actionName) => {
+                                            {hasRowActions && rowActions.map((actionName) => {
                                                 const actionKey = actionName.toLowerCase();
                                                 const actionConfig = actionIconMap[actionKey];
                                                 if (!actionConfig) return null;
@@ -453,6 +458,8 @@ const CustomTable = ({
                                     </TableCell>
                                 )}
                             </TableRow>
+                                );
+                            })()
                         ))
                     ) : (
                         <TableRow>

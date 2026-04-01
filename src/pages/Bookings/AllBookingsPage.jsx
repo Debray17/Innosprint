@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Typography, Button, Paper, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, IconButton, FormControl, InputLabel, Select, InputAdornment, Tabs, Tab, Divider, Avatar, List, ListItem, ListItemIcon, ListItemText, Stepper, Step, StepLabel } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
@@ -14,25 +14,137 @@ import PrintIcon from "@mui/icons-material/Print";
 
 import CustomTable from "../../components/CustomTable";
 import ConfirmDialog from "../../components/ConfirmDialog";
-import { bookings, properties } from "../../data/mockData";
+import {
+  useBookingActionMutation,
+  useBookingHistory,
+  useDeleteBookingMutation,
+} from "../../hooks/useBooking";
+import { getPropertyList } from "../../services/propertyService";
 
 const AllBookingsPage = () => {
   const theme = useTheme();
-  const [bookingsData, setBookingsData] = useState(bookings);
   const [selectedTab, setSelectedTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterProperty, setFilterProperty] = useState("");
   const [filterPayment, setFilterPayment] = useState("");
   const [openViewModal, setOpenViewModal] = useState(false);
+  const [openApproveDialog, setOpenApproveDialog] = useState(false);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [rejectRemark, setRejectRemark] = useState("");
+  const [rejectError, setRejectError] = useState("");
+  const [approvedProperties, setApprovedProperties] = useState([]);
+  const { data: bookingRecords = [] } = useBookingHistory();
+  const deleteBookingMutation = useDeleteBookingMutation();
+  const bookingActionMutation = useBookingActionMutation();
 
-  // Get approved properties
-  const approvedProperties = properties.filter((p) => p.status === "approved");
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchProperties = async () => {
+      try {
+        const response = await getPropertyList({ language: "en" });
+        const properties = Array.isArray(response) ? response : response ? [response] : [];
+
+        if (isMounted) {
+          setApprovedProperties(
+            properties
+              .filter((property) => property?.isActive !== false)
+              .map((property) => ({
+                id: property?.id || property?.primaryKeyValue || property?.name,
+                name: property?.name || "Unknown",
+              }))
+          );
+        }
+      } catch (error) {
+        if (isMounted) {
+          setApprovedProperties([]);
+        }
+      }
+    };
+
+    fetchProperties();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const mapPaymentStatus = (paymentStatus) => {
+    const normalizedValue = String(paymentStatus || "").toLowerCase();
+    if (normalizedValue.includes("full") || normalizedValue === "paid") return "paid";
+    if (normalizedValue.includes("part")) return "partial";
+    if (normalizedValue.includes("refund")) return "refunded";
+    return "pending";
+  };
+
+  const mapBookingStatus = (booking) => {
+    const apiStatus = String(booking?.api?.statusLabel || "").toLowerCase();
+    const normalizedStatus = String(booking?.status || "").toLowerCase();
+
+    if (
+      apiStatus.includes("checked out") ||
+      apiStatus.includes("checked-out") ||
+      apiStatus.includes("checkout") ||
+      normalizedStatus === "completed"
+    ) {
+      return "checked-out";
+    }
+    if (
+      apiStatus.includes("checked in") ||
+      apiStatus.includes("checked-in") ||
+      apiStatus.includes("checkin") ||
+      normalizedStatus === "checked-in"
+    ) {
+      return "checked-in";
+    }
+    if (apiStatus.includes("cancel") || normalizedStatus === "cancelled") {
+      return "cancelled";
+    }
+    return "confirmed";
+  };
+
+  const bookingsData = useMemo(
+    () =>
+      bookingRecords.map((booking) => ({
+        id: booking.id,
+        api: booking.api,
+        bookingNo: booking.bookingNo || 0,
+        bookingCode: booking.bookingCode || "-",
+        guestName:
+          booking.api?.userName ||
+          `${booking.guestDetails?.firstName || ""} ${booking.guestDetails?.lastName || ""}`.trim() ||
+          "Guest",
+        guestEmail: booking.guestDetails?.email || "-",
+        guestPhone: booking.guestDetails?.phone || "-",
+        propertyName: booking.property?.name || booking.api?.propertyName || "Unknown Property",
+        propertyId: booking.property?.id || "",
+        roomNumber: booking.room?.roomNo || booking.room?.name || "-",
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        grandTotal: booking.pricing?.total || 0,
+        paymentStatus: mapPaymentStatus(
+          booking.paymentStatus || booking.api?.paymentStatusLabel
+        ),
+        bookingStatus: mapBookingStatus(booking),
+        approvalStatus: booking.approvalStatus || "pending",
+        adults: booking.guests?.adults || 0,
+        children: booking.guests?.children || 0,
+        guests: (booking.guests?.adults || 0) + (booking.guests?.children || 0),
+        nights: booking.nights || 0,
+        roomType: booking.room?.type || "-",
+        totalAmount: booking.pricing?.subtotal || booking.pricing?.total || 0,
+        taxAmount: booking.pricing?.taxes || 0,
+        paymentMethod: booking.paymentStatus || booking.api?.paymentStatusLabel || "N/A",
+        remark: booking.api?.remark || "",
+      })),
+    [bookingRecords]
+  );
 
   // Filter bookings
   const getFilteredBookings = () => {
-    let filtered = bookingsData;
+    let filtered = [...bookingsData];
 
     // Tab filter
     switch (selectedTab) {
@@ -64,7 +176,7 @@ const AllBookingsPage = () => {
 
     // Property filter
     if (filterProperty) {
-      filtered = filtered.filter((b) => b.propertyId === parseInt(filterProperty));
+      filtered = filtered.filter((b) => b.propertyName === filterProperty);
     }
 
     // Payment filter
@@ -128,6 +240,7 @@ const AllBookingsPage = () => {
     id: "paymentStatus",
     label: "Payment",
     type: "status",
+    statusType: "payment",
     options: ["paid", "pending", "partial", "refunded"],
     width: "100px"
   },
@@ -135,17 +248,99 @@ const AllBookingsPage = () => {
     id: "bookingStatus",
     label: "Status",
     type: "status",
+    statusType: "booking",
     options: ["confirmed", "checked-in", "checked-out", "cancelled"],
     width: "120px"
   }];
 
 
   // Handle action clicks
-  const handleActionClick = (action, booking) => {
+  const getRowActions = (booking) => {
+    const actions = ["view"];
+
+    if (booking.approvalStatus === "pending") {
+      actions.push("approve", "reject");
+    }
+
+    actions.push("delete");
+    return actions;
+  };
+
+  const runBookingAction = async (action, booking, extraContext = {}) => {
+    const actionPayload = {
+      id: booking.id,
+      isActive: true,
+      transactedBy: "admin",
+      ...(extraContext.payload || {}),
+    };
+
+    await bookingActionMutation.mutateAsync({
+      action,
+      payload: actionPayload,
+      options: { language: "en" },
+      context: {
+        id: booking.id,
+        userId: booking.api?.userId || "",
+        roomId: booking.api?.roomId || "",
+        property: {
+          id: booking.propertyId,
+          name: booking.propertyName,
+        },
+        room: {
+          id: booking.api?.roomId || "",
+          name: booking.roomNumber,
+          roomNo: booking.roomNumber,
+          type: booking.roomType,
+        },
+        guestDetails: {
+          email: booking.guestEmail,
+          phone: booking.guestPhone,
+          firstName: booking.guestName,
+        },
+        guests: {
+          adults: booking.adults,
+          children: booking.children,
+        },
+        pricing: {
+          subtotal: booking.totalAmount,
+          taxes: booking.taxAmount,
+          total: booking.grandTotal,
+        },
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        nights: booking.nights,
+        paymentStatus: booking.paymentStatus,
+        status:
+          action === "checkin"
+            ? "checked-in"
+            : action === "checkout"
+              ? "completed"
+              : action === "reject"
+                ? "cancelled"
+                : "confirmed",
+        approvalStatus:
+          action === "approve"
+            ? "approved"
+            : action === "reject"
+              ? "rejected"
+              : booking.approvalStatus,
+      },
+    });
+  };
+
+  const handleActionClick = async (action, booking) => {
     setSelectedBooking(booking);
     switch (action) {
       case "view":
         setOpenViewModal(true);
+        break;
+      case "approve":
+        setOpenApproveDialog(true);
+        break;
+      case "reject":
+        setRejectRemark("");
+        setRejectError("");
+        setOpenRejectDialog(true);
         break;
       case "delete":
         setOpenCancelDialog(true);
@@ -155,16 +350,63 @@ const AllBookingsPage = () => {
     }
   };
 
+  const handleApproveBooking = async () => {
+    if (!selectedBooking) return;
+
+    await runBookingAction("approve", selectedBooking);
+    setOpenApproveDialog(false);
+    setOpenViewModal(false);
+    setSelectedBooking(null);
+  };
+
   // Handle cancel booking
-  const handleCancelBooking = () => {
-    setBookingsData(
-      bookingsData.map((b) =>
-      b.id === selectedBooking.id ?
-      { ...b, bookingStatus: "cancelled", paymentStatus: "refunded" } :
-      b
-      )
-    );
+  const handleCancelBooking = async () => {
+    if (!selectedBooking) return;
+
+    const apiBooking = selectedBooking.api || {};
+    const deletePayload = {
+      id: selectedBooking.id,
+      isActive: apiBooking.isActive ?? true,
+      transactedBy: apiBooking.transactedBy || "admin",
+      bookingNo: selectedBooking.bookingNo || 0,
+      bookingCode: selectedBooking.bookingCode || "",
+      userId: apiBooking.userId || "",
+      roomId: apiBooking.roomId || "",
+      checkinDate: selectedBooking.checkIn,
+      checkoutDate: selectedBooking.checkOut,
+      totalAmount: selectedBooking.grandTotal || 0,
+      amountPaid: apiBooking.amountPaid ?? 0,
+      paymentStatusId: apiBooking.paymentStatusId ?? 0,
+      paymentStatusLabel: apiBooking.paymentStatusLabel || "",
+      journalNo: apiBooking.journalNo || "",
+      statusId: apiBooking.statusId ?? 0,
+      statusLabel: apiBooking.statusLabel || "",
+      propertyName: selectedBooking.propertyName || "",
+      roomNo: selectedBooking.roomNumber || "",
+      userName: selectedBooking.guestName || "",
+    };
+
+    await deleteBookingMutation.mutateAsync({
+      payload: deletePayload,
+      options: { language: "en" },
+    });
     setOpenCancelDialog(false);
+    setSelectedBooking(null);
+  };
+
+  const handleRejectBooking = async () => {
+    if (!selectedBooking) return;
+    if (!rejectRemark.trim()) {
+      setRejectError("Remark is required when rejecting a booking.");
+      return;
+    }
+
+    await runBookingAction("reject", selectedBooking, {
+      payload: { remark: rejectRemark.trim() },
+    });
+    setOpenRejectDialog(false);
+    setRejectRemark("");
+    setRejectError("");
     setSelectedBooking(null);
   };
 
@@ -230,7 +472,7 @@ const AllBookingsPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid size={{ xs: 6, sm: 4, md: 2.4 }}>
                     <Paper
             sx={{
               p: 2,
@@ -246,7 +488,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid size={{ xs: 6, sm: 4, md: 2.4 }}>
                     <Paper
             sx={{
               p: 2,
@@ -262,7 +504,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid size={{ xs: 6, sm: 4, md: 2.4 }}>
                     <Paper
             sx={{
               p: 2,
@@ -278,7 +520,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid size={{ xs: 6, sm: 4, md: 2.4 }}>
                     <Paper
             sx={{
               p: 2,
@@ -294,7 +536,7 @@ const AllBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={4} md={2.4}>
+                <Grid size={{ xs: 6, sm: 4, md: 2.4 }}>
                     <Paper
             sx={{
               p: 2,
@@ -332,7 +574,7 @@ const AllBookingsPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <TextField
               fullWidth
               size="small"
@@ -348,7 +590,7 @@ const AllBookingsPage = () => {
               }} />
 
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -358,14 +600,14 @@ const AllBookingsPage = () => {
 
                                 <MenuItem value="">All Properties</MenuItem>
                                 {approvedProperties.map((property) =>
-                <MenuItem key={property.id} value={property.id}>
+                <MenuItem key={property.id} value={property.name}>
                                         {property.name}
                                     </MenuItem>
                 )}
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Payment Status</InputLabel>
                             <Select
@@ -388,7 +630,8 @@ const AllBookingsPage = () => {
             <CustomTable
         data={getFilteredBookings()}
         columns={columns}
-        actions={["view", "delete"]}
+        actions={["view", "approve", "reject", "delete"]}
+        getRowActions={getRowActions}
         onActionClick={handleActionClick}
         emptyMessage="No bookings found matching your criteria" />
 
@@ -464,7 +707,7 @@ const AllBookingsPage = () => {
 
                             <Grid container spacing={3}>
                                 {/* Guest Information */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Guest Information
@@ -506,7 +749,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Property & Room */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Property & Room
@@ -535,13 +778,13 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Stay Details */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Stay Details
                                         </Typography>
                                         <Grid container spacing={2}>
-                                            <Grid item xs={6}>
+                                            <Grid size={6}>
                                                 <Typography variant="caption" color="text.secondary">
                                                     Check-in
                                                 </Typography>
@@ -549,7 +792,7 @@ const AllBookingsPage = () => {
                                                     {formatDate(selectedBooking.checkIn)}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={6}>
+                                            <Grid size={6}>
                                                 <Typography variant="caption" color="text.secondary">
                                                     Check-out
                                                 </Typography>
@@ -557,7 +800,7 @@ const AllBookingsPage = () => {
                                                     {formatDate(selectedBooking.checkOut)}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={6}>
+                                            <Grid size={6}>
                                                 <Typography variant="caption" color="text.secondary">
                                                     Nights
                                                 </Typography>
@@ -565,7 +808,7 @@ const AllBookingsPage = () => {
                                                     {selectedBooking.nights}
                                                 </Typography>
                                             </Grid>
-                                            <Grid item xs={6}>
+                                            <Grid size={6}>
                                                 <Typography variant="caption" color="text.secondary">
                                                     Guests
                                                 </Typography>
@@ -578,7 +821,7 @@ const AllBookingsPage = () => {
                                 </Grid>
 
                                 {/* Payment Details */}
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Paper sx={{ p: 2 }}>
                                         <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 2 }}>
                                             Payment Details
@@ -631,7 +874,7 @@ const AllBookingsPage = () => {
 
                                 {/* Special Requests */}
                                 {selectedBooking.specialRequests &&
-              <Grid item xs={12}>
+              <Grid size={12}>
                                         <Paper
                   sx={{
                     p: 2,
@@ -658,14 +901,23 @@ const AllBookingsPage = () => {
                     <Button variant="outlined" onClick={() => setOpenViewModal(false)}>
                         Close
                     </Button>
-                    {selectedBooking?.bookingStatus === "confirmed" &&
-          <Button variant="contained" color="success">
-                            Check In
+                    {selectedBooking?.approvalStatus === "pending" &&
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setOpenApproveDialog(true)}>
+                            Approve
                         </Button>
           }
-                    {selectedBooking?.bookingStatus === "checked-in" &&
-          <Button variant="contained" color="warning">
-                            Check Out
+                    {selectedBooking?.approvalStatus === "pending" &&
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => {
+              setOpenViewModal(false);
+              setOpenRejectDialog(true);
+            }}>
+                            Reject
                         </Button>
           }
                     {(selectedBooking?.bookingStatus === "confirmed" ||
@@ -686,6 +938,21 @@ const AllBookingsPage = () => {
 
             {/* Cancel Booking Dialog */}
             <ConfirmDialog
+        open={openApproveDialog}
+        onClose={() => {
+          setOpenApproveDialog(false);
+          if (!openViewModal) {
+            setSelectedBooking(null);
+          }
+        }}
+        onConfirm={handleApproveBooking}
+        title="Approve Booking"
+        message={`Are you sure you want to approve booking ${selectedBooking?.bookingCode}?`}
+        confirmText="Approve Booking"
+        type="success" />
+
+            {/* Cancel Booking Dialog */}
+            <ConfirmDialog
         open={openCancelDialog}
         onClose={() => {
           setOpenCancelDialog(false);
@@ -696,6 +963,50 @@ const AllBookingsPage = () => {
         message={`Are you sure you want to cancel booking ${selectedBooking?.bookingCode}? The guest will be notified and a refund will be processed.`}
         confirmText="Cancel Booking"
         type="danger" />
+
+            <Dialog
+        open={openRejectDialog}
+        onClose={() => {
+          setOpenRejectDialog(false);
+          setRejectRemark("");
+          setRejectError("");
+          if (!openViewModal) {
+            setSelectedBooking(null);
+          }
+        }}
+        maxWidth="sm"
+        fullWidth>
+
+                <DialogTitle>Reject Booking</DialogTitle>
+                <DialogContent dividers>
+                    <TextField
+            fullWidth
+            multiline
+            rows={4}
+            label="Remark"
+            value={rejectRemark}
+            onChange={(e) => {
+              setRejectRemark(e.target.value);
+              if (rejectError) setRejectError("");
+            }}
+            error={!!rejectError}
+            helperText={rejectError || "Remark is required when rejecting a booking."}
+          />
+                </DialogContent>
+                <DialogActions>
+                    <Button
+            onClick={() => {
+              setOpenRejectDialog(false);
+              setRejectRemark("");
+              setRejectError("");
+            }}>
+                        Cancel
+                    </Button>
+                    <Button color="error" variant="contained" onClick={handleRejectBooking}>
+                        Reject Booking
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
         </Box>);
 

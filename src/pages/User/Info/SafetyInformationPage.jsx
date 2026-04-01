@@ -51,7 +51,7 @@ export default function SafetyInformationPage() {
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {safetyFeatures.map((feature, index) =>
-        <Grid item key={index} xs={12} sm={6}>
+        <Grid size={{ xs: 12, sm: 6 }} key={index}>
             <Card elevation={2} sx={{ height: "100%" }}>
               <CardContent sx={{ textAlign: "center" }}>
                 {feature.icon}

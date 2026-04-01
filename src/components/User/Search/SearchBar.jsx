@@ -6,7 +6,6 @@ import {
   Paper,
   TextField,
   Button,
-  Popover,
   InputAdornment,
 } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
@@ -16,15 +15,15 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import PersonIcon from "@mui/icons-material/Person";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import GuestSelector from "./GuestSelector";
 
 export default function SearchBar({ variant = "default", initialValues = {} }) {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const [destination, setDestination] = useState(
-    initialValues.destination || "",
+  const [city, setCity] = useState(
+    initialValues.city || initialValues.destination || "",
   );
+  const [country, setCountry] = useState(initialValues.country || "");
   // Initialize with dayjs objects or null, but handle properly
   const [checkIn, setCheckIn] = useState(
     initialValues.checkIn ? dayjs(initialValues.checkIn) : null,
@@ -32,35 +31,35 @@ export default function SearchBar({ variant = "default", initialValues = {} }) {
   const [checkOut, setCheckOut] = useState(
     initialValues.checkOut ? dayjs(initialValues.checkOut) : null,
   );
-  const [guests, setGuests] = useState(
-    initialValues.guests || { adults: 2, children: 0, rooms: 1 },
+  const [roomCapacity, setRoomCapacity] = useState(
+    String(initialValues.roomCapacity || ""),
   );
-  const [guestAnchor, setGuestAnchor] = useState(null);
+  const [errors, setErrors] = useState({ city: "", country: "" });
 
   const isCompact = variant === "compact";
 
   const handleSearch = () => {
+    const trimmedCity = city.trim();
+    const trimmedCountry = country.trim();
+    const hasLocation = Boolean(trimmedCity || trimmedCountry);
+    const nextErrors = hasLocation
+      ? { city: "", country: "" }
+      : {
+          city: "Enter a city or country",
+          country: "Enter a city or country",
+        };
+
+    setErrors(nextErrors);
+    if (nextErrors.city || nextErrors.country) return;
+
     const params = new URLSearchParams();
-    if (destination) params.set("destination", destination);
+    if (trimmedCity) params.set("city", trimmedCity);
+    if (trimmedCountry) params.set("country", trimmedCountry);
     if (checkIn) params.set("checkIn", checkIn.format("YYYY-MM-DD"));
     if (checkOut) params.set("checkOut", checkOut.format("YYYY-MM-DD"));
-    params.set("adults", guests.adults);
-    params.set("children", guests.children);
-    params.set("rooms", guests.rooms);
+    if (roomCapacity.trim()) params.set("roomCapacity", roomCapacity.trim());
 
     navigate(`/search?${params.toString()}`);
-  };
-
-  const getGuestText = () => {
-    const parts = [];
-    parts.push(`${guests.adults} Adult${guests.adults !== 1 ? "s" : ""}`);
-    if (guests.children > 0) {
-      parts.push(
-        `${guests.children} Child${guests.children !== 1 ? "ren" : ""}`,
-      );
-    }
-    parts.push(`${guests.rooms} Room${guests.rooms !== 1 ? "s" : ""}`);
-    return parts.join(", ");
   };
 
   return (
@@ -79,9 +78,44 @@ export default function SearchBar({ variant = "default", initialValues = {} }) {
       <Box sx={{ flex: 2, minWidth: { md: 200 } }}>
         <TextField
           fullWidth
-          placeholder="Where are you going?"
-          value={destination}
-          onChange={(e) => setDestination(e.target.value)}
+          label="City"
+          placeholder="Enter city"
+          value={city}
+          onChange={(e) => {
+            setCity(e.target.value);
+            if (errors.city) setErrors((prev) => ({ ...prev, city: "" }));
+          }}
+          error={!!errors.city}
+          helperText={errors.city}
+          size={isCompact ? "small" : "medium"}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LocationOnIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              bgcolor: alpha(theme.palette.primary.main, 0.02),
+            },
+          }}
+        />
+      </Box>
+
+      {/* Country */}
+      <Box sx={{ flex: 2, minWidth: { md: 200 } }}>
+        <TextField
+          fullWidth
+          label="Country"
+          placeholder="Enter country"
+          value={country}
+          onChange={(e) => {
+            setCountry(e.target.value);
+            if (errors.country) setErrors((prev) => ({ ...prev, country: "" }));
+          }}
+          error={!!errors.country}
+          helperText={errors.country}
           size={isCompact ? "small" : "medium"}
           InputProps={{
             startAdornment: (
@@ -154,16 +188,18 @@ export default function SearchBar({ variant = "default", initialValues = {} }) {
         />
       </Box>
 
-      {/* Guests */}
+      {/* Room capacity */}
       <Box sx={{ flex: 1.5, minWidth: { md: 180 } }}>
         <TextField
           fullWidth
-          placeholder="Guests"
-          value={getGuestText()}
-          onClick={(e) => setGuestAnchor(e.currentTarget)}
+          label="Room Capacity"
+          placeholder="Enter capacity"
+          type="number"
+          value={roomCapacity}
+          onChange={(e) => setRoomCapacity(e.target.value)}
           size={isCompact ? "small" : "medium"}
+          inputProps={{ min: 1 }}
           InputProps={{
-            readOnly: true,
             startAdornment: (
               <InputAdornment position="start">
                 <PersonIcon color="action" />
@@ -177,20 +213,6 @@ export default function SearchBar({ variant = "default", initialValues = {} }) {
             },
           }}
         />
-        <Popover
-          open={Boolean(guestAnchor)}
-          anchorEl={guestAnchor}
-          onClose={() => setGuestAnchor(null)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-          transformOrigin={{ vertical: "top", horizontal: "left" }}
-          PaperProps={{ sx: { p: 2, mt: 1, minWidth: 280 } }}
-        >
-          <GuestSelector
-            guests={guests}
-            onChange={setGuests}
-            onClose={() => setGuestAnchor(null)}
-          />
-        </Popover>
       </Box>
 
       {/* Search Button */}

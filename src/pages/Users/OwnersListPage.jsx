@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Typography, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, IconButton, Paper, Tabs, Tab, Divider, List, ListItem, ListItemText, ListItemIcon, FormControl, InputLabel, Select, MenuItem, Snackbar, Alert } from "@mui/material";
+import { Box, Button, Typography, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, IconButton, Paper, Tabs, Tab, Divider, List, ListItem, ListItemText, ListItemIcon, Snackbar, Alert } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -218,11 +218,11 @@ const OwnersListPage = () => {
         email: formData.email,
         phoneNo: formData.phoneNo,
         address: formData.address,
-        avatarUrl: formData.avatarUrl || null,
-        statusId: Number(formData.statusId) || 0,
-        documentUrl: formData.documentUrl || null,
-        rejectionReason: formData.rejectionReason || null,
-        verificationDate: formData.verificationDate || new Date().toISOString()
+        avatarUrl: null,
+        statusId: 0,
+        documentUrl: null,
+        rejectionReason: null,
+        verificationDate: new Date().toISOString()
       };
 
       const response = await createOwner(payload, { language: "en" });
@@ -495,7 +495,7 @@ const OwnersListPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Full Name"
@@ -505,7 +505,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Email"
@@ -516,7 +516,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Phone"
@@ -526,7 +526,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Address"
@@ -535,58 +535,6 @@ const OwnersListPage = () => {
                 onChange={handleFormChange}
                 multiline
                 rows={2} />
-
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                fullWidth
-                label="Avatar URL"
-                name="avatarUrl"
-                value={formData.avatarUrl}
-                onChange={handleFormChange} />
-
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <FormControl fullWidth>
-                                <InputLabel>Status</InputLabel>
-                                <Select
-                  label="Status"
-                  name="statusId"
-                  value={formData.statusId}
-                  onChange={handleFormChange}>
-
-                                    <MenuItem value={0}>Pending</MenuItem>
-                                    <MenuItem value={1}>Verified</MenuItem>
-                                    <MenuItem value={2}>Rejected</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                fullWidth
-                label="Document URL"
-                name="documentUrl"
-                value={formData.documentUrl}
-                onChange={handleFormChange} />
-
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                fullWidth
-                label="Rejection Reason"
-                name="rejectionReason"
-                value={formData.rejectionReason}
-                onChange={handleFormChange} />
-
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                fullWidth
-                label="Verification Date"
-                name="verificationDate"
-                value={formData.verificationDate}
-                onChange={handleFormChange}
-                helperText="ISO date-time" />
 
                         </Grid>
                     </Grid>
@@ -633,7 +581,7 @@ const OwnersListPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Full Name"
@@ -643,7 +591,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Email"
@@ -654,7 +602,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Phone"
@@ -664,7 +612,7 @@ const OwnersListPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Address"
@@ -721,7 +669,7 @@ const OwnersListPage = () => {
                     {selectedOwner &&
           <Grid container spacing={3}>
                             {/* Owner Info */}
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                                 <Paper
                 sx={{
                   p: 3,
@@ -760,7 +708,7 @@ const OwnersListPage = () => {
                             </Grid>
 
                             {/* Contact & Stats */}
-                            <Grid item xs={12} md={8}>
+                            <Grid size={{ xs: 12, md: 8 }}>
                                 <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
                                     Contact Information
                                 </Typography>
@@ -809,7 +757,7 @@ const OwnersListPage = () => {
                                     Statistics
                                 </Typography>
                                 <Grid container spacing={2}>
-                                    <Grid item xs={6}>
+                                    <Grid size={6}>
                                         <Paper sx={{ p: 2, textAlign: "center" }}>
                                             <ApartmentIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
                                             <Typography variant="h5" fontWeight={600}>
@@ -820,7 +768,7 @@ const OwnersListPage = () => {
                                             </Typography>
                                         </Paper>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={6}>
                                         <Paper sx={{ p: 2, textAlign: "center" }}>
                                             <AttachMoneyIcon color="success" sx={{ fontSize: 32, mb: 1 }} />
                                             <Typography variant="h5" fontWeight={600}>
@@ -835,7 +783,7 @@ const OwnersListPage = () => {
                             </Grid>
 
                             {/* Owner's Properties */}
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Divider sx={{ my: 1 }} />
                                 <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2, mt: 2 }}>
                                     Properties ({getOwnerProperties(selectedOwner.id).length})
@@ -843,7 +791,7 @@ const OwnersListPage = () => {
                                 {getOwnerProperties(selectedOwner.id).length > 0 ?
               <Grid container spacing={2}>
                                         {getOwnerProperties(selectedOwner.id).map((property) =>
-                <Grid item xs={12} sm={6} key={property.id}>
+                <Grid size={{ xs: 12, sm: 6 }} key={property.id}>
                                                 <Paper
                     sx={{
                       p: 2,
@@ -896,7 +844,7 @@ const OwnersListPage = () => {
                             </Grid>
 
                             {/* Documents */}
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Divider sx={{ my: 1 }} />
                                 <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2, mt: 2 }}>
                                     Documents

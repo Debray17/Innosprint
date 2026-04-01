@@ -159,7 +159,7 @@ export default function UserProfilePage() {
       <Card>
                     <CardContent>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="User Id"
@@ -167,7 +167,7 @@ export default function UserProfilePage() {
                 disabled />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="ASP.NET User Id"
@@ -175,7 +175,7 @@ export default function UserProfilePage() {
                 onChange={handleChange("aspNetUserId")} />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="Name"
@@ -183,7 +183,7 @@ export default function UserProfilePage() {
                 onChange={handleChange("name")} />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="Email"
@@ -191,7 +191,7 @@ export default function UserProfilePage() {
                 onChange={handleChange("email")} />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="Phone"
@@ -199,7 +199,7 @@ export default function UserProfilePage() {
                 onChange={handleChange("phoneNo")} />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="Avatar URL"
@@ -207,7 +207,7 @@ export default function UserProfilePage() {
                 onChange={handleChange("avatarUrl")} />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                 fullWidth
                 label="Last Login Date"
@@ -215,7 +215,7 @@ export default function UserProfilePage() {
                 disabled />
 
                             </Grid>
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <Box sx={{ display: "flex", gap: 3, alignItems: "center", height: "100%" }}>
                                     <FormControlLabel
                   control={
@@ -237,7 +237,7 @@ export default function UserProfilePage() {
 
                                 </Box>
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1 }}>
                                     <Button variant="outlined" onClick={() => navigate(-1)}>
                                         Back

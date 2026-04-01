@@ -11,17 +11,14 @@ import {
   Box,
   Tooltip,
   ListItemIcon,
-  Badge,
   InputBase,
 } from "@mui/material";
 import { styled, alpha, useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import Notifications from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -69,22 +66,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Header({ open, onToggle, title = "Dashboard" }) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationAnchor, setNotificationAnchor] = useState(null);
   const openMenu = Boolean(anchorEl);
-  const openNotifications = Boolean(notificationAnchor);
 
   const handleProfileClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
-  const handleNotificationClick = (event) => setNotificationAnchor(event.currentTarget);
-  const handleNotificationClose = () => setNotificationAnchor(null);
-
-  const notifications = [
-    { id: 1, message: "New property registration request", time: "5 min ago", unread: true },
-    { id: 2, message: "Booking #BK-2024-008 confirmed", time: "1 hour ago", unread: true },
-    { id: 3, message: "Owner verification pending", time: "3 hours ago", unread: false },
-  ];
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
 
   return (
     <MuiAppBar
@@ -129,77 +114,6 @@ export default function Header({ open, onToggle, title = "Dashboard" }) {
 
         {/* Right Section */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {/* Help */}
-          <Tooltip title="Help">
-            <IconButton
-              sx={{
-                backgroundColor: "rgba(0, 0, 0, 0.04)",
-                "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.08)" },
-              }}
-            >
-              <HelpOutlineIcon sx={{ color: theme.palette.text.secondary }} />
-            </IconButton>
-          </Tooltip>
-
-          {/* Notifications */}
-          <Tooltip title="Notifications">
-            <IconButton
-              onClick={handleNotificationClick}
-              sx={{
-                backgroundColor: "rgba(255, 193, 7, 0.1)",
-                "&:hover": { backgroundColor: "rgba(255, 193, 7, 0.2)" },
-              }}
-            >
-              <Badge badgeContent={unreadCount} color="error">
-                <Notifications sx={{ color: theme.palette.secondary.dark }} />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-
-          {/* Notification Menu */}
-          <Menu
-            anchorEl={notificationAnchor}
-            open={openNotifications}
-            onClose={handleNotificationClose}
-            PaperProps={{
-              elevation: 3,
-              sx: { mt: 1.5, width: 320, borderRadius: 2 },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <Box sx={{ px: 2, py: 1.5 }}>
-              <Typography fontWeight={600}>Notifications</Typography>
-            </Box>
-            <Divider />
-            {notifications.map((notification) => (
-              <MenuItem
-                key={notification.id}
-                onClick={handleNotificationClose}
-                sx={{
-                  py: 1.5,
-                  backgroundColor: notification.unread
-                    ? alpha(theme.palette.primary.main, 0.05)
-                    : "transparent",
-                }}
-              >
-                <Box>
-                  <Typography variant="body2">{notification.message}</Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {notification.time}
-                  </Typography>
-                </Box>
-              </MenuItem>
-            ))}
-            <Divider />
-            <MenuItem
-              onClick={handleNotificationClose}
-              sx={{ justifyContent: "center", color: theme.palette.primary.main }}
-            >
-              View All Notifications
-            </MenuItem>
-          </Menu>
-
           {/* Profile Avatar */}
           <Tooltip title="Account settings">
             <IconButton onClick={handleProfileClick} size="small" sx={{ ml: 1 }}>

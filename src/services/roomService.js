@@ -41,6 +41,52 @@ export const getRoomList = async (options = {}) => {
 };
 
 /**
+ * Get available room list.
+ * Endpoint: /hpms/api/Room/GetAvailableRoomList
+ * @param {{ language?: "en" | "dz", headers?: Record<string, string> }} options
+ * @returns {Promise<any>}
+ */
+export const getAvailableRoomList = async (options = {}) => {
+  const language = options.language || DEFAULT_LANGUAGE;
+  const headers = {
+    ...(options.headers || {}),
+    [ACCEPT_LANGUAGE_HEADER]: language,
+  };
+
+  const response = await api.get(ENDPOINTS.ROOMS.GET_AVAILABLE_ROOM_LIST, {
+    headers,
+  });
+  return extractResponseData(response);
+};
+
+/**
+ * Search room list by filters.
+ * Endpoint: /hpms/api/Room/SearchRoomListByFilters
+ * @param {{
+ *  cityName?: string,
+ *  countryName?: string,
+ *  checkinDate?: string,
+ *  checkoutDate?: string,
+ *  roomCapacity?: number,
+ * }} params
+ * @param {{ language?: "en" | "dz", headers?: Record<string, string> }} options
+ * @returns {Promise<any>}
+ */
+export const searchRoomListByFilters = async (params, options = {}) => {
+  const language = options.language || DEFAULT_LANGUAGE;
+  const headers = {
+    ...(options.headers || {}),
+    [ACCEPT_LANGUAGE_HEADER]: language,
+  };
+
+  const response = await api.get(ENDPOINTS.ROOMS.SEARCH_BY_FILTERS, {
+    headers,
+    params,
+  });
+  return extractResponseData(response);
+};
+
+/**
  * Create room.
  * Endpoint: /hpms/api/Room/Post
  * @param {{

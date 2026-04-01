@@ -75,7 +75,7 @@ export default function CancellationPolicyPage() {
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {policyTypes.map((policy, index) =>
-        <Grid item key={index} xs={12}>
+        <Grid size={12} key={index}>
             <Card elevation={2}>
               <CardContent>
                 <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>

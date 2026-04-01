@@ -75,7 +75,7 @@ const GeneralSettingsPage = () => {
 
             <Grid container spacing={3}>
                 {/* Business Information */}
-                <Grid item xs={12} lg={8}>
+                <Grid size={{ xs: 12, lg: 8 }}>
                     <Paper sx={{ p: 3, borderRadius: 2, mb: 3 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Business Information
@@ -123,7 +123,7 @@ const GeneralSettingsPage = () => {
                         </Box>
 
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   label="Business Name"
@@ -137,7 +137,7 @@ const GeneralSettingsPage = () => {
                   }} />
 
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   label="Email"
@@ -150,7 +150,7 @@ const GeneralSettingsPage = () => {
                   }} />
 
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   label="Phone"
@@ -162,7 +162,7 @@ const GeneralSettingsPage = () => {
                   }} />
 
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   label="Website"
@@ -176,7 +176,7 @@ const GeneralSettingsPage = () => {
                   }} />
 
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid size={12}>
                                 <TextField
                   fullWidth
                   label="Address"
@@ -201,7 +201,7 @@ const GeneralSettingsPage = () => {
                             Regional Settings
                         </Typography>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   select
@@ -220,7 +220,7 @@ const GeneralSettingsPage = () => {
                                     <option value="Asia/Tokyo">Tokyo (JST)</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   select
@@ -238,7 +238,7 @@ const GeneralSettingsPage = () => {
                                     <option value="AUD">AUD - Australian Dollar</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   select
@@ -253,7 +253,7 @@ const GeneralSettingsPage = () => {
                                     <option value="YYYY-MM-DD">YYYY-MM-DD</option>
                                 </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
+                            <Grid size={{ xs: 12, sm: 6 }}>
                                 <TextField
                   fullWidth
                   select
@@ -374,7 +374,7 @@ const GeneralSettingsPage = () => {
                 </Grid>
 
                 {/* Right Column - Quick Settings */}
-                <Grid item xs={12} lg={4}>
+                <Grid size={{ xs: 12, lg: 4 }}>
                     {/* Display Settings */}
                     <Paper sx={{ p: 3, borderRadius: 2, mb: 3 }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 2 }}>

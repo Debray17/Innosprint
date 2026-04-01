@@ -1,7 +1,7 @@
 // src/pages/User/Account/UserDashboardPage.jsx
 import React from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Box, Container, Paper, Typography, Button, Avatar, Chip, Card, CardContent, LinearProgress, Divider, List, ListItem, ListItemText } from "@mui/material";
+import { Box, Container, Paper, Typography, Button, Avatar, Chip, Card, CardContent, Divider, List, ListItem, ListItemText } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
@@ -16,22 +16,22 @@ import StarIcon from "@mui/icons-material/Star";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import EditIcon from "@mui/icons-material/Edit";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 import AccountSidebar from "../../../components/User/Dashboard/AccountSidebar";
 import {
   currentUser,
-  userBookings,
   userWishlist,
   userNotifications } from
 "../../../data/userMockData";
+import { useBookingHistory } from "../../../hooks/useBooking";
 
 export default function UserDashboardPage() {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { data: bookings = [] } = useBookingHistory();
 
   // Get upcoming bookings
-  const upcomingBookings = userBookings.
+  const upcomingBookings = bookings.
   filter((b) => b.status === "confirmed" && new Date(b.checkIn) > new Date()).
   slice(0, 2);
 
@@ -40,14 +40,10 @@ export default function UserDashboardPage() {
   filter((n) => !n.isRead).
   slice(0, 3);
 
-  // Calculate loyalty progress
-  const pointsToNextTier = 5000;
-  const loyaltyProgress = currentUser.loyaltyPoints / pointsToNextTier * 100;
-
   const statCards = [
   {
     label: "Total Bookings",
-    value: currentUser.totalBookings,
+    value: bookings.length,
     icon: BookOnlineIcon,
     color: theme.palette.primary.main,
     link: "/account/bookings"
@@ -86,14 +82,14 @@ export default function UserDashboardPage() {
   return (
     <Box sx={{ bgcolor: "grey.50", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="lg">
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ flexWrap: { xs: "wrap", md: "nowrap" } }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }} sx={{ flexShrink: 0 }}>
             <AccountSidebar />
           </Grid>
 
           {/* Main Content */}
-          <Grid item xs={12} md={9}>
+          <Grid size={{ xs: 12, md: 9 }} sx={{ minWidth: 0 }}>
             {/* Welcome Section */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Box
@@ -119,36 +115,6 @@ export default function UserDashboardPage() {
                     <Typography variant="h5" fontWeight={700}>
                       Welcome back, {currentUser.firstName}!
                     </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                        mt: 0.5
-                      }}>
-
-                      <Chip
-                        label={currentUser.membershipTier}
-                        size="small"
-                        sx={{
-                          bgcolor:
-                          currentUser.membershipTier === "Gold" ?
-                          "#FFD700" :
-                          currentUser.membershipTier === "Platinum" ?
-                          "#E5E4E2" :
-                          theme.palette.primary.main,
-                          color:
-                          currentUser.membershipTier === "Gold" ?
-                          "#000" :
-                          "#fff",
-                          fontWeight: 600
-                        }} />
-
-                      <Typography variant="body2" color="text.secondary">
-                        Member since{" "}
-                        {new Date(currentUser.memberSince).getFullYear()}
-                      </Typography>
-                    </Box>
                   </Box>
                 </Box>
                 <Button
@@ -161,57 +127,12 @@ export default function UserDashboardPage() {
                 </Button>
               </Box>
 
-              {/* Loyalty Progress */}
-              <Box
-                sx={{
-                  mt: 3,
-                  p: 2,
-                  bgcolor: alpha(theme.palette.primary.main, 0.05),
-                  borderRadius: 2
-                }}>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 1
-                  }}>
-
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <TrendingUpIcon color="primary" />
-                    <Typography variant="subtitle2" fontWeight={600}>
-                      Progress to Platinum
-                    </Typography>
-                  </Box>
-                  <Typography variant="body2" color="text.secondary">
-                    {currentUser.loyaltyPoints.toLocaleString()} /{" "}
-                    {pointsToNextTier.toLocaleString()} points
-                  </Typography>
-                </Box>
-                <LinearProgress
-                  variant="determinate"
-                  value={loyaltyProgress}
-                  sx={{ height: 8, borderRadius: 4 }} />
-
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  sx={{ mt: 1, display: "block" }}>
-
-                  Earn{" "}
-                  {(
-                  pointsToNextTier - currentUser.loyaltyPoints).
-                  toLocaleString()}{" "}
-                  more points to reach Platinum status
-                </Typography>
-              </Box>
             </Paper>
 
             {/* Stats Cards */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
               {statCards.map((stat) =>
-              <Grid item key={stat.label} xs={6} sm={3}>
+              <Grid size={{ xs: 6, sm: 3 }} key={stat.label}>
                   <Card
                   sx={{
                     cursor: "pointer",
@@ -249,7 +170,7 @@ export default function UserDashboardPage() {
 
             <Grid container spacing={3}>
               {/* Upcoming Bookings */}
-              <Grid item xs={12} md={7}>
+              <Grid size={{ xs: 12, md: 7 }}>
                 <Paper sx={{ p: 3, height: "100%" }}>
                   <Box
                     sx={{
@@ -356,7 +277,7 @@ export default function UserDashboardPage() {
               </Grid>
 
               {/* Notifications */}
-              <Grid item xs={12} md={5}>
+              <Grid size={{ xs: 12, md: 5 }}>
                 <Paper sx={{ p: 3, height: "100%" }}>
                   <Box
                     sx={{
@@ -418,117 +339,6 @@ export default function UserDashboardPage() {
                 </Paper>
               </Grid>
 
-              {/* Recent Wishlist */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 3 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      mb: 2
-                    }}>
-
-                    <Typography variant="h6" fontWeight={600}>
-                      Saved Properties
-                    </Typography>
-                    <Button
-                      size="small"
-                      endIcon={<ArrowForwardIcon />}
-                      component={RouterLink}
-                      to="/account/wishlist">
-
-                      View All
-                    </Button>
-                  </Box>
-
-                  <Grid container spacing={2}>
-                    {userWishlist.slice(0, 3).map((item) =>
-                    <Grid item key={item.id} xs={12} sm={4}>
-                        <Card
-                        sx={{
-                          cursor: "pointer",
-                          "&:hover": {
-                            boxShadow: "0 4px 12px rgba(0,0,0,0.1)"
-                          }
-                        }}
-                        onClick={() =>
-                        navigate(`/property/${item.property.id}`)
-                        }>
-
-                          <Box
-                          sx={{
-                            height: 120,
-                            backgroundImage: `url(${item.property.images[0]})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center"
-                          }} />
-
-                          <CardContent sx={{ p: 2 }}>
-                            <Typography
-                            variant="subtitle2"
-                            fontWeight={600}
-                            noWrap>
-
-                              {item.property.name}
-                            </Typography>
-                            <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5
-                            }}>
-
-                              <LocationOnIcon
-                              sx={{ fontSize: 14, color: "text.secondary" }} />
-
-                              <Typography
-                              variant="caption"
-                              color="text.secondary">
-
-                                {item.property.location.city}
-                              </Typography>
-                            </Box>
-                            <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                              mt: 1
-                            }}>
-
-                              <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 0.5
-                              }}>
-
-                                <StarIcon
-                                sx={{
-                                  fontSize: 14,
-                                  color: theme.palette.warning.main
-                                }} />
-
-                                <Typography variant="body2">
-                                  {item.property.rating}
-                                </Typography>
-                              </Box>
-                              <Typography
-                              variant="subtitle2"
-                              color="primary"
-                              fontWeight={600}>
-
-                                Nu {item.property.pricePerNight}/night
-                              </Typography>
-                            </Box>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    )}
-                  </Grid>
-                </Paper>
-              </Grid>
             </Grid>
           </Grid>
         </Grid>

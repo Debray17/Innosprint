@@ -91,7 +91,7 @@ export default function ListYourPropertyPage() {
         </Typography>
         <Grid container spacing={3}>
           {benefits.map((benefit, index) =>
-          <Grid item key={index} xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
               <Card elevation={2} sx={{ height: "100%", textAlign: "center" }}>
                 <CardContent sx={{ p: 3 }}>
                   {benefit.icon}
@@ -131,7 +131,7 @@ export default function ListYourPropertyPage() {
         </Typography>
         <Grid container spacing={2}>
           {requirements.map((req, index) =>
-          <Grid item key={index} xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }} key={index}>
               <Card elevation={1}>
                 <CardContent sx={{ display: "flex", alignItems: "center" }}>
                   <CheckCircleIcon sx={{ color: "success.main", mr: 2 }} />

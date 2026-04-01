@@ -122,7 +122,7 @@ const CalendarPage = () => {
   // Empty cells for days before first day of month
   for (let i = 0; i < firstDayOfMonth; i++) {
     calendarDays.push(
-      <Grid item key={`empty-${i}`} xs={12 / 7}>
+      <Grid size={12 / 7} key={`empty-${i}`}>
                 <Paper
           sx={{
             p: 1,
@@ -311,7 +311,7 @@ const CalendarPage = () => {
                 {/* Days of Week Header */}
                 <Grid container spacing={1} sx={{ mb: 1 }}>
                     {daysOfWeek.map((day) =>
-          <Grid item key={day} xs={12 / 7}>
+          <Grid size={12 / 7} key={day}>
                             <Typography
               variant="body2"
               fontWeight={600}

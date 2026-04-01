@@ -8,19 +8,14 @@ import {
   Typography,
   TextField,
   Button,
-  Divider,
   Link,
   InputAdornment,
   IconButton,
   Alert,
-  Checkbox,
-  FormControlLabel,
 } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import HotelIcon from "@mui/icons-material/Hotel";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
@@ -32,7 +27,6 @@ export default function LoginPage() {
 
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
@@ -74,10 +68,6 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSocialLogin = (provider) => {
-    console.log(`Login with ${provider}`);
   };
 
   return (
@@ -176,35 +166,6 @@ export default function LoginPage() {
                 ),
               }}
             />
-
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 3,
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    size="small"
-                  />
-                }
-                label={<Typography variant="body2">Remember me</Typography>}
-              />
-              <Link
-                component={RouterLink}
-                to="/forgot-password"
-                variant="body2"
-                underline="hover"
-              >
-                Forgot Password?
-              </Link>
-            </Box>
-
             <Button
               type="submit"
               fullWidth
@@ -214,49 +175,6 @@ export default function LoginPage() {
               sx={{ mb: 3 }}
             >
               {loading ? "Signing in..." : "Sign In"}
-            </Button>
-          </Box>
-
-          {/* Divider */}
-          <Divider sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              or continue with
-            </Typography>
-          </Divider>
-
-          {/* Social Login */}
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<GoogleIcon />}
-              onClick={() => handleSocialLogin("google")}
-              sx={{
-                borderColor: "#DB4437",
-                color: "#DB4437",
-                "&:hover": {
-                  borderColor: "#DB4437",
-                  bgcolor: alpha("#DB4437", 0.04),
-                },
-              }}
-            >
-              Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<FacebookIcon />}
-              onClick={() => handleSocialLogin("facebook")}
-              sx={{
-                borderColor: "#4267B2",
-                color: "#4267B2",
-                "&:hover": {
-                  borderColor: "#4267B2",
-                  bgcolor: alpha("#4267B2", 0.04),
-                },
-              }}
-            >
-              Facebook
             </Button>
           </Box>
 

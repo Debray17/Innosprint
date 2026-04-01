@@ -29,18 +29,8 @@ import KingBedIcon from "@mui/icons-material/KingBed";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import BookOnlineIcon from "@mui/icons-material/BookOnline";
 import LoginIcon from "@mui/icons-material/Login";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import GroupsIcon from "@mui/icons-material/Groups";
-import RoomServiceIcon from "@mui/icons-material/RoomService";
-import SpaIcon from "@mui/icons-material/Spa";
-import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
-import AssessmentIcon from "@mui/icons-material/Assessment";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import SettingsIcon from "@mui/icons-material/Settings";
-import TuneIcon from "@mui/icons-material/Tune";
-import PercentIcon from "@mui/icons-material/Percent";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -103,6 +93,7 @@ const menuItems = [
             { name: "All Properties", path: "/admin/properties/all", icon: BusinessIcon },
             { name: "Property Types", path: "/admin/properties/types", icon: CategoryIcon },
             { name: "Property Amenities", path: "/admin/properties/amenities", icon: CategoryIcon },
+            { name: "Seasonal Pricing", path: "/admin/settings/seasonal-pricing", icon: DateRangeIcon },
         ],
     },
     {
@@ -125,44 +116,12 @@ const menuItems = [
         subItems: [
             { name: "All Bookings", path: "/admin/bookings/all", icon: BookOnlineIcon },
             { name: "Check-in / Check-out", path: "/admin/bookings/check-in-out", icon: LoginIcon },
-            { name: "Calendar View", path: "/admin/bookings/calendar", icon: CalendarMonthIcon },
         ],
     },
     {
-        name: "Guests",
-        icon: GroupsIcon,
-        path: "/admin/guests",
-    },
-    {
-        name: "Services",
-        icon: RoomServiceIcon,
-        isDropdown: true,
-        path: "/admin/services",
-        subItems: [
-            { name: "Service Categories", path: "/admin/services/categories", icon: SpaIcon },
-            { name: "Service Bookings", path: "/admin/services/bookings", icon: BookmarkAddedIcon },
-        ],
-    },
-    {
-        name: "Reports",
-        icon: AssessmentIcon,
-        isDropdown: true,
-        path: "/admin/reports",
-        subItems: [
-            { name: "Revenue Report", path: "/admin/reports/revenue", icon: MonetizationOnIcon },
-            { name: "Occupancy Report", path: "/admin/reports/occupancy", icon: TrendingUpIcon },
-        ],
-    },
-    {
-        name: "Settings",
-        icon: SettingsIcon,
-        isDropdown: true,
-        path: "/admin/settings",
-        subItems: [
-            { name: "General", path: "/admin/settings/general", icon: TuneIcon },
-            { name: "Commission", path: "/admin/settings/commission", icon: PercentIcon },
-            { name: "Seasonal Pricing", path: "/admin/settings/seasonal-pricing", icon: DateRangeIcon },
-        ],
+        name: "AI Assistant",
+        icon: SmartToyIcon,
+        path: "/admin/ai-assistant",
     },
 ];
 

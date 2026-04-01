@@ -218,7 +218,7 @@ export default function PendingVerificationsPage() {
                 onReject={() => {
                     setViewModalOpen(false);
                     setRejectDialogOpen(true);
-                }}
+                }} 
             />
 
             {/* Approve Dialog */}

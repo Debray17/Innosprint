@@ -62,7 +62,7 @@ export default function AllPropertiesPage() {
       country: property?.country || "",
       statusId: property?.statusId ?? 0,
       status:
-      property?.statusId === 1 ?
+      property?.statusId === 3 ?
       "approved" :
       property?.statusId === 2 ?
       "rejected" :
@@ -72,6 +72,8 @@ export default function AllPropertiesPage() {
       commissionRate: property?.commissionRate ?? 0,
       contactEmail: property?.emailAddress || "",
       contactPhone: property?.phoneNo || "",
+      accountName: property?.accountName || "",
+      accountNo: property?.accountNo || "",
       checkinDate: property?.checkinDate || "",
       checkoutDate: property?.checkoutDate || "",
       rejectionReason: property?.rejectionReason || "",
@@ -123,7 +125,11 @@ export default function AllPropertiesPage() {
             activeAmenities.map((a) => a?.name).filter(Boolean)
           );
           if (propsArray.length > 0) {
-            setData(propsArray.map((p, i) => mapProperty(p, i, ownersMap, typeMap)));
+            setData(
+              propsArray
+                .map((p, i) => mapProperty(p, i, ownersMap, typeMap))
+                .filter((property) => Number(property.statusId) === 3)
+            );
           }
         }
       } catch (err) {
@@ -316,6 +322,8 @@ export default function AllPropertiesPage() {
         commissionRate: Number(updatedProperty.commissionRate) || 0,
         emailAddress: updatedProperty.contactEmail || "",
         phoneNo: updatedProperty.contactPhone || "",
+        accountName: updatedProperty.accountName || "",
+        accountNo: updatedProperty.accountNo || "",
         checkinDate: selectedProperty.checkinDate || new Date().toISOString(),
         checkoutDate: selectedProperty.checkoutDate || new Date().toISOString(),
         rejectionReason: selectedProperty.rejectionReason || "",
@@ -356,6 +364,8 @@ export default function AllPropertiesPage() {
         commissionRate: response?.commissionRate ?? updatedProperty.commissionRate,
         contactEmail: response?.emailAddress || updatedProperty.contactEmail || "",
         contactPhone: response?.phoneNo || updatedProperty.contactPhone || "",
+        accountName: response?.accountName || updatedProperty.accountName || "",
+        accountNo: response?.accountNo || updatedProperty.accountNo || "",
         totalRooms: updatedProperty.totalRooms || p.totalRooms,
         availableRooms: updatedProperty.totalRooms || p.availableRooms,
         amenities: updatedProperty.amenities || p.amenities,
@@ -398,6 +408,8 @@ export default function AllPropertiesPage() {
         commissionRate: Number(newProperty.commissionRate) || 0,
         emailAddress: newProperty.contactEmail || "",
         phoneNo: newProperty.contactPhone || "",
+        accountName: newProperty.accountName || "",
+        accountNo: newProperty.accountNo || "",
         checkinDate: new Date().toISOString(),
         checkoutDate: new Date().toISOString(),
         rejectionReason: "",
@@ -453,6 +465,8 @@ export default function AllPropertiesPage() {
         commissionRate: response?.commissionRate ?? newProperty.commissionRate,
         contactEmail: response?.emailAddress || newProperty.contactEmail || "",
         contactPhone: response?.phoneNo || newProperty.contactPhone || "",
+        accountName: response?.accountName || newProperty.accountName || "",
+        accountNo: response?.accountNo || newProperty.accountNo || "",
         checkinDate: response?.checkinDate || payload.checkinDate,
         checkoutDate: response?.checkoutDate || payload.checkoutDate,
         rejectionReason: response?.rejectionReason || "",
@@ -470,8 +484,17 @@ export default function AllPropertiesPage() {
         split("T")[0]
       };
 
-      setData((prev) => [...prev, mapped]);
-      setSnackbar({ open: true, message: "Property created successfully.", severity: "success" });
+      if (mapped.status === "approved") {
+        setData((prev) => [...prev, mapped]);
+      }
+      setSnackbar({
+        open: true,
+        message:
+          mapped.status === "approved"
+            ? "Property created successfully."
+            : "Property submitted and moved to Registration Requests.",
+        severity: "success"
+      });
       setAddModalOpen(false);
       setSelectedProperty(null);
     } catch (err) {
@@ -506,6 +529,8 @@ export default function AllPropertiesPage() {
         commissionRate: selectedProperty.commissionRate ?? 0,
         emailAddress: selectedProperty.contactEmail || "",
         phoneNo: selectedProperty.contactPhone || "",
+        accountName: selectedProperty.accountName || "",
+        accountNo: selectedProperty.accountNo || "",
         checkinDate: selectedProperty.checkinDate || new Date().toISOString(),
         checkoutDate: selectedProperty.checkoutDate || new Date().toISOString(),
         rejectionReason: selectedProperty.rejectionReason || "",
@@ -620,7 +645,7 @@ export default function AllPropertiesPage() {
                             <Divider sx={{ my: 2 }} />
 
                             <Grid container spacing={3}>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                                         Description
                                     </Typography>
@@ -628,7 +653,7 @@ export default function AllPropertiesPage() {
                                         {selectedProperty.description}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <Typography variant="subtitle2" color="text.secondary" gutterBottom>
                                         Amenities
                                     </Typography>
@@ -639,50 +664,62 @@ export default function AllPropertiesPage() {
                                     </Box>
                                 </Grid>
 
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Owner
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.ownerName}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Total Rooms
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.totalRooms}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Available Rooms
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.availableRooms}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Commission Rate
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.commissionRate}%</Typography>
                                 </Grid>
 
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Contact Email
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.contactEmail}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Contact Phone
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.contactPhone}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
+                                    <Typography variant="subtitle2" color="text.secondary">
+                                        Account Name
+                                    </Typography>
+                                    <Typography variant="body1">{selectedProperty.accountName || "-"}</Typography>
+                                </Grid>
+                                <Grid size={{ xs: 6, md: 3 }}>
+                                    <Typography variant="subtitle2" color="text.secondary">
+                                        Account No
+                                    </Typography>
+                                    <Typography variant="body1">{selectedProperty.accountNo || "-"}</Typography>
+                                </Grid>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         City
                                     </Typography>
                                     <Typography variant="body1">{selectedProperty.city}</Typography>
                                 </Grid>
-                                <Grid item xs={6} md={3}>
+                                <Grid size={{ xs: 6, md: 3 }}>
                                     <Typography variant="subtitle2" color="text.secondary">
                                         Country
                                     </Typography>
@@ -761,7 +798,7 @@ export default function AllPropertiesPage() {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Name"
@@ -771,7 +808,7 @@ export default function AllPropertiesPage() {
                 } />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Description"
@@ -781,7 +818,7 @@ export default function AllPropertiesPage() {
                 } />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Icon"

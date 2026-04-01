@@ -1,6 +1,6 @@
 // src/pages/User/BookingConfirmationPage.jsx
 import React from "react";
-import { useParams, Link as RouterLink } from "react-router-dom";
+import { useParams, Link as RouterLink, useLocation } from "react-router-dom";
 import { Box, Container, Paper, Typography, Button, Divider, Chip, Avatar } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
@@ -10,7 +10,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
-import PrintIcon from "@mui/icons-material/Print";
 import HomeIcon from "@mui/icons-material/Home";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import StarIcon from "@mui/icons-material/Star";
@@ -21,10 +20,11 @@ import { propertyDetails } from "../../data/userMockData";
 export default function BookingConfirmationPage() {
   const theme = useTheme();
   const { bookingId } = useParams();
+  const location = useLocation();
+  const state = location.state || {};
   // const navigate = useNavigate();
 
-  // Mock booking data
-  const booking = {
+  const fallbackBooking = {
     id: bookingId,
     bookingCode: bookingId || "BK-2024-001",
     status: "confirmed",
@@ -50,6 +50,30 @@ export default function BookingConfirmationPage() {
     createdAt: new Date().toISOString()
   };
 
+  const bookingResponse = state?.bookingResponse;
+  const bookingRecord = state?.booking;
+  const booking = {
+    ...fallbackBooking,
+    ...bookingRecord,
+    bookingCode:
+      bookingResponse?.bookingCode ||
+      bookingRecord?.bookingCode ||
+      bookingResponse?.bookingNo ||
+      fallbackBooking.bookingCode,
+    status:
+      bookingRecord?.status ||
+      bookingResponse?.statusLabel ||
+      fallbackBooking.status,
+    property: state?.property || fallbackBooking.property,
+    room: state?.room || fallbackBooking.room,
+    checkIn: state?.checkIn || fallbackBooking.checkIn,
+    checkOut: state?.checkOut || fallbackBooking.checkOut,
+    nights: state?.nights || fallbackBooking.nights,
+    guestDetails: state?.guestDetails || fallbackBooking.guestDetails,
+    guests: state?.guests || bookingRecord?.guests || fallbackBooking.guests,
+    pricing: state?.pricing || fallbackBooking.pricing,
+  };
+
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
       weekday: "long",
@@ -57,10 +81,6 @@ export default function BookingConfirmationPage() {
       day: "numeric",
       year: "numeric"
     });
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   return (
@@ -109,7 +129,7 @@ export default function BookingConfirmationPage() {
 
           <Grid container spacing={3}>
             {/* Property Info */}
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Box
                 sx={{
                   display: "flex",
@@ -172,7 +192,7 @@ export default function BookingConfirmationPage() {
             </Grid>
 
             {/* Room Info */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Room Type
               </Typography>
@@ -181,7 +201,7 @@ export default function BookingConfirmationPage() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="subtitle2" color="text.secondary">
                 Guests
               </Typography>
@@ -193,12 +213,12 @@ export default function BookingConfirmationPage() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Divider />
             </Grid>
 
             {/* Check-in / Check-out */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Box
                 sx={{
                   p: 2,
@@ -218,7 +238,7 @@ export default function BookingConfirmationPage() {
               </Box>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Box
                 sx={{
                   p: 2,
@@ -238,12 +258,12 @@ export default function BookingConfirmationPage() {
               </Box>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid size={12}>
               <Divider />
             </Grid>
 
             {/* Guest Details */}
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Box
                 sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
 
@@ -257,7 +277,7 @@ export default function BookingConfirmationPage() {
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Box
                 sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
 
@@ -273,7 +293,7 @@ export default function BookingConfirmationPage() {
           </Grid>
         </Paper>
 
-        {/* Payment Summary */}
+        {/* Payment Summary
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" fontWeight={600} gutterBottom>
             Payment Summary
@@ -319,8 +339,9 @@ export default function BookingConfirmationPage() {
             </Typography>
           </Box>
         </Paper>
+        */}
 
-        {/* Important Information */}
+        {/* Important Information
         <Paper sx={{ p: 3, mb: 3 }}>
           <Typography variant="h6" fontWeight={600} gutterBottom>
             Important Information
@@ -356,6 +377,7 @@ export default function BookingConfirmationPage() {
             </Typography>
           </Box>
         </Paper>
+        */}
 
         {/* Action Buttons */}
         <Box
@@ -366,13 +388,6 @@ export default function BookingConfirmationPage() {
             justifyContent: "center"
           }}>
 
-          <Button
-            variant="outlined"
-            startIcon={<PrintIcon />}
-            onClick={handlePrint}>
-
-            Print Confirmation
-          </Button>
           <Button
             variant="outlined"
             startIcon={<ListAltIcon />}

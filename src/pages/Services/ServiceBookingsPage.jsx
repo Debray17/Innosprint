@@ -232,7 +232,7 @@ const ServiceBookingsPage = () => {
 
             {/* Stats Summary */}
             <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
             sx={{
               p: 2,
@@ -248,7 +248,7 @@ const ServiceBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
             sx={{
               p: 2,
@@ -264,7 +264,7 @@ const ServiceBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
             sx={{
               p: 2,
@@ -280,7 +280,7 @@ const ServiceBookingsPage = () => {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item xs={6} sm={3}>
+                <Grid size={{ xs: 6, sm: 3 }}>
                     <Paper
             sx={{
               p: 2,
@@ -353,7 +353,7 @@ const ServiceBookingsPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <TextField
               fullWidth
               size="small"
@@ -369,7 +369,7 @@ const ServiceBookingsPage = () => {
               }} />
 
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid size={{ xs: 12, sm: 6 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -467,7 +467,7 @@ const ServiceBookingsPage = () => {
 
                             {/* Details */}
                             <Grid container spacing={2}>
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
                                         Guest & Property
                                     </Typography>
@@ -493,11 +493,11 @@ const ServiceBookingsPage = () => {
                                     </List>
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Divider />
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
                                         Schedule
                                     </Typography>
@@ -523,11 +523,11 @@ const ServiceBookingsPage = () => {
                                     </List>
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Divider />
                                 </Grid>
 
-                                <Grid item xs={12}>
+                                <Grid size={12}>
                                     <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
                                         Payment
                                     </Typography>
@@ -551,7 +551,7 @@ const ServiceBookingsPage = () => {
                                 </Grid>
 
                                 {selectedServiceBooking.notes &&
-              <Grid item xs={12}>
+              <Grid size={12}>
                                         <Paper
                   sx={{
                     p: 2,

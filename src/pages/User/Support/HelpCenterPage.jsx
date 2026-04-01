@@ -224,7 +224,7 @@ export default function HelpCenterPage() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {/* Main Content */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             {/* Category Tabs */}
             <Paper sx={{ mb: 3 }}>
               <Tabs
@@ -289,7 +289,7 @@ export default function HelpCenterPage() {
           </Grid>
 
           {/* Sidebar */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             {/* Contact Options */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>

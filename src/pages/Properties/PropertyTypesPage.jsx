@@ -324,7 +324,7 @@ const PropertyTypesPage = () => {
 
             <Grid container spacing={3}>
                 {typesData.map((type) =>
-        <Grid item xs={12} sm={6} md={4} key={type.id}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={type.id}>
                         <PropertyTypeCard type={type} />
                     </Grid>
         )}
@@ -351,7 +351,7 @@ const PropertyTypesPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Name"
@@ -361,7 +361,7 @@ const PropertyTypesPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Description"
@@ -372,7 +372,7 @@ const PropertyTypesPage = () => {
                 rows={2} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
                                 Icon
                             </Typography>
@@ -437,7 +437,7 @@ const PropertyTypesPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Name"
@@ -447,7 +447,7 @@ const PropertyTypesPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Description"
@@ -458,7 +458,7 @@ const PropertyTypesPage = () => {
                 rows={2} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <Typography variant="subtitle2" fontWeight={600} sx={{ mb: 1 }}>
                                 Icon
                             </Typography>

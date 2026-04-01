@@ -1,11 +1,9 @@
 // src/pages/Auth/RegisterPage.jsx
 import React, { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { Box, Container, Paper, Typography, TextField, Button, Divider, Link, InputAdornment, Alert, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Container, Paper, Typography, TextField, Button, Link, InputAdornment, Alert } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
 import HotelIcon from "@mui/icons-material/Hotel";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
@@ -22,8 +20,6 @@ export default function RegisterPage() {
     phoneNo: "",
     avatarUrl: ""
   });
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [subscribeNewsletter, setSubscribeNewsletter] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [errors, setErrors] = useState({});
@@ -47,9 +43,6 @@ export default function RegisterPage() {
     }
     if (!formData.phoneNo.trim())
     newErrors.phoneNo = "Phone number is required";
-    if (!agreeTerms) {
-      newErrors.terms = "You must agree to the terms and conditions";
-    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -137,7 +130,7 @@ export default function RegisterPage() {
           {/* Registration Form */}
           <Box component="form" onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   fullWidth
                   label="Full Name"
@@ -190,65 +183,6 @@ export default function RegisterPage() {
 
               }} />
 
-
-            <TextField
-              fullWidth
-              label="Avatar URL (optional)"
-              value={formData.avatarUrl}
-              onChange={handleChange("avatarUrl")}
-              sx={{ mt: 2 }} />
-
-
-            {/* Terms & Newsletter */}
-            <Box sx={{ mt: 2 }}>
-              <FormControlLabel
-                control={
-                <Checkbox
-                  checked={agreeTerms}
-                  onChange={(e) => setAgreeTerms(e.target.checked)}
-                  size="small" />
-
-                }
-                label={
-                <Typography variant="body2">
-                    I agree to the{" "}
-                    <Link href="/terms" underline="hover">
-                      Terms of Service
-                    </Link>{" "}
-                    and{" "}
-                    <Link href="/privacy" underline="hover">
-                      Privacy Policy
-                    </Link>
-                  </Typography>
-                } />
-
-              {errors.terms &&
-              <Typography
-                variant="caption"
-                color="error"
-                display="block"
-                sx={{ ml: 4 }}>
-
-                  {errors.terms}
-                </Typography>
-              }
-
-              <FormControlLabel
-                control={
-                <Checkbox
-                  checked={subscribeNewsletter}
-                  onChange={(e) => setSubscribeNewsletter(e.target.checked)}
-                  size="small" />
-
-                }
-                label={
-                <Typography variant="body2">
-                    Send me special offers and travel inspiration
-                  </Typography>
-                } />
-
-            </Box>
-
             <Button
               type="submit"
               fullWidth
@@ -258,47 +192,6 @@ export default function RegisterPage() {
               sx={{ mt: 3, mb: 3 }}>
 
               {loading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </Box>
-
-          {/* Divider */}
-          <Divider sx={{ mb: 3 }}>
-            <Typography variant="body2" color="text.secondary">
-              or sign up with
-            </Typography>
-          </Divider>
-
-          {/* Social Sign Up */}
-          <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<GoogleIcon />}
-              sx={{
-                borderColor: "#DB4437",
-                color: "#DB4437",
-                "&:hover": {
-                  borderColor: "#DB4437",
-                  bgcolor: alpha("#DB4437", 0.04)
-                }
-              }}>
-
-              Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<FacebookIcon />}
-              sx={{
-                borderColor: "#4267B2",
-                color: "#4267B2",
-                "&:hover": {
-                  borderColor: "#4267B2",
-                  bgcolor: alpha("#4267B2", 0.04)
-                }
-              }}>
-
-              Facebook
             </Button>
           </Box>
 

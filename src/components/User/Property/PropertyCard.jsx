@@ -13,7 +13,6 @@ import {
     Skeleton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import StarIcon from "@mui/icons-material/Star";
@@ -31,7 +30,7 @@ const amenityIcons = {
     Gym: FitnessCenterIcon,
 };
 
-export default function PropertyCard({ property, onFavoriteToggle, loading = false }) {
+export default function PropertyCard({ property, loading = false }) {
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -63,7 +62,6 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
         originalPrice,
         discount,
         amenities,
-        isFavorite,
         freeCancellation,
         breakfastIncluded,
     } = property;
@@ -72,16 +70,12 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
         navigate(`/property/${id}`);
     };
 
-    const handleFavoriteClick = (e) => {
-        e.stopPropagation();
-        onFavoriteToggle?.(id);
-    };
-
     return (
         <Card
             onClick={handleClick}
             sx={{
                 height: "100%",
+                width: "100%",
                 display: "flex",
                 flexDirection: "column",
                 cursor: "pointer",
@@ -93,13 +87,13 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
             }}
         >
             {/* Image Section */}
-            <Box sx={{ position: "relative" }}>
+            <Box sx={{ position: "relative", height: 200, overflow: "hidden" }}>
                 <CardMedia
                     component="img"
                     height={200}
                     image={images?.[0] || "/placeholder-hotel.jpg"}
                     alt={name}
-                    sx={{ objectFit: "cover" }}
+                    sx={{ height: 200, width: "100%", objectFit: "cover" }}
                 />
 
                 {/* Discount Badge */}
@@ -120,7 +114,8 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
 
                 {/* Favorite Button */}
                 <IconButton
-                    onClick={handleFavoriteClick}
+                    onClick={(e) => e.stopPropagation()}
+                    disabled
                     sx={{
                         position: "absolute",
                         top: 8,
@@ -129,11 +124,8 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
                         "&:hover": { bgcolor: "#fff" },
                     }}
                 >
-                    {isFavorite ? (
-                        <FavoriteIcon sx={{ color: theme.palette.error.main }} />
-                    ) : (
-                        <FavoriteBorderIcon />
-                    )}
+                    {/* Wishlist logic is temporarily disabled. */}
+                    <FavoriteBorderIcon />
                 </IconButton>
 
                 {/* Property Type Badge */}
@@ -151,7 +143,15 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
             </Box>
 
             {/* Content Section */}
-            <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
+            <CardContent
+                sx={{
+                    flexGrow: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    height: 220,
+                    overflow: "hidden",
+                }}
+            >
                 {/* Rating */}
                 <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1 }}>
                     <StarIcon sx={{ fontSize: 18, color: theme.palette.warning.main }} />
@@ -169,9 +169,11 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
                     fontWeight={600}
                     sx={{
                         overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
                         mb: 0.5,
+                        minHeight: 48,
                     }}
                 >
                     {name}
@@ -186,7 +188,15 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
                 </Box>
 
                 {/* Amenities */}
-                <Box sx={{ display: "flex", gap: 1, mb: 1.5, flexWrap: "wrap" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: 1,
+                        mb: 1.5,
+                        flexWrap: "wrap",
+                        minHeight: 28,
+                    }}
+                >
                     {amenities?.slice(0, 4).map((amenity) => {
                         const IconComponent = amenityIcons[amenity];
                         return (
@@ -207,7 +217,15 @@ export default function PropertyCard({ property, onFavoriteToggle, loading = fal
                 </Box>
 
                 {/* Tags */}
-                <Box sx={{ display: "flex", gap: 0.5, mb: 1.5, flexWrap: "wrap" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        gap: 0.5,
+                        mb: 1.5,
+                        flexWrap: "wrap",
+                        minHeight: 28,
+                    }}
+                >
                     {freeCancellation && (
                         <Chip
                             label="Free Cancellation"

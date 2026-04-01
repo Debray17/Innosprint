@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Typography, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, IconButton, Paper, Tabs, Tab, Divider, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -240,13 +239,6 @@ const AllUsersPage = () => {
                         Manage platform users and their accounts
                     </Typography>
                 </Box>
-                <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => setOpenAddModal(true)}>
-
-                    Add User
-                </Button>
             </Box>
 
             <Paper sx={{ mb: 3, borderRadius: 2 }}>
@@ -318,7 +310,7 @@ const AllUsersPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Full Name"
@@ -328,7 +320,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Email"
@@ -339,7 +331,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Phone"
@@ -349,7 +341,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Address"
@@ -403,7 +395,7 @@ const AllUsersPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Full Name"
@@ -413,7 +405,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Email"
@@ -424,7 +416,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid size={{ xs: 12, sm: 6 }}>
                             <TextField
                 fullWidth
                 label="Phone"
@@ -434,7 +426,7 @@ const AllUsersPage = () => {
                 required />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Address"
@@ -489,7 +481,7 @@ const AllUsersPage = () => {
                 <DialogContent dividers>
                     {selectedUser &&
           <Grid container spacing={3}>
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                                 <Paper
                 sx={{
                   p: 3,
@@ -527,7 +519,7 @@ const AllUsersPage = () => {
                                 </Paper>
                             </Grid>
 
-                            <Grid item xs={12} md={8}>
+                            <Grid size={{ xs: 12, md: 8 }}>
                                 <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
                                     Contact Information
                                 </Typography>
@@ -576,7 +568,7 @@ const AllUsersPage = () => {
                                     Statistics
                                 </Typography>
                                 <Grid container spacing={2}>
-                                    <Grid item xs={6}>
+                                    <Grid size={6}>
                                         <Paper sx={{ p: 2, textAlign: "center" }}>
                                             <ApartmentIcon color="primary" sx={{ fontSize: 32, mb: 1 }} />
                                             <Typography variant="h5" fontWeight={600}>
@@ -587,7 +579,7 @@ const AllUsersPage = () => {
                                             </Typography>
                                         </Paper>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid size={6}>
                                         <Paper sx={{ p: 2, textAlign: "center" }}>
                                             <AttachMoneyIcon color="success" sx={{ fontSize: 32, mb: 1 }} />
                                             <Typography variant="h5" fontWeight={600}>

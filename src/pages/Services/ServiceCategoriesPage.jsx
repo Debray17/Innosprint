@@ -363,7 +363,7 @@ const ServiceCategoriesPage = () => {
             {/* Stats Summary */}
             <Paper sx={{ p: 3, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={3}>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="primary.main">
                                 {categoriesData.length}
@@ -373,7 +373,7 @@ const ServiceCategoriesPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="success.main">
                                 {activeCategories}
@@ -383,7 +383,7 @@ const ServiceCategoriesPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <Box sx={{ textAlign: "center" }}>
                             <Typography variant="h3" fontWeight={700} color="info.main">
                                 {totalServices}
@@ -399,7 +399,7 @@ const ServiceCategoriesPage = () => {
             {/* Categories Grid */}
             <Grid container spacing={3}>
                 {categoriesData.map((category) =>
-        <Grid item key={category.id} xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={category.id}>
                         <CategoryCard category={category} />
                     </Grid>
         )}

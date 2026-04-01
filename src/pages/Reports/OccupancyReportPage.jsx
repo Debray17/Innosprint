@@ -137,7 +137,7 @@ const OccupancyReportPage = () => {
             {/* Filters */}
             <Paper sx={{ p: 2, mb: 3, borderRadius: 2 }}>
                 <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Date Range</InputLabel>
                             <Select
@@ -153,7 +153,7 @@ const OccupancyReportPage = () => {
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid size={{ xs: 12, sm: 4 }}>
                         <FormControl fullWidth size="small">
                             <InputLabel>Property</InputLabel>
                             <Select
@@ -172,7 +172,7 @@ const OccupancyReportPage = () => {
                     </Grid>
                     {dateRange === "custom" &&
           <>
-                            <Grid item xs={12} sm={2}>
+                            <Grid size={{ xs: 12, sm: 2 }}>
                                 <TextField
                 fullWidth
                 size="small"
@@ -181,7 +181,7 @@ const OccupancyReportPage = () => {
                 InputLabelProps={{ shrink: true }} />
 
                             </Grid>
-                            <Grid item xs={12} sm={2}>
+                            <Grid size={{ xs: 12, sm: 2 }}>
                                 <TextField
                 fullWidth
                 size="small"
@@ -197,7 +197,7 @@ const OccupancyReportPage = () => {
 
             {/* Stats Cards */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
             title="Overall Occupancy"
             value={`${overallOccupancy}%`}
@@ -207,7 +207,7 @@ const OccupancyReportPage = () => {
             trendValue="+5%" />
 
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
             title="Total Rooms"
             value={totalRooms}
@@ -216,7 +216,7 @@ const OccupancyReportPage = () => {
             subtitle={`${occupiedRooms} occupied`} />
 
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
             title="Available Rooms"
             value={availableRooms}
@@ -225,7 +225,7 @@ const OccupancyReportPage = () => {
             subtitle="Ready for booking" />
 
                 </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                     <StatCard
             title="Avg. Stay Length"
             value={`${avgStayLength} nights`}
@@ -243,7 +243,7 @@ const OccupancyReportPage = () => {
                     Current Room Status
                 </Typography>
                 <Grid container spacing={3}>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                         <Box
               sx={{
                 p: 2,
@@ -261,7 +261,7 @@ const OccupancyReportPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                         <Box
               sx={{
                 p: 2,
@@ -279,7 +279,7 @@ const OccupancyReportPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                         <Box
               sx={{
                 p: 2,
@@ -297,7 +297,7 @@ const OccupancyReportPage = () => {
                             </Typography>
                         </Box>
                     </Grid>
-                    <Grid item xs={6} sm={3}>
+                    <Grid size={{ xs: 6, sm: 3 }}>
                         <Box
               sx={{
                 p: 2,
@@ -321,7 +321,7 @@ const OccupancyReportPage = () => {
             {/* Charts Row */}
             <Grid container spacing={3} sx={{ mb: 3 }}>
                 {/* Monthly Occupancy Trend */}
-                <Grid item xs={12} lg={8}>
+                <Grid size={{ xs: 12, lg: 8 }}>
                     <Paper sx={{ p: 3, borderRadius: 2, height: "100%" }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             Occupancy Trend
@@ -391,7 +391,7 @@ const OccupancyReportPage = () => {
                 </Grid>
 
                 {/* Occupancy by Day of Week */}
-                <Grid item xs={12} lg={4}>
+                <Grid size={{ xs: 12, lg: 4 }}>
                     <Paper sx={{ p: 3, borderRadius: 2, height: "100%" }}>
                         <Typography variant="h6" fontWeight={600} sx={{ mb: 3 }}>
                             By Day of Week
@@ -536,7 +536,7 @@ const OccupancyReportPage = () => {
                 </Typography>
                 <Grid container spacing={3}>
                     {roomTypeData.map((roomType) =>
-          <Grid item key={roomType.type} xs={12} sm={6} md={4}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={roomType.type}>
                             <Paper
               sx={{
                 p: 2,

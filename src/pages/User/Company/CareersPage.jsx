@@ -115,7 +115,7 @@ export default function CareersPage() {
         </Typography>
         <Grid container spacing={2}>
           {benefits.map((benefit, index) =>
-          <Grid item key={index} xs={12} sm={6} md={4}>
+          <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Card elevation={1}>
                 <CardContent>
                   <Typography variant="body1">✓ {benefit}</Typography>

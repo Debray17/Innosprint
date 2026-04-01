@@ -151,7 +151,7 @@ export default function ContactUsPage() {
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           {/* Contact Form */}
-          <Grid item xs={12} md={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             <Paper sx={{ p: 4 }}>
               <Typography variant="h5" fontWeight={600} gutterBottom>
                 Send us a message
@@ -163,7 +163,7 @@ export default function ContactUsPage() {
 
               <Box component="form" onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Your Name"
@@ -174,7 +174,7 @@ export default function ContactUsPage() {
                       required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Email Address"
@@ -186,7 +186,7 @@ export default function ContactUsPage() {
                       required />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <TextField
                       fullWidth
                       label="Phone Number (Optional)"
@@ -194,7 +194,7 @@ export default function ContactUsPage() {
                       onChange={handleChange("phone")} />
 
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <FormControl fullWidth error={!!errors.reason}>
                       <InputLabel>Reason for Contact *</InputLabel>
                       <Select
@@ -210,7 +210,7 @@ export default function ContactUsPage() {
                       </Select>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <TextField
                       fullWidth
                       label="Booking Reference (if applicable)"
@@ -219,7 +219,7 @@ export default function ContactUsPage() {
                       onChange={handleChange("bookingCode")} />
 
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid size={12}>
                     <TextField
                       fullWidth
                       multiline
@@ -250,7 +250,7 @@ export default function ContactUsPage() {
           </Grid>
 
           {/* Contact Info Sidebar */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             {/* Quick Contact */}
             <Paper sx={{ p: 3, mb: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>

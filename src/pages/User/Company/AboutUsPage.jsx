@@ -97,7 +97,7 @@ export default function AboutUsPage() {
         </Typography>
         <Grid container spacing={3}>
           {values.map((value, index) =>
-          <Grid item key={index} xs={6} sm={6} md={3}>
+          <Grid size={{ xs: 6, sm: 6, md: 3 }} key={index}>
               <Card
               elevation={2}
               sx={{
@@ -141,7 +141,7 @@ export default function AboutUsPage() {
 
         <Grid container spacing={4}>
           {stats.map((stat, index) =>
-          <Grid item key={index} xs={6} md={3}>
+          <Grid size={{ xs: 6, md: 3 }} key={index}>
               <Box sx={{ textAlign: "center" }}>
                 <Typography variant="h3" fontWeight={700}>
                   {stat.number}

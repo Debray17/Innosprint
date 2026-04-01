@@ -1,7 +1,7 @@
 // src/pages/User/SearchResultsPage.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Box, Container, Typography, Button, Paper, Select, MenuItem, FormControl, InputLabel, Chip, IconButton, useMediaQuery, Pagination } from "@mui/material";
+import { Box, Container, Typography, Button, Paper, Select, MenuItem, FormControl, InputLabel, Chip, IconButton, useMediaQuery, Pagination, Alert } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -15,6 +15,10 @@ import FilterDrawer from "../../components/User/Search/FilterDrawer";
 import { featuredProperties, searchFilters } from "../../data/userMockData";
 import { getPropertyList } from "../../services/propertyService";
 import { getPropertyTypeList } from "../../services/propertyTypeService";
+import {
+  getAvailableRoomList,
+  searchRoomListByFilters,
+} from "../../services/roomService";
 
 export default function SearchResultsPage() {
   const theme = useTheme();
@@ -27,6 +31,7 @@ export default function SearchResultsPage() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [propertiesData, setPropertiesData] = useState(featuredProperties);
+  const [searchError, setSearchError] = useState("");
 
   const [filters, setFilters] = useState({
     priceRange: [0, 1000],
@@ -58,72 +63,134 @@ export default function SearchResultsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeParam]);
 
+  // Get search params
+  const city = searchParams.get("city") || searchParams.get("destination") || "";
+  const country = searchParams.get("country") || "";
+  const checkIn = searchParams.get("checkIn") || "";
+  const checkOut = searchParams.get("checkOut") || "";
+  const roomCapacity = Number(searchParams.get("roomCapacity") || 0);
+  const hasLocationFilter = Boolean(city.trim() || country.trim());
+
   useEffect(() => {
     let isMounted = true;
 
     const fetchProperties = async () => {
       setLoading(true);
+      setSearchError("");
       try {
-        const [propertiesResponse, propertyTypesResponse] = await Promise.all([
+        const [propertiesResponse, propertyTypesResponse, roomsResponse] = await Promise.all([
           getPropertyList({ language: "en" }),
-          getPropertyTypeList({ language: "en" })
+          getPropertyTypeList({ language: "en" }),
+          hasLocationFilter
+            ? searchRoomListByFilters(
+                {
+                  ...(city.trim() ? { cityName: city.trim() } : {}),
+                  ...(country.trim() ? { countryName: country.trim() } : {}),
+                  ...(checkIn ? { checkinDate: new Date(checkIn).toISOString() } : {}),
+                  ...(checkOut ? { checkoutDate: new Date(checkOut).toISOString() } : {}),
+                  ...(roomCapacity > 0 ? { roomCapacity } : {}),
+                },
+                { language: "en" }
+              )
+            : getAvailableRoomList({ language: "en" }),
         ]);
 
-        const propertiesList = Array.isArray(propertiesResponse) ?
-        propertiesResponse :
-        propertiesResponse ?
-        [propertiesResponse] :
-        [];
+        const propertiesList = Array.isArray(propertiesResponse)
+          ? propertiesResponse
+          : propertiesResponse
+            ? [propertiesResponse]
+            : [];
 
-        const propertyTypesList = Array.isArray(propertyTypesResponse) ?
-        propertyTypesResponse :
-        propertyTypesResponse ?
-        [propertyTypesResponse] :
-        [];
+        const propertyTypesList = Array.isArray(propertyTypesResponse)
+          ? propertyTypesResponse
+          : propertyTypesResponse
+            ? [propertyTypesResponse]
+            : [];
+
+        const roomsList = Array.isArray(roomsResponse)
+          ? roomsResponse
+          : roomsResponse
+            ? [roomsResponse]
+            : [];
 
         const propertyTypeById = new Map(
-          propertyTypesList.
-          filter((t) => t?.isActive !== false).
-          map((t) => [t.id || t.primaryKeyValue, t])
+          propertyTypesList
+            .filter((t) => t?.isActive !== false)
+            .map((t) => [t.id || t.primaryKeyValue, t])
+        );
+
+        const propertyById = new Map(
+          propertiesList
+            .filter((p) => p?.isActive !== false)
+            .map((p) => [p.id || p.primaryKeyValue, p])
         );
 
         const fallbackImages = [
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
-        "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800",
-        "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
+          "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+          "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=800",
+          "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800",
         ];
 
-        const normalized = propertiesList.
-        filter((p) => p?.isActive !== false).
-        map((p, index) => {
-          const typeDto = propertyTypeById.get(p?.propertyTypeId) || null;
-          const typeName = typeDto?.name || "Property";
-          return {
-            id: p?.id || p?.primaryKeyValue || index,
-            name: p?.name || "Untitled Property",
-            type: typeName,
-            location: {
-              city: p?.city || "",
-              state: p?.country || ""
-            },
-            images: [fallbackImages[index % fallbackImages.length]],
-            rating: Number(p?.rating) || 0,
-            reviewsCount: Number(p?.reviewCount) || 0,
-            pricePerNight: 0,
-            originalPrice: null,
-            discount: 0,
-            amenities: [],
-            isFavorite: false,
-            freeCancellation: false,
-            breakfastIncluded: false
-          };
-        });
+        const minRoomByPropertyId = new Map();
+        roomsList
+          .filter((room) => room?.isActive !== false)
+          .forEach((room) => {
+            const propertyId = room?.propertyId;
+            if (!propertyId) return;
+            const current = minRoomByPropertyId.get(propertyId);
+            const nextPrice = Number(room?.basePrise) || 0;
+            if (!current || nextPrice < current.pricePerNight) {
+              minRoomByPropertyId.set(propertyId, {
+                roomId: room?.id || room?.primaryKeyValue,
+                pricePerNight: nextPrice,
+                roomNo: room?.roomNo || "",
+                roomTypeId: room?.roomTypeId || "",
+                statusLabel: room?.statusLabel || "",
+              });
+            }
+          });
 
-        if (isMounted && normalized.length > 0) {
+        const normalized = Array.from(minRoomByPropertyId.entries())
+          .map(([propertyId, roomInfo], index) => {
+            const property = propertyById.get(propertyId);
+            const typeDto = property
+              ? propertyTypeById.get(property?.propertyTypeId) || null
+              : null;
+            const typeName = typeDto?.name || "Property";
+            return {
+              id: property?.id || property?.primaryKeyValue || propertyId || index,
+              roomId: roomInfo.roomId,
+              name:
+                property?.name ||
+                (roomInfo.roomNo ? `Room ${roomInfo.roomNo}` : "Available Room"),
+              type: typeName,
+              location: {
+                city: property?.city || city.trim(),
+                state: property?.country || country.trim(),
+                address: property?.address || "",
+              },
+              images: [fallbackImages[index % fallbackImages.length]],
+              rating: Number(property?.rating) || 0,
+              reviewsCount: Number(property?.reviewCount) || 0,
+              pricePerNight: roomInfo.pricePerNight,
+              originalPrice: null,
+              discount: 0,
+              amenities: [],
+              isFavorite: false,
+              freeCancellation: false,
+              breakfastIncluded: false,
+            };
+          })
+          .filter(Boolean);
+
+        if (isMounted) {
           setPropertiesData(normalized);
         }
       } catch (err) {
-        // Keep mock data on error.
+        if (isMounted) {
+          setSearchError("Unable to load room search results right now.");
+          setPropertiesData([]);
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
@@ -134,32 +201,44 @@ export default function SearchResultsPage() {
     return () => {
       isMounted = false;
     };
-  }, []);
-
-  // Get search params
-  const destination = searchParams.get("destination") || "";
-  const checkIn = searchParams.get("checkIn") || "";
-  const checkOut = searchParams.get("checkOut") || "";
+  }, [city, country, checkIn, checkOut, roomCapacity, hasLocationFilter]);
 
   // Filtered results
   const filteredResults = useMemo(() => {
     let results = [...propertiesData];
 
-    const normalizedDestination = (destination || "").
+    const normalizedCity = (city || "").
+    toString().
+    trim().
+    toLowerCase();
+    const normalizedCountry = (country || "").
     toString().
     trim().
     toLowerCase();
 
-    if (normalizedDestination) {
+    if (normalizedCity) {
       results = results.filter((p) => {
         const city = (p?.location?.city || "").
         toString().
         trim().
         toLowerCase();
         if (!city) return false;
-        return city === normalizedDestination ||
-          city.includes(normalizedDestination) ||
-          normalizedDestination.includes(city);
+        return city === normalizedCity ||
+          city.includes(normalizedCity) ||
+          normalizedCity.includes(city);
+      });
+    }
+
+    if (normalizedCountry) {
+      results = results.filter((p) => {
+        const itemCountry = (p?.location?.state || "").
+        toString().
+        trim().
+        toLowerCase();
+        if (!itemCountry) return false;
+        return itemCountry === normalizedCountry ||
+          itemCountry.includes(normalizedCountry) ||
+          normalizedCountry.includes(itemCountry);
       });
     }
 
@@ -206,7 +285,7 @@ export default function SearchResultsPage() {
     }
 
     return results;
-  }, [filters, propertiesData, sortBy]);
+  }, [filters, propertiesData, sortBy, city, country]);
 
   const itemsPerPage = 8;
   const totalPages = Math.ceil(filteredResults.length / itemsPerPage);
@@ -290,7 +369,8 @@ export default function SearchResultsPage() {
           <SearchBar
             variant="compact"
             initialValues={{
-              destination,
+              city,
+              country,
               checkIn,
               checkOut
             }} />
@@ -300,6 +380,12 @@ export default function SearchResultsPage() {
 
       <Container maxWidth="lg" sx={{ mt: 3 }}>
         {/* Results Header */}
+        {searchError && (
+          <Alert severity="warning" sx={{ mb: 2 }}>
+            {searchError}
+          </Alert>
+        )}
+
         <Box
           sx={{
             display: "flex",
@@ -312,7 +398,7 @@ export default function SearchResultsPage() {
 
           <Box>
             <Typography variant="h5" fontWeight={700}>
-              {destination ? `Stays in ${destination}` : "All Properties"}
+              {city ? `Stays in ${city}, ${country}` : "Available Properties"}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               {filteredResults.length} properties found
@@ -420,17 +506,17 @@ export default function SearchResultsPage() {
         <Grid container spacing={3}>
           {loading ?
           Array.from({ length: 8 }).map((_, index) =>
-          <Grid item
+          <Grid size={{ xs: 12, sm: 6, md: viewMode === "list" ? 12 : 3 }}
 
-          key={index} xs={12} sm={6} md={viewMode === "list" ? 12 : 3}>
+          key={index}>
 
                   <PropertyCard loading />
                 </Grid>
           ) :
           paginatedResults.map((property) =>
-          <Grid item
+          <Grid size={{ xs: 12, sm: 6, md: viewMode === "list" ? 12 : 3 }}
 
-          key={property.id} xs={12} sm={6} md={viewMode === "list" ? 12 : 3}>
+          key={property.id}>
 
                   <PropertyCard
               property={property}

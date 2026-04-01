@@ -1,14 +1,13 @@
 // src/components/User/Common/UserFooter.jsx
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Container, Typography, Link, IconButton, Divider, TextField, Button, Stack, Grid } from "@mui/material";
+import { Box, Container, Typography, Link, IconButton, Divider, Stack, Grid } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import HotelIcon from "@mui/icons-material/Hotel";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import SendIcon from "@mui/icons-material/Send";
 
 export default function UserFooter() {
   const theme = useTheme();
@@ -51,7 +50,7 @@ export default function UserFooter() {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           {/* Brand Section */}
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <HotelIcon
                 sx={{ fontSize: 36, mr: 1, color: theme.palette.primary.light }} />
@@ -67,38 +66,10 @@ export default function UserFooter() {
               Discover unique stays and experiences around Bhutan. Book
               hotels, resorts, villas, and homestays with ease.
             </Typography>
-
-            {/* Newsletter */}
-            <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
-              Subscribe to our newsletter
-            </Typography>
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <TextField
-                size="small"
-                placeholder="Enter your email"
-                sx={{
-                  flex: 1,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "rgba(255,255,255,0.1)",
-                    color: "#fff",
-                    "& fieldset": { borderColor: "rgba(255,255,255,0.2)" },
-                    "&:hover fieldset": {
-                      borderColor: "rgba(255,255,255,0.3)"
-                    }
-                  },
-                  "& .MuiInputBase-input::placeholder": {
-                    color: "rgba(255,255,255,0.5)"
-                  }
-                }} />
-
-              <Button variant="contained" sx={{ minWidth: "auto", px: 2 }}>
-                <SendIcon />
-              </Button>
-            </Box>
           </Grid>
 
           {/* Links Sections */}
-          <Grid item xs={6} sm={3} md={2}>
+          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               Company
             </Typography>
@@ -120,7 +91,7 @@ export default function UserFooter() {
             </Stack>
           </Grid>
 
-          <Grid item xs={6} sm={3} md={2}>
+          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               Support
             </Typography>
@@ -142,7 +113,7 @@ export default function UserFooter() {
             </Stack>
           </Grid>
 
-          <Grid item xs={6} sm={3} md={2}>
+          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               Hosting
             </Typography>
@@ -164,7 +135,7 @@ export default function UserFooter() {
             </Stack>
           </Grid>
 
-          <Grid item xs={6} sm={3} md={2}>
+          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
             <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>
               Legal
             </Typography>

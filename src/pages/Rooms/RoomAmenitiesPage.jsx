@@ -254,7 +254,7 @@ const RoomAmenitiesPage = () => {
 
             <Grid container spacing={3}>
                 {amenities.map((amenity) =>
-        <Grid item xs={12} sm={6} md={4} key={amenity.id}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }} key={amenity.id}>
                         <Card sx={{ height: "100%" }}>
                             <CardContent>
                                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
@@ -313,7 +313,7 @@ const RoomAmenitiesPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Room</InputLabel>
                                 <Select
@@ -330,7 +330,7 @@ const RoomAmenitiesPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Name"
@@ -339,7 +339,7 @@ const RoomAmenitiesPage = () => {
                 onChange={handleFormChange} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Description"
@@ -348,7 +348,7 @@ const RoomAmenitiesPage = () => {
                 onChange={handleFormChange} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Icon"
@@ -400,7 +400,7 @@ const RoomAmenitiesPage = () => {
                 </DialogTitle>
                 <DialogContent dividers>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <FormControl fullWidth>
                                 <InputLabel>Room</InputLabel>
                                 <Select
@@ -417,7 +417,7 @@ const RoomAmenitiesPage = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Name"
@@ -426,7 +426,7 @@ const RoomAmenitiesPage = () => {
                 onChange={handleFormChange} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Description"
@@ -435,7 +435,7 @@ const RoomAmenitiesPage = () => {
                 onChange={handleFormChange} />
 
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid size={12}>
                             <TextField
                 fullWidth
                 label="Icon"

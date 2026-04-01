@@ -56,7 +56,7 @@ export default function RoomCard({
       <CardContent sx={{ p: 0 }}>
         <Grid container>
           {/* Room Image */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Box
               sx={{
                 height: { xs: 200, md: "100%" },
@@ -69,7 +69,7 @@ export default function RoomCard({
           </Grid>
 
           {/* Room Details */}
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ p: 2.5 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 {name}
@@ -167,7 +167,7 @@ export default function RoomCard({
           </Grid>
 
           {/* Price & Action */}
-          <Grid item xs={12} md={3}>
+          <Grid size={{ xs: 12, md: 3 }}>
             <Box
               sx={{
                 p: 2.5,
